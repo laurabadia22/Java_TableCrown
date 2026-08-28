@@ -1,5 +1,6 @@
 package it.univaq.tablecrown.entity;
 
+import it.univaq.tablecrown.entity.enumerativi.DisponibilitaProdotto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public abstract class EProdotto {
     @Column(name = "data_pubblicazione", nullable = false)
     private LocalDateTime dataPubblicazione;
 
+    // TODO: decidere cosa fare con EPrezzo.
 //    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "prezzo_id", referencedColumnName = "id_prezzo")
 //    private EPrezzo prezzo;
@@ -47,17 +49,26 @@ public abstract class EProdotto {
     @Column(name = "valutazione_media", nullable = false)
     protected float valutazioneMedia = 0.0f;
 
-    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "prodotto", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ERecensione> recensioni = new ArrayList<>();
 
     private static final int GIORNI_NOVITA = 30;
 
-    //Costruttore vuoto richiesto da JPA/Hibernate
+    //Costruttore vuoto richiesto da Hibernate
     protected  EProdotto() {
     }
 
     //Costruttore con logica di dominio
-    //TODO
+    protected EProdotto(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto) {
+        this.rinominaProdotto(nomeProdotto);
+        this.aggiornaDescrizione(descrizioneProdotto);
+        this.aggiornaImg(imgProdotto);
+        this.disponibilitaProdotto = disponibilitaProdotto;
+        this.aggiornaQuantita(quantita);
+        this.recensioni = new ArrayList<>();
+        this.numeroVendite = 0;
+        this.valutazioneMedia = 0.0f;
+    }
 
     // --- GETTER ---
     public Long getIdProdotto() {
@@ -111,7 +122,7 @@ public abstract class EProdotto {
 
     public void aggiornaDescrizione(String descrizioneProdotto) {
         if (descrizioneProdotto == null || descrizioneProdotto.trim().isEmpty()) {
-            throw new IllegalArgumentException("La descrizione del prodotto non può essere vuota.")
+            throw new IllegalArgumentException("La descrizione del prodotto non può essere vuota.");
         }
         this.descrizioneProdotto = descrizioneProdotto;
     }
@@ -147,19 +158,20 @@ public abstract class EProdotto {
         this.disponibilitaProdotto = DisponibilitaProdotto.NON_DISPONIBILE;
     }
 
+    //TODO: decidere cosa fare con EPrezzo
 //    public void assegnaPrezzo(EPrezzo prezzo) {
 //        this.prezzo = prezzo;
 //    }
 
-    public void rimuoviPrezzo() {
-        this.prezzo = null;
-    }
+//    public void removePrezzo() {
+//        this.prezzo = null;
+//    }
 
-    public boolean isAcquistabile() {
-        return this.disponibilitaProdotto == DisponibilitaProdotto.DISPONIBILE
-                && this.quantita > 0
-                && this.prezzo != null;
-    }
+//    public boolean isAcquistabile() {
+//        return this.disponibilitaProdotto == DisponibilitaProdotto.DISPONIBILE
+//                && this.quantita > 0
+//                && this.prezzo != null;
+//    }
 
     public boolean isDisponibile() {
         return this.disponibilitaProdotto == DisponibilitaProdotto.DISPONIBILE
@@ -198,7 +210,7 @@ public abstract class EProdotto {
         return this.valutazioneMedia;
     }
 
-    public void aggiungiVendite(int quantitaAcquistata) {
+    public void addVendite(int quantitaAcquistata) {
         if (quantitaAcquistata <= 0) {
             throw new IllegalArgumentException("La quantità di vendite da aggiungere deve essere maggiore di zero.");
         }
