@@ -4,8 +4,6 @@ import it.univaq.tablecrown.entity.enumerativi.DisponibilitaProdotto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "prodotto")
@@ -47,11 +45,8 @@ public abstract class EProdotto {
     @Column(name = "numero_vendite", nullable = false)
     protected int numeroVendite = 0;
 
-    @Column(name = "valutazione_media", nullable = false)
-    protected float valutazioneMedia = 0.0f;
-
-    @OneToMany(mappedBy = "prodotto", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<ERecensione> recensioni = new ArrayList<>();
+    @Embedded
+    private EValutazione valutazione = new EValutazione();
 
     private static final int GIORNI_NOVITA = 30;
 
@@ -68,9 +63,7 @@ public abstract class EProdotto {
         this.aggiornaQuantita(quantita);
         this.assegnaPrezzo(prezzo);
         this.dataPubblicazione = LocalDateTime.now();
-        this.recensioni = new ArrayList<>();
         this.numeroVendite = 0;
-        this.valutazioneMedia = 0.0f;
     }
 
     // --- GETTER ---
@@ -114,8 +107,8 @@ public abstract class EProdotto {
         return sconto.applicaA(prezzo);
     }
 
-    public List<ERecensione> getRecensioni() {
-        return recensioni;
+    public EValutazione getValutazione() {
+        return valutazione;
     }
 
     public int getNumeroVendite() {
@@ -181,28 +174,12 @@ public abstract class EProdotto {
         return isDisponibile();
     }
 
-    public void addRecensione(ERecensione recensione) {
-        if (!this.recensioni.contains(recensione)) {
-            this.recensioni.add(recensione);
-            this.valutazioneMedia = calcolaValutazioneMedia();
-        }
-    }
-
-    public void removeRecensione(ERecensione recensione) {
-        if (this.recensioni.remove(recensione)) {
-            this.valutazioneMedia = calcolaValutazioneMedia();
-        }
+    public void aggiungiValutazione(int stelle){
+        this.valutazione.aggiungiValutazione(stelle);
     }
 
     public float getValutazioneMedia() {
-        if (this.recensioni == null || this.recensioni.isEmpty()) {
-            return 0.0f;
-        }
-        float somma = 0.0f;
-        for (ERecensione recensione : this.recensioni) {
-            somma += recensione.getValutazione();
-        }
-        return somma / this.recensioni.size();
+        return this.valutazione.getMedia();
     }
 
     public void addVendite(int quantitaAcquistata) {

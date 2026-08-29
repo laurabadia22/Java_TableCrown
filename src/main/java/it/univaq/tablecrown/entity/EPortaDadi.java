@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class EPortaDadi extends EProdotto{
 
     //Costruttore vuoto per Hibernate
-    public EPortaDadi() {
+    protected EPortaDadi() {
         super();
     }
 
