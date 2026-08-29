@@ -38,10 +38,11 @@ public abstract class EProdotto {
     @Column(name = "data_pubblicazione", nullable = false)
     private LocalDateTime dataPubblicazione;
 
-    // TODO: decidere cosa fare con EPrezzo.
-//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "prezzo_id", referencedColumnName = "id_prezzo")
-//    private EPrezzo prezzo;
+    @Column(name = "prezzo", nullable = false)
+    private float prezzo;
+
+    @Embedded
+    private ESconto sconto = new ESconto();
 
     @Column(name = "numero_vendite", nullable = false)
     protected int numeroVendite = 0;
@@ -99,9 +100,17 @@ public abstract class EProdotto {
         return dataPubblicazione;
     }
 
-//    public EPrezzo getPrezzo() {
-//        return prezzo;
-//    }
+    public float getPrezzo() {
+        return prezzo;
+    }
+
+    public ESconto getSconto() {
+        return sconto;
+    }
+
+    public float getPrezzoScontato() {
+        return sconto.applicaA(prezzo);
+    }
 
     public List<ERecensione> getRecensioni() {
         return recensioni;
@@ -143,6 +152,13 @@ public abstract class EProdotto {
         }
     }
 
+    public void assegnaPrezzo(float prezzo) {
+        if (prezzo < 0) {
+            throw new IllegalArgumentException("Il prezzo non può essere negativo.");
+        }
+        this.prezzo = prezzo;
+    }
+
     public void rendiDisponibile() {
         if (this.quantita == 0) {
             throw new IllegalArgumentException("Non è possibile rendere disponibile un prodotto con quantità 0.");
@@ -150,32 +166,17 @@ public abstract class EProdotto {
         this.disponibilitaProdotto = DisponibilitaProdotto.DISPONIBILE;
     }
 
-    public void rendiInArrivo() {
-        this.disponibilitaProdotto = DisponibilitaProdotto.IN_ARRIVO;
-    }
-
     public void rimuoviProdotto() {
         this.disponibilitaProdotto = DisponibilitaProdotto.NON_DISPONIBILE;
     }
 
-    //TODO: decidere cosa fare con EPrezzo
-//    public void assegnaPrezzo(EPrezzo prezzo) {
-//        this.prezzo = prezzo;
-//    }
-
-//    public void removePrezzo() {
-//        this.prezzo = null;
-//    }
-
-//    public boolean isAcquistabile() {
-//        return this.disponibilitaProdotto == DisponibilitaProdotto.DISPONIBILE
-//                && this.quantita > 0
-//                && this.prezzo != null;
-//    }
-
     public boolean isDisponibile() {
         return this.disponibilitaProdotto == DisponibilitaProdotto.DISPONIBILE
                 && this.quantita > 0;
+    }
+
+    public boolean isAcquistabile() {
+        return isDisponibile();
     }
 
     public void addRecensione(ERecensione recensione) {

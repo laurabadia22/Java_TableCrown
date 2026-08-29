@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "bustine")
 public class EBustine extends EProdotto{
     // Costruttore vuoto richiesto da Hibernate
-    public EBustine() {
+    protected EBustine() {
         super();
     }
 
