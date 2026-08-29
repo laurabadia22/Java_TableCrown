@@ -1,11 +1,11 @@
 package it.univaq.tablecrown.entity;
 
 import it.univaq.tablecrown.entity.enumerativi.DisponibilitaProdotto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "porta_dadi")
+@DiscriminatorValue("portaDadi")
 public class EPortaDadi extends EProdotto{
 
     //Costruttore vuoto per Hibernate
@@ -14,7 +14,7 @@ public class EPortaDadi extends EProdotto{
     }
 
     //Costruttore con logica di dominio
-    public EPortaDadi(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto){
-        super(nomeProdotto, descrizioneProdotto, disponibilitaProdotto, quantita, imgProdotto); //TODO: DA AGGIUNGERE IL PREZZO
+    public EPortaDadi(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto, float prezzo){
+        super(nomeProdotto, descrizioneProdotto, disponibilitaProdotto, quantita, imgProdotto, prezzo);
     }
 }

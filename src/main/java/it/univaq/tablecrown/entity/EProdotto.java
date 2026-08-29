@@ -60,12 +60,14 @@ public abstract class EProdotto {
     }
 
     //Costruttore con logica di dominio
-    protected EProdotto(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto) {
+    protected EProdotto(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto, float prezzo) {
         this.rinominaProdotto(nomeProdotto);
         this.aggiornaDescrizione(descrizioneProdotto);
         this.aggiornaImg(imgProdotto);
         this.disponibilitaProdotto = disponibilitaProdotto;
         this.aggiornaQuantita(quantita);
+        this.assegnaPrezzo(prezzo);
+        this.dataPubblicazione = LocalDateTime.now();
         this.recensioni = new ArrayList<>();
         this.numeroVendite = 0;
         this.valutazioneMedia = 0.0f;
@@ -193,22 +195,14 @@ public abstract class EProdotto {
     }
 
     public float getValutazioneMedia() {
-        return calcolaValutazioneMedia();
-    }
-
-    private float calcolaValutazioneMedia() {
         if (this.recensioni == null || this.recensioni.isEmpty()) {
-            this.valutazioneMedia = 0.0f;
             return 0.0f;
         }
-
         float somma = 0.0f;
         for (ERecensione recensione : this.recensioni) {
             somma += recensione.getValutazione();
         }
-
-        this.valutazioneMedia = somma / this.recensioni.size();
-        return this.valutazioneMedia;
+        return somma / this.recensioni.size();
     }
 
     public void addVendite(int quantitaAcquistata) {
