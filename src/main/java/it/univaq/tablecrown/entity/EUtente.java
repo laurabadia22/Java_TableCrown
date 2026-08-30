@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "utente")
@@ -16,13 +18,11 @@ public class EUtente extends EPersona {
     @Column(name = "data_registrazione", nullable = false)
     private LocalDateTime dataRegistrazione;
 
-    // TODO: riattivare quando EOrdine è tradotta
-//    @OneToMany(mappedBy = "utente")
-//    private List<EOrdine> ordini = new ArrayList<>();
+    @OneToMany(mappedBy = "utente")
+    private List<EOrdine> ordini = new ArrayList<>();
 
-    // TODO: riattivare quando EIndirizzo è tradotta
-//    @OneToMany(mappedBy = "utente")
-//    private List<EIndirizzo> indirizzi = new ArrayList<>();
+    @OneToMany(mappedBy = "utente")
+    private List<EIndirizzo> indirizzi = new ArrayList<>();
 
     //Costruttore vuoto per Hibernate
     protected EUtente() {
@@ -47,27 +47,25 @@ public class EUtente extends EPersona {
         return calcolaEta(this.dataNascita);
     }
 
-    // TODO: riattivare quando EOrdine è tradotta
-//    public List<EOrdine> getOrdini() {
-//        return ordini;
-//    }
-//
-//    public void riceviOrdine(EOrdine ordine) {
-//        if (!this.ordini.contains(ordine)) {
-//            this.ordini.add(ordine);
-//        }
-//    }
+    public List<EOrdine> getOrdini() {
+        return ordini;
+    }
 
-    // TODO: riattivare quando EIndirizzo è tradotta
-//    public List<EIndirizzo> getIndirizzi() {
-//        return indirizzi;
-//    }
-//
-//    public void riceviIndirizzo(EIndirizzo indirizzo) {
-//        if (!this.indirizzi.contains(indirizzo)) {
-//            this.indirizzi.add(indirizzo);
-//        }
-//    }
+    public void riceviOrdine(EOrdine ordine) {
+        if (!this.ordini.contains(ordine)) {
+            this.ordini.add(ordine);
+        }
+    }
+
+    public List<EIndirizzo> getIndirizzi() {
+        return indirizzi;
+    }
+
+    public void riceviIndirizzo(EIndirizzo indirizzo) {
+        if (!this.indirizzi.contains(indirizzo)) {
+            this.indirizzi.add(indirizzo);
+        }
+    }
 
     // --- METODI DI DOMINIO ---
 
