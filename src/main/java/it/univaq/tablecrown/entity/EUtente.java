@@ -28,8 +28,16 @@ public class EUtente extends EPersona {
     protected EUtente() {
     }
 
+    //Costruttore di dominio
     public EUtente(String nomeUtente, String emailUtente, String passwordUtente, LocalDate dataNascita, byte[] imgUtente) {
         super(nomeUtente, emailUtente, passwordUtente, imgUtente);
+        this.impostaDataNascita(dataNascita);
+        this.dataRegistrazione = LocalDateTime.now();
+    }
+
+    //Costruttore senza immagine (passa null a super)
+    public EUtente(String nomeUtente, String emailUtente, String passwordUtente, LocalDate dataNascita) {
+        super(nomeUtente, emailUtente, passwordUtente, null); // null per imgPersona
         this.impostaDataNascita(dataNascita);
         this.dataRegistrazione = LocalDateTime.now();
     }

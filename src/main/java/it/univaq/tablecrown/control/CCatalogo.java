@@ -1,0 +1,186 @@
+package it.univaq.tablecrown.control;
+
+import it.univaq.tablecrown.entity.EBustine;
+import it.univaq.tablecrown.entity.EGiocoDaTavolo;
+import it.univaq.tablecrown.entity.EPortaDadi;
+import it.univaq.tablecrown.entity.EProdotto;
+import jakarta.persistence.EntityManager;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Controller deputato alla visualizzazione dei cataloghi dei prodotti e della ricerca.
+ */
+public class CCatalogo extends BaseController{
+
+    public CCatalogo() {
+        super();
+    }
+
+    /**
+     * Mostra la pagina del catalogo dei giochi da tavolo.
+     * URL: GET /catalogo/giochi-da-tavolo
+     */
+    public void mostraCatalogoGiochi(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
+
+        if (reindirizzaGestore(request, response)) return;
+
+        int pagina = estraiPaginaRichiesta(request);
+        String query = request.getParameter("q");
+        if (query != null) query = query.trim();
+
+        Map<String, Object> risultatoGrezzo;
+        Map<String, Object> filtri;
+
+        if (query != null && !query.isEmpty()) {
+            filtri = new HashMap<>();
+            risultatoGrezzo = FPersistentManager.getInstance().ricercaGiochi(em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+        } else {
+            filtri = estraiFiltriGiochi(request);
+            risultatoGrezzo = FPersistentManager.getInstance().findGiochi(em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
+        }
+
+        renderCatalogo(request, response, "catalogo_giochi", risultatoGrezzo, pagina, filtri, query);
+    }
+
+    /**
+     * Mostra il catalogo delle bustine.
+     * URL: GET /catalogo/bustine
+     */
+    public void mostraCatalogoBustine(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws ServletException, IOException {
+
+        if (reindirizzaGestore(request, response)) return;
+
+        int pagina = estraiPaginaRichiesta(request);
+        String query = request.getParameter("q");
+        if (query != null) query = query.trim();
+
+        Map<String, Object> risultatoGrezzo;
+        Map<String, Object> filtri;
+
+        if (query != null && !query.isEmpty()) {
+            filtri = new HashMap<>();
+            risultatoGrezzo = FPersistentManager.getInstance().ricercaBustine(
+                    em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
+            );
+        } else {
+            filtri = estraiFiltriPrezzo(request);
+            risultatoGrezzo = FPersistentManager.getInstance().findBustine(
+                    em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
+            );
+            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
+        }
+
+        renderCatalogo(request, response, "catalogo_bustine", risultatoGrezzo, pagina, filtri, query);
+    }
+
+    /**
+     * Mostra il catalogo dei porta dadi.
+     * URL: GET /catalogo/porta-dadi
+     */
+    public void mostraCatalogoPortaDadi(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws ServletException, IOException {
+
+        if (reindirizzaGestore(request, response)) return;
+
+        int pagina = estraiPaginaRichiesta(request);
+        String query = request.getParameter("q");
+        if (query != null) query = query.trim();
+
+        Map<String, Object> risultatoGrezzo;
+        Map<String, Object> filtri;
+
+        if (query != null && !query.isEmpty()) {
+            filtri = new HashMap<>();
+            risultatoGrezzo = FPersistentManager.getInstance().ricercaPortaDadi(
+                    em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
+            );
+        } else {
+            filtri = estraiFiltriPrezzo(request);
+            risultatoGrezzo = FPersistentManager.getInstance().findPortaDadi(
+                    em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
+            );
+            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
+        }
+
+        renderCatalogo(request, response, "catalogo_portadadi", risultatoGrezzo, pagina, filtri, query);
+    }
+
+    /**
+     * Mostra il catalogo unico delle offerte
+     * URL: GET /offerte
+     */
+    public void mostraOfferte(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws ServletException, IOException {
+
+        if (reindirizzaGestore(request, response)) return;
+
+        int pagina = estraiPaginaRichiesta(request);
+
+        Map<String, Object> risultatoGrezzo = FPersistentManager.getInstance().findProdottiInOfferta(
+                em, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
+        );
+
+        renderCatalogo(request, response, "offerte", risultatoGrezzo, pagina, new HashMap<>(), null);
+    }
+
+    /**
+     * Restituisce l'URL del catalogo specifico in base all'istanza del prodotto.
+     */
+    protected String urlCatalogo(EProdotto prodotto) {
+        if (prodotto instanceof EGiocoDaTavolo) {
+            return "/catalogo/giochi-da-tavolo";
+        }
+        if (prodotto instanceof EBustine) {
+            return "/catalogo/bustine";
+        }
+        if (prodotto instanceof EPortaDadi) {
+            return "/catalogo/porta-dadi";
+        }
+        return "/";
+    }
+
+    @Override
+    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+
+        Map<String, String> home = new HashMap<>();
+        home.put("label", "Home");
+        home.put("url", "/");
+        breadcrumbs.add(home);
+
+        Map<String, String> current = new HashMap<>();
+        switch (currentPage) {
+            case "catalogo_giochi":
+                current.put("label", "Giochi da tavolo");
+                current.put("url", "/catalogo/giochi-da-tavolo");
+                break;
+            case "catalogo_bustine":
+                current.put("label", "Bustine");
+                current.put("url", "/catalogo/bustine");
+                break;
+            case "catalogo_portadadi":
+                current.put("label", "Porta Dadi");
+                current.put("url", "/catalogo/porta-dadi");
+                break;
+            case "offerte":
+                current.put("label", "Offerte");
+                current.put("url", "/offerte");
+                break;
+            default:
+                return breadcrumbs;
+        }
+
+        breadcrumbs.add(current);
+        return breadcrumbs;
+    }
+}

@@ -6,6 +6,8 @@ import java.util.Enumeration;
 
 public class USession {
 
+    //TODO: CLASSE DA CANCELLARE!!!!!!
+
     //Distrugge completamente la sessione - usato al logout
     public static void destroySession(HttpSession session) {
         session.invalidate();
