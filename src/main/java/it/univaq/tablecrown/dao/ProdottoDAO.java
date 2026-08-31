@@ -26,7 +26,7 @@ public class ProdottoDAO extends GenericDAO {
         try {
             // Nota: il CASE WHEN va direttamente nell'ORDER BY, non serve
             // dichiararlo nel SELECT come "colonna nascosta" (non esiste in JPQL).
-            String jpql = "SELECT p FROM Prodotto p " +
+            String jpql = "SELECT p FROM EProdotto p " +
                     "JOIN p.prezzo pr " +
                     "WHERE pr.sconto > 0 " +
                     "AND p.disponibilitaProdotto = :disponibile " +
@@ -43,7 +43,7 @@ public class ProdottoDAO extends GenericDAO {
             List<EProdotto> risultati = query.getResultList();
 
 
-            String countJpql = "SELECT COUNT(p) FROM Prodotto p " +
+            String countJpql = "SELECT COUNT(p) FROM EProdotto p " +
                     "JOIN p.prezzo pr " +
                     "WHERE pr.sconto > 0 " +
                     "AND p.disponibilitaProdotto = :disponibile " +
@@ -89,10 +89,10 @@ public class ProdottoDAO extends GenericDAO {
     }
 
 
-    public List<EProdotto> findCorrelati(List<Integer> prodottiEsclusi, int limit) {
+    public List<EProdotto> findCorrelati(List<Long> prodottiEsclusi, int limit) {
         try {
             StringBuilder jpql = new StringBuilder(
-                    "SELECT p FROM Prodotto p " +
+                    "SELECT p FROM EProdotto p " +
                             "WHERE p.quantita > 0 " +
                             "AND p.disponibilitaProdotto = :disponibile "
             );
