@@ -72,8 +72,59 @@ public class PersistentManager {
         return dao.findCorrelati(prodottiEsclusi, limit);
     }
 
+    // =========================================================================
+    // 3. METODI SPECIFICI: PORTA DADI
+    // =========================================================================
 
+    public Map<String, Object> PMfindPortaDadi(Map<String, Object> filtri, int limit, int offset) {
+        PortaDadiDAO dao = new PortaDadiDAO(em);
+        return dao.findPortaDadi(filtri, limit, offset);
+    }
 
-    // Man mano che creerai UtenteDAO, OrdineDAO, ecc.,
-    // aggiungerai qui i loro metodi specifici!
+    public Map<String, Object> PMricercaPortaDadi(String stringaDiRicerca, int limit, int offset) {
+        PortaDadiDAO dao = new PortaDadiDAO(em);
+        return dao.ricercaPortaDadi(stringaDiRicerca, limit, offset);
+    }
+
+    // =========================================================================
+    // 4. METODI SPECIFICI: BUSTINE
+    // =========================================================================
+
+    public Map<String, Object> PMfindBustine(Map<String, Object> filtri, int limit, int offset) {
+        BustineDAO dao = new BustineDAO(em);
+        return dao.findBustine(filtri, limit, offset);
+    }
+
+    public Map<String, Object> PMricercaBustine(String stringaDiRicerca, int limit, int offset) {
+        BustineDAO dao = new BustineDAO(em);
+        return dao.ricercaBustine(stringaDiRicerca, limit, offset);
+    }
+
+    // =========================================================================
+    // 5. METODI SPECIFICI: GIOCHI DA TAVOLO
+    // =========================================================================
+
+    public Map<String, Object> PMfindGiochi(Map<String, Object> filtri, int limit, int offset) {
+        GiocoDaTavoloDAO dao = new GiocoDaTavoloDAO(em);
+        return dao.findGiochi(filtri, limit, offset);
+    }
+
+    public Map<String, Object> PMricercaGiochi(String stringaDiRicerca, int limit, int offset) {
+        GiocoDaTavoloDAO dao = new GiocoDaTavoloDAO(em);
+        return dao.ricercaGiochi(stringaDiRicerca, limit, offset);
+    }
+
+    // =========================================================================
+    // 6. METODI SPECIFICI: ORDINI
+    // =========================================================================
+
+    public int PMcontaOrdiniTotali() {
+        OrdineDAO dao = new OrdineDAO(em);
+        return dao.contaOrdiniTotali();
+    }
+
+    public float PMcontaVenditeTotali() {
+        OrdineDAO dao = new OrdineDAO(em);
+        return dao.contaVenditeTotali();
+    }
 }
