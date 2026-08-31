@@ -89,7 +89,7 @@ public class ProdottoDAO extends GenericDAO {
     }
 
 
-    public List<EProdotto> findCorrelati(List<Integer> prodottiEsclusi, int limit) {
+    public List<EProdotto> findCorrelati(List<Long> prodottiEsclusi, int limit) {
         try {
             StringBuilder jpql = new StringBuilder(
                     "SELECT p FROM EProdotto p " +
