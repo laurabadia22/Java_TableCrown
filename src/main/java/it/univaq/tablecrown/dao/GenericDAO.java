@@ -9,7 +9,7 @@ import java.util.Map;
 public class GenericDAO {
 
     // Contiene l'EntityManager passato dall'esterno
-    private EntityManager em;
+    protected EntityManager em;
 
     public GenericDAO(EntityManager em) {
         this.em = em;
