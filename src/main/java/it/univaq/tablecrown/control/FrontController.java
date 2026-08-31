@@ -76,6 +76,7 @@ public class FrontController extends HttpServlet {
         String cleanPath = path.startsWith("/") ? path.substring(1) : path;
         String[] parti = cleanPath.isEmpty() ? new String[]{"home"} : cleanPath.split("/");
         String routePrincipale = parti[0].toLowerCase();
+        String sottoRoute = parti.length > 1 ? parti[1].toLowerCase() : "";
         String metodoHTTP = request.getMethod();
 
         //Apertura dell'EntityManager dedicato alla singola Request
@@ -87,6 +88,77 @@ public class FrontController extends HttpServlet {
                 case "home":
                     if ("GET".equals(metodoHTTP)) {
                         new CHome().mostraHome(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "catalogo":
+                    if (!"GET".equals(metodoHTTP)) {
+                        mostra404(response);
+                        break;
+                    }
+
+                    CCatalogo catalogoController = new CCatalogo();
+                    switch (sottoRoute) {
+                        case "giochi-da-tavolo":
+                            catalogoController.mostraCatalogoGiochi(request, response, em);
+                            break;
+                        case "bustine":
+                            catalogoController.mostraCatalogoBustine(request, response, em);
+                            break;
+                        case "porta-dadi":
+                            catalogoController.mostraCatalogoPortaDadi(request, response, em);
+                            break;
+                        default:
+                            mostra404(response);
+                            break;
+                    }
+                    break;
+
+                case "offerte":
+                    if ("GET".equals(metodoHTTP)) {
+                        new CCatalogo().mostraOfferte(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "accedi":
+                    if ("GET".equals(metodoHTTP)) {
+                        new CAutenticazione().mostraFormLogin(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "registrati":
+                    if ("GET".equals(metodoHTTP)) {
+                        new CAutenticazione().mostraFormRegistrazione(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "logout":
+                    if ("GET".equals(metodoHTTP)) {
+                        new CAutenticazione().logout(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "login":
+                    if ("POST".equals(metodoHTTP)) {
+                        new CAutenticazione().login(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "registrazione":
+                    if ("POST".equals(metodoHTTP)) {
+                        new CAutenticazione().registrazione(request, response, em);
                     } else {
                         mostra404(response);
                     }
