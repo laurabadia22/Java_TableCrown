@@ -23,8 +23,11 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
     public Map<String, Object> findGiochi(Map<String, Object> filtri, int limit, int offset) {
         try {
+            //una stringa che crescerà dinamicamente per costruire la query completa, al momento ne contiene solo il corpo principale
             StringBuilder jpqlBase = new StringBuilder("FROM EGiocoDaTavolo g JOIN g.prezzo pr ");
+            //un array ocn tutte le condizioni che verranno applicate, sarano poi unite tramite degli AND
             List<String> condizioni = new ArrayList<>();
+            //serve per evitare SQLinjection, conterrà tutti i "setparameter" che saranno applicati tutti insieme
             Map<String, Object> parametri = new HashMap<>();
 
             // 1. Filtri Enum Base
@@ -221,19 +224,27 @@ public class GiocoDaTavoloDAO extends GenericDAO {
     // =========================================================================
     // HELPER: Convertitore Universale di Enum
     // =========================================================================
+    //metodo di supporto per questa classe, funziona per un qualsiasi tipo di enum <E>
     private <E extends Enum<E>> List<E> parseEnumList(Object obj, Class<E> enumClass) {
         List<E> result = new ArrayList<>();
         if (obj == null) return result;
 
+        //l'oggetto è un'istanza di una qualsiasi lista di oggetti generici?
         if (obj instanceof List<?>) {
+            //(List<?>) obj è un cast di obj, serve per trattarlo come una list, di qualsiasi tipo <?> per poterci iterare sopra
             for (Object val : (List<?>) obj) {
+                //controllo se il valore che sto controllando è già un enumerativo del tipo che mi è stato passato, in tal caso lo aggiunge direttamente alla lista risultato
                 if (enumClass.isInstance(val)) {
                     result.add(enumClass.cast(val));
-                } else if (val instanceof String) {
+                }
+                //controllo se il valore è una stringa e lo converto nel tipo di enumerativo passato
+                //altrimenti restituisco un'eccezione senza bloccare l'esecuzione
+                else if (val instanceof String) {
                     try { result.add(Enum.valueOf(enumClass, ((String) val).toUpperCase())); }
                     catch (IllegalArgumentException ignored) {}
                 }
             }
+        //l'oggetto è un'istanza di un
         } else if (obj instanceof String[]) {
             for (String val : (String[]) obj) {
                 try { result.add(Enum.valueOf(enumClass, val.toUpperCase())); }
