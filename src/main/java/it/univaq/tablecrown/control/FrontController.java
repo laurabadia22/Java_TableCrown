@@ -28,7 +28,11 @@ public class FrontController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         emf = Persistence.createEntityManagerFactory("tablecrown-pu");
-        it.univaq.tablecrown.utility.UFreeMarker.init(getServletContext());
+        try {
+            it.univaq.tablecrown.utility.UFreeMarker.init(getServletContext());
+        } catch (IOException e) {
+            throw new ServletException("Errore nell'inizializzazione di FreeMarker", e);
+        }
     }
 
     /**
