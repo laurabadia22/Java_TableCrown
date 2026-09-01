@@ -30,7 +30,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             //serve per evitare SQLinjection, conterrà tutti i "setparameter" che saranno applicati tutti insieme
             Map<String, Object> parametri = new HashMap<>();
 
-            // 1. Filtri Enum Base
+            //Filtri Enum Base
             if (filtri.containsKey("difficolta")) {
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
                 if (!enumDiff.isEmpty()) {
@@ -244,7 +244,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                     catch (IllegalArgumentException ignored) {}
                 }
             }
-        //l'oggetto è un'istanza di un
+        //l'oggetto è un array di stringhe
         } else if (obj instanceof String[]) {
             for (String val : (String[]) obj) {
                 try { result.add(Enum.valueOf(enumClass, val.toUpperCase())); }
