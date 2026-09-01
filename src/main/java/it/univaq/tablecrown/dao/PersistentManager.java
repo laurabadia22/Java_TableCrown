@@ -53,6 +53,16 @@ public class PersistentManager {
         return dao.getRicerca(entityClass, str, field, limit, offset);
     }
 
+    public <T> List<T> getObjListOrdered(Class<T> entityClass, String field, String ordinationType, int quantity) {
+        GenericDAO dao = new GenericDAO(em);
+        return dao.getObjListOrdered(entityClass, field, ordinationType, quantity);
+    }
+
+    public <T> List<T> getObjListBetween(Class<T> entityClass, String field, Object start, Object end) {
+        GenericDAO dao = new GenericDAO(em);
+        return dao.getObjListBetween(entityClass, field, start, end);
+    }
+
     // =========================================================================
     // 2. METODI SPECIFICI (Delegati ai DAO specifici come ProdottoDAO)
     // =========================================================================
