@@ -47,7 +47,7 @@ public abstract class BaseController {
      */
     public void preparaDatiLayout(HttpServletRequest request, String currentPage, Map<String, Object> data) {
         //Dati globali necessari per ogni pagina
-        request.setAttribute("baseUrl", request.getContextPath());
+        request.setAttribute("base_url", request.getContextPath());
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("breadcrumbs", getBreadcrumbs(currentPage));
 
