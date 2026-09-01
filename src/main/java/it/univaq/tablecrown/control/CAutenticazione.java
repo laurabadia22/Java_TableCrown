@@ -1,5 +1,6 @@
 package it.univaq.tablecrown.control;
 
+import it.univaq.tablecrown.dao.PersistentManager;
 import it.univaq.tablecrown.entity.EGestore;
 import it.univaq.tablecrown.entity.EUtente;
 import it.univaq.tablecrown.utility.UFlashMessage;
@@ -34,7 +35,7 @@ public class CAutenticazione extends BaseController{
      * Mostra il form di login (Richiesta GET).
      * URL: GET /accedi
      */
-    public void mostraFormLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void mostraFormLogin(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
         if (isLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
@@ -61,7 +62,7 @@ public class CAutenticazione extends BaseController{
      * Mostra il form di registrazione (Richiesta GET).
      * URL: GET /registrati
      */
-    public void mostraFormRegistrazione(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void mostraFormRegistrazione(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
         if (isLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
@@ -76,7 +77,7 @@ public class CAutenticazione extends BaseController{
      * Gestisce l'invio dei dati del form di Login (Richiesta POST).
      * URL: POST /login
      */
-    public void login(HttpServletRequest request, HttpServletRequest response, EntityManager em) throws IOException {
+    public void login(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
 
         HttpSession session = request.getSession(true);
 
@@ -97,10 +98,13 @@ public class CAutenticazione extends BaseController{
             return;
         }
 
+        //Istanziazione del PersistentManager per questa specifica richiesta
+        PersistentManager pm = new PersistentManager(em);
+
         //Controllo credenziali sul db (Utente o Gestore)
-        Object persona = FPersistentManager.getInstance().getObjOnAttribute(em, EUtente.class, "email", email); // TODO: I METODI DEL PM DEVONO PRENDERE IN INGRESSO ANCHE L'em
+        Object persona = pm.PMgetObjOnAttribute(EUtente.class, "email", email);
         if (persona == null) {
-            persona = FPersistentManager.getInstance().getObjOnAttribute(em, EGestore.class, "email", email);
+            persona = pm.PMgetObjOnAttribute(EGestore.class, "email", email);
         }
 
         boolean passwordValida = false;
@@ -142,7 +146,7 @@ public class CAutenticazione extends BaseController{
      * Gestisce la registrazione di un nuovo utente (Richiesta POST)
      * URL: POST /registrazione
      */
-    public void registrazione(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws IOException {
+    public void registrazione(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
 
         String nome = request.getParameter("nome");
@@ -165,7 +169,10 @@ public class CAutenticazione extends BaseController{
             return;
         }
 
-        boolean esiste = FPersistentManager.getInstance().verificaEsistenza(em, EUtente.class, "email", email);
+        //Istanziazione del PersistentManager
+        PersistentManager pm = new PersistentManager(em);
+
+        boolean esiste = pm.PMverificaEsistenza(EUtente.class, "email", email);
         if (esiste) {
             UFlashMessage.addMessage(session, "danger", "Questa email è già registrata.");
             response.sendRedirect(request.getContextPath() + "/registrati");
@@ -176,7 +183,7 @@ public class CAutenticazione extends BaseController{
             LocalDate dataNascita = LocalDate.parse(dataNascitaStr);
             EUtente nuovoUtente = new EUtente(nome, email, password, dataNascita);
 
-            boolean salvato = FPersistentManager.getInstance().saveObj(em, nuovoUtente);
+            boolean salvato = pm.PMsaveObj(nuovoUtente);
 
             if (salvato) {
                 UFlashMessage.addMessage(session, "success", "Registrazione completata! Effettua il login.");
@@ -198,7 +205,7 @@ public class CAutenticazione extends BaseController{
      * Gestisce il logout dell'utente (Richiesta GET).
      * URL: GET /logout
      */
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void logout(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (session != null) {
             session.invalidate(); //distrugge la vecchia sessione

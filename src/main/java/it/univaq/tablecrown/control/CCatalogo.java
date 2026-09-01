@@ -1,5 +1,6 @@
 package it.univaq.tablecrown.control;
 
+import it.univaq.tablecrown.dao.PersistentManager;
 import it.univaq.tablecrown.entity.EBustine;
 import it.univaq.tablecrown.entity.EGiocoDaTavolo;
 import it.univaq.tablecrown.entity.EPortaDadi;
@@ -39,12 +40,14 @@ public class CCatalogo extends BaseController{
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
+        PersistentManager pm = new PersistentManager(em);
+
         if (query != null && !query.isEmpty()) {
             filtri = new HashMap<>();
-            risultatoGrezzo = FPersistentManager.getInstance().ricercaGiochi(em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+            risultatoGrezzo = pm.PMricercaGiochi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
         } else {
             filtri = estraiFiltriGiochi(request);
-            risultatoGrezzo = FPersistentManager.getInstance().findGiochi(em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+            risultatoGrezzo = pm.PMfindGiochi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
@@ -67,16 +70,14 @@ public class CCatalogo extends BaseController{
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
+        PersistentManager pm = new PersistentManager(em);
+
         if (query != null && !query.isEmpty()) {
             filtri = new HashMap<>();
-            risultatoGrezzo = FPersistentManager.getInstance().ricercaBustine(
-                    em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
-            );
+            risultatoGrezzo = pm.PMricercaBustine(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
         } else {
             filtri = estraiFiltriPrezzo(request);
-            risultatoGrezzo = FPersistentManager.getInstance().findBustine(
-                    em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
-            );
+            risultatoGrezzo = pm.PMfindBustine(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
@@ -99,16 +100,14 @@ public class CCatalogo extends BaseController{
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
+        PersistentManager pm = new PersistentManager(em);
+
         if (query != null && !query.isEmpty()) {
             filtri = new HashMap<>();
-            risultatoGrezzo = FPersistentManager.getInstance().ricercaPortaDadi(
-                    em, query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
-            );
+            risultatoGrezzo = pm.PMricercaPortaDadi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
         } else {
             filtri = estraiFiltriPrezzo(request);
-            risultatoGrezzo = FPersistentManager.getInstance().findPortaDadi(
-                    em, filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
-            );
+            risultatoGrezzo = pm.PMfindPortaDadi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
@@ -126,9 +125,9 @@ public class CCatalogo extends BaseController{
 
         int pagina = estraiPaginaRichiesta(request);
 
-        Map<String, Object> risultatoGrezzo = FPersistentManager.getInstance().findProdottiInOfferta(
-                em, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA
-        );
+        PersistentManager pm = new PersistentManager(em);
+
+        Map<String, Object> risultatoGrezzo = pm.PMfindProdottiInOfferta(RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
 
         renderCatalogo(request, response, "offerte", risultatoGrezzo, pagina, new HashMap<>(), null);
     }

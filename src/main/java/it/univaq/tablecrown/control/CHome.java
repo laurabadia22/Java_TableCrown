@@ -1,5 +1,7 @@
 package it.univaq.tablecrown.control;
 
+import it.univaq.tablecrown.dao.PersistentManager;
+import it.univaq.tablecrown.entity.EProdotto;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,17 +33,26 @@ public class CHome extends BaseController {
             return;
         }
 
-        //Recupero dei prodotti in offerta
-        // TODO: serve ancora il persistent manager con i suoi metodi
+        //Istanziazione del PersistentManager
+        PersistentManager pm = new PersistentManager(em);
 
-        //Recupero dei nuovi arrivi ordinati per data di pubblicazione
-        // TODO
+        //Recupero dei prodotti in offerta (max 5 prodotti)
+        Map<String, Object> mappaOfferte = pm.PMfindProdottiInOfferta(5, 0);
 
-        //Preparazione della mappa con i dati della pagina
-        // TODO
+        @SuppressWarnings("unchecked")
+        List<EProdotto> offerte = (List<EProdotto>) mappaOfferte.getOrDefault("risultati", new ArrayList<EProdotto>());
+
+        //Recupero dei nuovi arrivi ordinati per data di pubblicazione decrescente (max 10)
+        List<EProdotto> nuoviArrivi = pm.PMgetObjListOrdered(EProdotto.class, "dataPubblicazione", "DESC", 10);
+
+        //Preparazione della mappa con i dati specifici della pagina
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("offerte", offerte);
+        datiPagina.put("nuoviArrivi", nuoviArrivi);
 
         //Popolamento delle variabili globali della Request e inoltro dei dati verso Presentation
-        // TODO
+        preparaDatiLayout(request, "home", datiPagina);
+        request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
     }
 
     /**
