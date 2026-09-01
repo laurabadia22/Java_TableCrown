@@ -224,7 +224,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
     // =========================================================================
     // HELPER: Convertitore Universale di Enum
     // =========================================================================
-    //metodo di supporto per questa classe, funziona per un qualsiasi tipo di enum <E>
+    //metodo di supporto per questa classe utilizzato nel metofdo find, funziona per un qualsiasi tipo di enum <E>
     private <E extends Enum<E>> List<E> parseEnumList(Object obj, Class<E> enumClass) {
         List<E> result = new ArrayList<>();
         if (obj == null) return result;
