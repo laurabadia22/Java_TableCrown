@@ -10,8 +10,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -158,8 +160,43 @@ public abstract class BaseController {
     }
 
     //==========================================================================
-    // METODI UTILI PER PASSAGGIO DATI A PRESENTATION
+    // METODI UTILI IN COMUNE FRA I CONTROLLER
     //==========================================================================
+
+    // GENERICI
+
+    /**
+     * Formatta un importo come stringa con 2 decimali fissi e punto come separatore.
+     */
+    protected String formattaImporto(double importo) {
+        return String.format(Locale.US, "%.2f", importo);
+    }
+
+    /**
+     * Recupera in sicurezza un Part (file caricato) dalla richiesta HTTP multipart.
+     */
+    //TODO: DA RIVEDERE
+    protected Part estraiPart(HttpServletRequest request, String nomeCampo) {
+        try {
+            return request.getPart(nomeCampo);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Converte il Part di un'immagine caricata nel relativo array di byte (byte[]).
+     * Restituisce null se l'immagine non è stata selezionata nel form.
+     */
+    //TODO: DA RIVEDERE
+    protected byte[] estraiImmagine(Part filePart) throws IOException {
+        if (filePart == null || filePart.getSize() == 0 || filePart.getSubmittedFileName() == null || filePart.getSubmittedFileName().trim().isEmpty()) {
+            return null;
+        }
+        try (InputStream is = filePart.getInputStream()) {
+            return is.readAllBytes();
+        }
+    }
 
     // CATALOGO/PRODOTTI
 
