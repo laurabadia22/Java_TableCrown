@@ -1,4 +1,4 @@
-package it.univaq.tablecrown.dao;
+/*package it.univaq.tablecrown.dao;
 
 import it.univaq.tablecrown.entity.EProdotto;
 import it.univaq.tablecrown.entity.EOrdine;
@@ -92,6 +92,7 @@ public class UtenteDAO extends GenericDAO {
         }
     }
 
+
     public List<ERecensione> getRecensioniSegnalateDiUtente(int idUtente) {
         try {
             String jpql = "SELECT DISTINCT r FROM ESegnalazione s JOIN s.recensione r " +
@@ -107,3 +108,4 @@ public class UtenteDAO extends GenericDAO {
         }
     }
 }
+*/

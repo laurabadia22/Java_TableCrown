@@ -5,7 +5,7 @@ import it.univaq.tablecrown.entity.enumerativi.DisponibilitaProdotto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,9 +96,12 @@ public class PortaDadiDAO extends GenericDAO {
 
             // 4. Query: COUNT
             TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(p) " + jpqlBase.toString(), Long.class);
+            parametri.forEach(queryCount::setParameter);
+            Long totale = queryCount.getSingleResult();
 
             // 5. Query: MIN / MAX Prezzo
             TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(pr.valore), MAX(pr.valore) " + jpqlBase.toString(), Object[].class);
+            parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = queryMinMax.getSingleResult();
 
             double prezzoMinimo = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
