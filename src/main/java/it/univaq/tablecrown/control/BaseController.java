@@ -1,8 +1,11 @@
 package it.univaq.tablecrown.control;
 
+import it.univaq.tablecrown.dao.PersistentManager;
 import it.univaq.tablecrown.entity.EGestore;
+import it.univaq.tablecrown.entity.EProdotto;
 import it.univaq.tablecrown.entity.EUtente;
 import it.univaq.tablecrown.utility.UFlashMessage;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -158,7 +161,7 @@ public abstract class BaseController {
     // METODI UTILI PER PASSAGGIO DATI A PRESENTATION
     //==========================================================================
 
-    // CATALOGO
+    // CATALOGO/PRODOTTI
 
     /**
      * Valida e restituisce il numero di pagina richiesto dalla query GET.
@@ -321,6 +324,94 @@ public abstract class BaseController {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    /**
+     * Restituisce prodotti "correlati" delegando la ricerca al PersistentManager,
+     * escludendo gli ID passati in idsEsclusi e limitando il risultato a limit.
+     */
+    protected List<EProdotto> prodottiCorrelati(EntityManager em, List<Long> idsEsclusi, int limit) {
+        if (idsEsclusi == null) {
+            idsEsclusi = Collections.emptyList();
+        }
+        PersistentManager pm = new PersistentManager(em);
+        return pm.PMfindCorrelati(idsEsclusi, limit);
+    }
+
+    /**
+     * Overload di comodità con limit di default a 8.
+     */
+    protected List<EProdotto> prodottiCorrelati(EntityManager em, List<Long> idsEsclusi) {
+        return prodottiCorrelati(em, idsEsclusi, 8);
+    }
+
+    /**
+     * Simile a utenteCorrente(), ma utile in contesti in cui il login è facoltativo
+     * (es. pagine pubbliche che mostrano contenuto diverso se l'utente è loggato).
+     * Non forza mai un redirect: restituisce null se non loggato o senza ruolo 'utente'.
+     */
+    protected EUtente utenteCorrenteOpzionale(HttpServletRequest request, EntityManager em) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+
+        Object utenteLoggato = session.getAttribute("utenteLoggato");
+        if (utenteLoggato instanceof EUtente) {
+            return (EUtente) utenteLoggato;
+        }
+
+        // Se in sessione è stato salvato idPersona (Long o Integer)
+        Object idPersonaObj = session.getAttribute("id_persona");
+        Long idPersona = null;
+        if (idPersonaObj instanceof Long) {
+            idPersona = (Long) idPersonaObj;
+        } else if (idPersonaObj instanceof Integer) {
+            idPersona = ((Integer) idPersonaObj).longValue();
+        }
+
+        if (idPersona == null) {
+            return null;
+        }
+
+        PersistentManager pm = new PersistentManager(em);
+        return pm.PMgetObjOnAttribute(EUtente.class, "idPersona", idPersona);
+    }
+
+    /**
+     * Recupera l'utente correntemente loggato nel DB, verificando che abbia il ruolo 'utente'.
+     * Se l'utente non è valido o non viene trovato nel DB, invalida la sessione, ripulisce
+     * i cookie e reindirizza alla pagina di login.
+     *
+     * @return L'istanza di EUtente, oppure null se la risposta è già stata reindirizzata (redirect).
+     */
+    protected EUtente utenteCorrente(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws IOException {
+
+        // Verifica del ruolo obbligatorio
+        if (!requireRole(request, response, EUtente.class)) {
+            return null; // requireRole ha già gestito il redirect se fallito
+        }
+
+        EUtente utente = utenteCorrenteOpzionale(request, em);
+
+        // Difensivo: se per qualsiasi motivo non troviamo l'utente nel db,
+        // puliamo la sessione e lo reindirizziamo al login
+        if (utente == null) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate(); // Invalida e distrugge la sessione HTTP
+            }
+
+            // Creiamo una nuova sessione solo per impostare il messaggio flash
+            HttpSession newSession = request.getSession(true);
+            UFlashMessage.addMessage(newSession, "danger", "Sessione non valida o scaduta. Effettuare nuovamente il login.");
+
+            response.sendRedirect(request.getContextPath() + "/accedi");
+            return null;
+        }
+
+        return utente;
     }
 
 
