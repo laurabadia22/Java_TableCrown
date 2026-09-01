@@ -29,7 +29,7 @@ public class EUtente extends EPersona {
     }
 
     //Costruttore di dominio
-    public EUtente(String nomeUtente, String emailUtente, String passwordUtente, LocalDate dataNascita, byte[] imgUtente) {
+    public EUtente(String nomeUtente, String emailUtente, String passwordUtente, LocalDate dataNascita, String imgUtente) {
         super(nomeUtente, emailUtente, passwordUtente, imgUtente);
         this.impostaDataNascita(dataNascita);
         this.dataRegistrazione = LocalDateTime.now();

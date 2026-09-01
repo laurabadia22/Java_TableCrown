@@ -14,7 +14,7 @@ public class EPortaDadi extends EProdotto{
     }
 
     //Costruttore con logica di dominio
-    public EPortaDadi(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto, float prezzo){
+    public EPortaDadi(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, String imgProdotto, float prezzo){
         super(nomeProdotto, descrizioneProdotto, disponibilitaProdotto, quantita, imgProdotto, prezzo);
     }
 }

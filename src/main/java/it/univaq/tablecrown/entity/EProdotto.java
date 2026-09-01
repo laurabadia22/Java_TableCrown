@@ -19,9 +19,8 @@ public abstract class EProdotto {
     @Column(name = "nome_prodotto", nullable = false, length = 255)
     private String nomeProdotto;
 
-    @Lob
-    @Column(name = "img_prodotto")
-    private byte[] imgProdotto;
+    @Column(name = "img_prodotto", length = 255)
+    private String imgProdotto;
 
     @Column(name = "descrizione_prodotto", columnDefinition = "TEXT", nullable = false)
     private String descrizioneProdotto;
@@ -55,7 +54,7 @@ public abstract class EProdotto {
     }
 
     //Costruttore con logica di dominio
-    protected EProdotto(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto, float prezzo) {
+    protected EProdotto(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, String imgProdotto, float prezzo) {
         this.rinominaProdotto(nomeProdotto);
         this.aggiornaDescrizione(descrizioneProdotto);
         this.aggiornaImg(imgProdotto);
@@ -75,7 +74,7 @@ public abstract class EProdotto {
         return nomeProdotto;
     }
 
-    public byte[] getImgProdotto() {
+    public String getImgProdotto() {
         return imgProdotto;
     }
 
@@ -131,7 +130,7 @@ public abstract class EProdotto {
         this.descrizioneProdotto = descrizioneProdotto;
     }
 
-    public void aggiornaImg(byte[] imgProdotto) {
+    public void aggiornaImg(String imgProdotto) {
         this.imgProdotto = imgProdotto;
     }
 

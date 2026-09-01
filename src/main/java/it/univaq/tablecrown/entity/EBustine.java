@@ -15,7 +15,7 @@ public class EBustine extends EProdotto{
     }
 
     // Costruttore completo che invoca il costruttore della classe padre (EProdotto)
-    public EBustine(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, byte[] imgProdotto, float prezzo) {
+    public EBustine(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, String imgProdotto, float prezzo) {
         super(nomeProdotto, descrizioneProdotto, disponibilitaProdotto, quantita, imgProdotto, prezzo);
     }
 }
