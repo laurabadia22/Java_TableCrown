@@ -11,7 +11,7 @@ public class EGestore extends EPersona {
     protected EGestore() {
     }
 
-    public EGestore(String nome, String email, String password, byte[] img) {
+    public EGestore(String nome, String email, String password, String img) {
         super(nome, email, password, img);
     }
 }

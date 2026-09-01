@@ -19,9 +19,8 @@ public abstract class EPersona {
     @Column(name = "nome_persona", nullable = false, length = 100)
     private String nomePersona;
 
-    @Lob
-    @Column(name = "img_persona")
-    private byte[] imgPersona;
+    @Column(name = "img_persona", length = 255)
+    private String imgPersona;
 
     @Column(name = "email_persona", nullable = false, length = 180, unique = true)
     private String emailPersona;
@@ -35,7 +34,7 @@ public abstract class EPersona {
     }
 
     //Costruttore di dominio
-    protected EPersona(String nomePersona, String emailPersona, String passwordPersona, byte[] imgPersona) {
+    protected EPersona(String nomePersona, String emailPersona, String passwordPersona, String imgPersona) {
         this.rinomina(nomePersona);
         this.cambiaEmail(emailPersona);
         this.cambiaPassword(passwordPersona);
@@ -51,7 +50,7 @@ public abstract class EPersona {
         return nomePersona;
     }
 
-    public byte[] getImgPersona() {
+    public String getImgPersona() {
         return imgPersona;
     }
 
@@ -83,8 +82,8 @@ public abstract class EPersona {
         this.passwordPersona = BCrypt.hashpw(nuovaPassword, BCrypt.gensalt());
     }
 
-    public void aggiornaImmagine(byte[] imgBlob) {
-        this.imgPersona = imgBlob;
+    public void aggiornaImmagine(String img) {
+        this.imgPersona = img;
     }
 
     public boolean verificaPassword(String password) {

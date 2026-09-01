@@ -60,7 +60,7 @@ public class EGiocoDaTavolo extends EProdotto{
         super();
     }
 
-    public EGiocoDaTavolo(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, float prezzo, Set<Categoria> categoria, Set<String> componenti, DifficoltaGioco difficolta, LinguaGioco lingua, byte[] imgProdotto, EGiocoDaTavolo giocoBase, int numeroGiocatoriMin, int numeroGiocatoriMax, int etaMinima, int durataMedia, LivelloDannoGiochi livelloDanno, String descrizioneDanno) {
+    public EGiocoDaTavolo(String nomeProdotto, String descrizioneProdotto, DisponibilitaProdotto disponibilitaProdotto, int quantita, float prezzo, Set<Categoria> categoria, Set<String> componenti, DifficoltaGioco difficolta, LinguaGioco lingua, String imgProdotto, EGiocoDaTavolo giocoBase, int numeroGiocatoriMin, int numeroGiocatoriMax, int etaMinima, int durataMedia, LivelloDannoGiochi livelloDanno, String descrizioneDanno) {
         super(nomeProdotto, descrizioneProdotto, disponibilitaProdotto, quantita, imgProdotto, prezzo);
         this.categoria = new LinkedHashSet<>(categoria);
         this.verificaCategoria();
