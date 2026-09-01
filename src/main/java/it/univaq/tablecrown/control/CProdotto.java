@@ -72,7 +72,7 @@ public class CProdotto extends BaseController{
         preparaDatiLayout(request, "prodotto", datiPagina);
 
         // Inoltro alla pagina JSP
-        request.getRequestDispatcher("/WEB-INF/views/dettaglio_prodotto.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/dettaglio_prodotto.ftl").forward(request, response);
     }
 
     //==========================================================================

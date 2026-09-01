@@ -21,13 +21,10 @@ import java.util.Map;
 /**
  * Controller deputato alla gestione degli indirizzi di spedizione dell'utente.
  */
-public class CIndirizzo<ObjectMapper> extends BaseController{
-
-    private final ObjectMapper objectMapper;
+public class CIndirizzo extends BaseController{
 
     public CIndirizzo() {
         super();
-        this.objectMapper = new ObjectMapper(); //TODO: NON VA BENEEE
     }
 
     //==========================================================================
@@ -49,39 +46,6 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
         }
     }
 
-    /**
-     * Invia una risposta in formato JSON senza richiedere librerie esterne.
-     */
-    //TODO: DA RIVEDERE/CANCELLARE O IN CASO AGGIUNGERE LIBRERIA jackson AL pom.xml
-    private void inviaRispostaJson(HttpServletResponse response, Map<String, Object> jsonMap) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        StringBuilder json = new StringBuilder("{");
-        boolean primo = true;
-
-        for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-            if (!primo) {
-                json.append(",");
-            }
-            json.append("\"").append(entry.getKey()).append("\":");
-
-            Object val = entry.getValue();
-            if (val instanceof Number || val instanceof Boolean) {
-                json.append(val);
-            } else {
-                String strVal = String.valueOf(val).replace("\"", "\\\"");
-                json.append("\"").append(strVal).append("\"");
-            }
-            primo = false;
-        }
-        json.append("}");
-
-        PrintWriter out = response.getWriter();
-        out.print(json.toString());
-        out.flush();
-    }
-
     //==========================================================================
     // AZIONI OPERATIVE (POST)
     //==========================================================================
@@ -101,7 +65,6 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
             return;
         }
 
-        boolean isAjax = UHTTPMethods.isAjax(request);
         HttpSession session = request.getSession(true);
 
         Boolean daCheckoutObj = (Boolean) session.getAttribute("provenienza_checkout");
@@ -144,30 +107,14 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
                 throw new RuntimeException("Si è verificato un errore durante l'aggiunta dell'indirizzo.");
             }
 
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "ok");
-                jsonResponse.put("message", "Indirizzo salvato con successo!");
-                jsonResponse.put("redirect", redirectUrl);
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
-
             UFlashMessage.addMessage(session, "success", "Nuovo indirizzo salvato!");
-            response.sendRedirect(redirectUrl);
 
         } catch (Exception e) {
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", e.getMessage());
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
-
             UFlashMessage.addMessage(session, "danger", e.getMessage());
-            response.sendRedirect(redirectUrl);
         }
+
+        response.sendRedirect(redirectUrl);
+
     }
 
     /**
@@ -186,7 +133,6 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
             return;
         }
 
-        boolean isAjax = UHTTPMethods.isAjax(request);
         HttpSession session = request.getSession(true);
         PersistentManager pm = new PersistentManager(em);
 
@@ -215,29 +161,15 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
                 throw new RuntimeException("Si è verificato un errore durante l'impostazione dell'indirizzo come predefinito.");
             }
 
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "ok");
-                jsonResponse.put("message", "Indirizzo impostato come predefinito!");
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
-
             UFlashMessage.addMessage(session, "success", "Indirizzo predefinito aggiornato con successo!");
-            response.sendRedirect(request.getContextPath() + "/profilo/indirizzi");
 
         } catch (Exception e) {
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", e.getMessage());
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
 
             UFlashMessage.addMessage(session, "danger", e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/profilo/indirizzi");
         }
+
+        response.sendRedirect(request.getContextPath() + "/profilo/indirizzi");
+
     }
 
     /**
@@ -256,7 +188,6 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
             return;
         }
 
-        boolean isAjax = UHTTPMethods.isAjax(request);
         String referer = UHTTPMethods.getReferer(request, request.getContextPath() + "/profilo/indirizzi");
 
         HttpSession session = request.getSession(true);
@@ -299,29 +230,14 @@ public class CIndirizzo<ObjectMapper> extends BaseController{
                 }
             }
 
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "ok");
-                jsonResponse.put("message", "Indirizzo eliminato con successo!");
-                jsonResponse.put("idIndirizzo", idIndirizzo);
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
-
             UFlashMessage.addMessage(session, "success", "Indirizzo eliminato con successo!");
-            response.sendRedirect(referer);
 
         } catch (Exception e) {
-            if (isAjax) {
-                Map<String, Object> jsonResponse = new HashMap<>();
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", e.getMessage());
-                inviaRispostaJson(response, jsonResponse);
-                return;
-            }
 
             UFlashMessage.addMessage(session, "danger", e.getMessage());
-            response.sendRedirect(referer);
         }
+
+        response.sendRedirect(referer);
+
     }
 }
