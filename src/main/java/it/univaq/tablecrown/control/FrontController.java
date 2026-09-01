@@ -28,6 +28,7 @@ public class FrontController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         emf = Persistence.createEntityManagerFactory("tablecrown-pu");
+        it.univaq.tablecrown.utility.UFreeMarker.init(getServletContext());
     }
 
     /**
@@ -78,9 +79,6 @@ public class FrontController extends HttpServlet {
         String routePrincipale = parti[0].toLowerCase();
         String sottoRoute = parti.length > 1 ? parti[1].toLowerCase() : "";
         String metodoHTTP = request.getMethod();
-
-        // LOG TEMPORANEO
-        System.out.println("[FrontController] path=\"" + path + "\" -> route=\"" + routePrincipale + "\" sottoRoute=\"" + sottoRoute + "\" metodo=" + metodoHTTP);
 
         //Apertura dell'EntityManager dedicato alla singola Request
         EntityManager em = emf.createEntityManager();

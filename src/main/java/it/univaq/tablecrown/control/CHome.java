@@ -52,7 +52,7 @@ public class CHome extends BaseController {
 
         //Popolamento delle variabili globali della Request e inoltro dei dati verso Presentation
         preparaDatiLayout(request, "home", datiPagina);
-        request.getRequestDispatcher("/WEB-INF/templates/home.ftl").forward(request, response);
+        renderizza("home.ftl", request, response);
     }
 
     /**

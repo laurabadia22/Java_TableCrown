@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -157,6 +161,31 @@ public abstract class BaseController {
             }
         }
         return false;
+    }
+
+    /**
+     * TODO: da controllare
+     */
+    protected void renderizza(String nomeTemplate, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        //Costruisce il model leggendo gli attributi della request
+        Map<String, Object> model = new HashMap<>();
+        Enumeration<String> nomiAttributi = request.getAttributeNames();
+        while (nomiAttributi.hasMoreElements()) {
+            String nome = nomiAttributi.nextElement();
+            model.put(nome, request.getAttribute(nome));
+        }
+
+        //Carica il template e lo processa scrivendo l'HTML sulla response
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            freemarker.template.Template template =
+                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(nomeTemplate);
+            template.process(model, response.getWriter());
+        } catch (freemarker.template.TemplateException | IOException e) {
+            throw new IOException("Errore nel rendering del template " + nomeTemplate, e);
+        }
     }
 
     //==========================================================================
