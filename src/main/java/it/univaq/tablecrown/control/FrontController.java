@@ -79,6 +79,9 @@ public class FrontController extends HttpServlet {
         String sottoRoute = parti.length > 1 ? parti[1].toLowerCase() : "";
         String metodoHTTP = request.getMethod();
 
+        // LOG TEMPORANEO
+        System.out.println("[FrontController] path=\"" + path + "\" -> route=\"" + routePrincipale + "\" sottoRoute=\"" + sottoRoute + "\" metodo=" + metodoHTTP);
+
         //Apertura dell'EntityManager dedicato alla singola Request
         EntityManager em = emf.createEntityManager();
 
