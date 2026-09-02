@@ -378,8 +378,8 @@ public abstract class BaseController {
 
         preparaDatiLayout(request, vista, datiPagina);
 
-        String jspPath = "/WEB-INF/views/catalogo/" + vista + ".jsp";
-        request.getRequestDispatcher(jspPath).forward(request, response);
+        String ftlPath = "/WEB-INF/templates/catalogo/" + vista + ".ftl";
+        request.getRequestDispatcher(ftlPath).forward(request, response);
     }
 
     private boolean isNumeric(String str) {

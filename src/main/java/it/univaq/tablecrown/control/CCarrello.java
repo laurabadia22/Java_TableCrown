@@ -109,8 +109,8 @@ public class CCarrello extends BaseController {
         request.setAttribute("update_url", request.getContextPath() + "/carrello/aggiorna");
         request.setAttribute("remove_url", request.getContextPath() + "/carrello/rimuovi");
 
-        // Inoltro alla Servlet/JSP/FreeMarker View
-        request.getRequestDispatcher("/WEB-INF/views/carrello.ftl").forward(request, response);
+        // Inoltro alla vista
+        request.getRequestDispatcher("/WEB-INF/templates/carrello.ftl").forward(request, response);
     }
 
     //==========================================================================

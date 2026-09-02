@@ -71,8 +71,8 @@ public class CProdotto extends BaseController{
         // Prepariamo i dati del layout globale (Navbar, Footer, Breadcrumbs, Flash Message)
         preparaDatiLayout(request, "prodotto", datiPagina);
 
-        // Inoltro alla pagina JSP
-        request.getRequestDispatcher("/WEB-INF/views/dettaglio_prodotto.ftl").forward(request, response);
+        // Inoltro alla vista
+        request.getRequestDispatcher("/WEB-INF/templates/dettaglio_prodotto.ftl").forward(request, response);
     }
 
     //==========================================================================

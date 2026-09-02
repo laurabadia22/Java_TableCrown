@@ -55,7 +55,7 @@ public class CAutenticazione extends BaseController{
 
         preparaDatiLayout(request, "accedi", datiPagina);
 
-        request.getRequestDispatcher("/WEB-INF/views/login.ftl").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/templates/login.ftl").forward(request, response);
     }
 
     /**
@@ -70,7 +70,7 @@ public class CAutenticazione extends BaseController{
 
         preparaDatiLayout(request, "registrati", new HashMap<>());
 
-        request.getRequestDispatcher("/WEB-INF/views/registrazione.ftl").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/templates/registrazione.ftl").forward(request, response);
     }
 
     /**
