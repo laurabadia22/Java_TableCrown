@@ -22,11 +22,11 @@ public abstract class EProdotto {
     @Column(name = "img_prodotto", length = 255)
     private String imgProdotto;
 
-    @Column(name = "descrizione_prodotto", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "descrizioneProdotto", columnDefinition = "TEXT", nullable = false)
     private String descrizioneProdotto;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "disponibilita_prodotto", nullable = false)
+    @Column(name = "disponibilitaProdotto", nullable = false)
     private DisponibilitaProdotto disponibilitaProdotto;
 
     @Column(name = "quantita", nullable = false)
@@ -41,7 +41,7 @@ public abstract class EProdotto {
     @Embedded
     private ESconto sconto = new ESconto();
 
-    @Column(name = "numero_vendite", nullable = false)
+    @Column(name = "numeroVendite", nullable = false)
     protected int numeroVendite = 0;
 
     @Embedded

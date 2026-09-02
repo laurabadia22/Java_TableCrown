@@ -121,11 +121,151 @@ public class FrontController extends HttpServlet {
                     }
                     break;
 
+                case "prodotto":
+                    if ("GET".equals(metodoHTTP)) {
+                        new CProdotto().mostraDettaglioProdotto(request, response, em);
+                    } else {
+                        mostra404(response);
+                    }
+                    break;
+
+                case "carrello":
+                    CCarrello carrelloController = new CCarrello();
+                    switch (sottoRoute) {
+                        case "":
+                            if ("GET".equals(metodoHTTP)) {
+                                carrelloController.mostraCarrello(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "aggiungi":
+                            if ("POST".equals(metodoHTTP)) {
+                                carrelloController.aggiungiAlCarrello(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "aggiorna":
+                            if ("POST".equals(metodoHTTP)) {
+                                carrelloController.aggiornaQuantita(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "rimuovi":
+                            if ("POST".equals(metodoHTTP)) {
+                                carrelloController.rimuoviDalCarrello(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        default:
+                            mostra404(response);
+                            break;
+                    }
+                    break;
+
                 case "offerte":
                     if ("GET".equals(metodoHTTP)) {
                         new CCatalogo().mostraOfferte(request, response, em);
                     } else {
                         mostra404(response);
+                    }
+                    break;
+
+                case "wishlist":
+                    CWishlist wishlistController = new CWishlist();
+                    switch (sottoRoute) {
+                        case "aggiungi":
+                            if ("POST".equals(metodoHTTP)) {
+                                wishlistController.aggiungiAllaWishlist(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "rimuovi":
+                            if ("POST".equals(metodoHTTP)) {
+                                wishlistController.rimuoviDallaWishlist(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        default:
+                            mostra404(response);
+                            break;
+                    }
+                    break;
+
+                case "profilo":
+                    CProfilo profiloController = new CProfilo();
+                    switch (sottoRoute) {
+                        case "":
+                            if ("GET".equals(metodoHTTP)) {
+                                profiloController.mostraHub(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "modifica":
+                            if (parti.length > 2) {
+                                String sottoModifica = parti[2].toLowerCase();
+                                if ("password".equals(sottoModifica)) {
+                                    if ("POST".equals(metodoHTTP)) {
+                                        profiloController.cambiaPassword(request, response, em);
+                                    } else {
+                                        mostra404(response);
+                                    }
+                                } else if ("elimina".equals(sottoModifica)) {
+                                    if ("POST".equals(metodoHTTP)) {
+                                        profiloController.eliminaAccount(request, response, em);
+                                    } else {
+                                        mostra404(response);
+                                    }
+                                } else {
+                                    mostra404(response);
+                                }
+                            } else {
+                                if ("GET".equals(metodoHTTP)) {
+                                    profiloController.mostraAccount(request, response, em);
+                                } else if ("POST".equals(metodoHTTP)) {
+                                    profiloController.aggiornaAccount(request, response, em);
+                                } else {
+                                    mostra404(response);
+                                }
+                            }
+                            break;
+                        case "ordini":
+                            if ("GET".equals(metodoHTTP)) {
+                                profiloController.mostraOrdini(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "wishlist":
+                            if ("GET".equals(metodoHTTP)) {
+                                profiloController.mostraWishlist(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "indirizzi":
+                            if ("GET".equals(metodoHTTP)) {
+                                profiloController.mostraIndirizzi(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "pagamenti":
+                            if ("GET".equals(metodoHTTP)) {
+                                profiloController.mostraMetodiPagamento(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        default:
+                            mostra404(response);
+                            break;
                     }
                     break;
 
