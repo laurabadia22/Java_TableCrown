@@ -51,7 +51,7 @@ public class CCatalogo extends BaseController{
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
-        renderCatalogo(request, response, "catalogo_giochi", risultatoGrezzo, pagina, filtri, query);
+        renderCatalogo(request, response, "catalogoGiochi", risultatoGrezzo, pagina, filtri, query);
     }
 
     /**
@@ -81,7 +81,7 @@ public class CCatalogo extends BaseController{
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
-        renderCatalogo(request, response, "catalogo_bustine", risultatoGrezzo, pagina, filtri, query);
+        renderCatalogo(request, response, "catalogoBustine", risultatoGrezzo, pagina, filtri, query);
     }
 
     /**
@@ -111,7 +111,7 @@ public class CCatalogo extends BaseController{
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
 
-        renderCatalogo(request, response, "catalogo_portadadi", risultatoGrezzo, pagina, filtri, query);
+        renderCatalogo(request, response, "catalogoPortaDadi", risultatoGrezzo, pagina, filtri, query);
     }
 
     /**

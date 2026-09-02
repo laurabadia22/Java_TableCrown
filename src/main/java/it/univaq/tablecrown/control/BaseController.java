@@ -281,25 +281,38 @@ public abstract class BaseController {
     protected Map<String, Object> estraiFiltriPrezzo(HttpServletRequest request) {
         Map<String, Object> filtri = new HashMap<>();
 
-        String priceMinRaw = request.getParameter("price_min");
-        String priceMaxRaw = request.getParameter("price_max");
-        String ratingMinRaw = request.getParameter("rating_min");
+        String priceMinRaw = request.getParameter("prezzoMin");
+        String priceMaxRaw = request.getParameter("prezzoMax");
+        String ratingMinRaw = request.getParameter("ratingMin");
         String ordinamentoRaw = request.getParameter("ordinamento");
 
-        filtri.put("price_min", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0); //TODO: ????
-        filtri.put("price_max", isNumeric(priceMaxRaw) ? Double.parseDouble(priceMaxRaw) : null);
-        filtri.put("price_range_min", 0.0);
-        filtri.put("price_range_max", null); // Verrà impostato dal PM
+        filtri.put("prezzoMin", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0); //TODO: ????
+        filtri.put("prezzoMax", isNumeric(priceMaxRaw) ? Double.parseDouble(priceMaxRaw) : null);
+        filtri.put("prezzoRangeMin", 0.0);
+        filtri.put("prezzoRangeMax", null); // Verrà impostato dal PM
 
         filtri.put("disponibilita", estraiListaDaRequest(request, "disponibilita"));
 
-        List<String> inEvidenza = estraiListaDaRequest(request, "in_evidenza_filtro").stream()
-                .filter(IN_EVIDENZA_VALIDI::contains)
-                .collect(Collectors.toList());
-        filtri.put("in_evidenza_filtro", inEvidenza);
+        List<String> valoriEvidenza = estraiListaDaRequest(request, "inEvidenzaFiltro");
+        List<String> inEvidenza = new ArrayList<>();
+        if (valoriEvidenza != null && IN_EVIDENZA_VALIDI != null) {
+            for (String s : valoriEvidenza) {
+                if (s != null && IN_EVIDENZA_VALIDI.contains(s)) {
+                    inEvidenza.add(s);
+                }
+            }
+        }
 
-        filtri.put("rating_min", isNumeric(ratingMinRaw) ? Double.parseDouble(ratingMinRaw) : 0.0);
-        filtri.put("ordinamento", ORDINAMENTO_VALIDI.contains(ordinamentoRaw) ? ordinamentoRaw : null);
+        filtri.put("inEvidenzaFiltro", inEvidenza);
+
+        filtri.put("ratingMin", isNumeric(ratingMinRaw) ? Double.parseDouble(ratingMinRaw) : 0.0);
+
+        // Controllo preventivo su ordinamentoRaw per evitare NullPointerException con List.of()
+        String ordinamentoValido = null;
+        if (ordinamentoRaw != null && !ordinamentoRaw.trim().isEmpty() && ORDINAMENTO_VALIDI != null && ORDINAMENTO_VALIDI.contains(ordinamentoRaw)) {
+            ordinamentoValido = ordinamentoRaw;
+        }
+        filtri.put("ordinamento", ordinamentoValido);
 
         return filtri;
     }
@@ -310,17 +323,17 @@ public abstract class BaseController {
     protected Map<String, Object> estraiFiltriGiochi(HttpServletRequest request) {
         Map<String, Object> filtri = estraiFiltriPrezzo(request);
 
-        String ageMinRaw = request.getParameter("age_min");
-        String playersMinRaw = request.getParameter("players_min");
-        String mostraEspansioni = request.getParameter("mostra_espansioni");
+        String ageMinRaw = request.getParameter("etaMinima");
+        String playersMinRaw = request.getParameter("giocatoriMin");
+        String mostraEspansioni = request.getParameter("mostraEspansioni");
 
-        filtri.put("categoria_selected", estraiListaDaRequest(request, "categoria_selected"));
-        filtri.put("mostra_espansioni", !"0".equals(mostraEspansioni));
-        filtri.put("age_min", isNumeric(ageMinRaw) ? Integer.parseInt(ageMinRaw) : null);
-        filtri.put("players_min", isNumeric(playersMinRaw) ? Integer.parseInt(playersMinRaw) : null);
+        filtri.put("categoria", estraiListaDaRequest(request, "categoria"));
+        filtri.put("mostraEspansioni", !"0".equals(mostraEspansioni));
+        filtri.put("etaMinima", isNumeric(ageMinRaw) ? Integer.parseInt(ageMinRaw) : null);
+        filtri.put("giocatoriMin", isNumeric(playersMinRaw) ? Integer.parseInt(playersMinRaw) : null);
         filtri.put("difficolta", estraiListaDaRequest(request, "difficolta"));
-        filtri.put("lingua_selected", estraiListaDaRequest(request, "lingua_selected"));
-        filtri.put("danno_selected", estraiListaDaRequest(request, "danno_selected"));
+        filtri.put("lingua", estraiListaDaRequest(request, "lingua"));
+        filtri.put("danno", estraiListaDaRequest(request, "danno"));
 
         return filtri;
     }
@@ -334,9 +347,9 @@ public abstract class BaseController {
             rangeMax = ((Number) risultatoGrezzo.get("rangemax")).doubleValue();
         }
 
-        filtri.put("price_range_max", rangeMax);
-        if (filtri.get("price_max") == null) {
-            filtri.put("price_max", rangeMax);
+        filtri.put("prezzoRangeMax", rangeMax);
+        if (filtri.get("prezzoMax") == null) {
+            filtri.put("prezzoMax", rangeMax);
         }
 
         return filtri;
@@ -364,22 +377,42 @@ public abstract class BaseController {
         int totalePagine = calcolaTotalePagine(totaleRisultati);
         pagina = clampPagina(pagina, totalePagine);
 
-        Map<String, Object> pagination = new HashMap<>();
-        pagination.put("current_page", pagina);
-        pagination.put("total_pages", totalePagine);
+//        Map<String, Object> pagination = new HashMap<>();
+//        pagination.put("current_page", pagina);
+//        pagination.put("total_pages", totalePagine);
 
         Map<String, Object> datiPagina = new HashMap<>();
         datiPagina.put("vista", vista);
         datiPagina.put("prodotti", prodotti);
-        datiPagina.put("total_results", totaleRisultati);
-        datiPagina.put("pagination", pagination);
-        datiPagina.put("search_query", searchQuery);
+        datiPagina.put("totaleRisultati", totaleRisultati);
+        datiPagina.put("paginaCorrente", pagina);
+        datiPagina.put("query", searchQuery != null ? searchQuery : "");
         datiPagina.put("filtri", filtri);
+
+        // Valori di default per le opzioni dei select/checkbox nei template
+        datiPagina.put("difficoltaOptions", Collections.emptyList());
+        datiPagina.put("categorieDisponibili", Collections.emptyList());
 
         preparaDatiLayout(request, vista, datiPagina);
 
-        String ftlPath = "/WEB-INF/templates/catalogo/" + vista + ".ftl";
-        request.getRequestDispatcher(ftlPath).forward(request, response);
+        //TODO: BOH DA CAPIRE STA COSA
+        //Rendering con FreeMarker
+        Map<String, Object> model = new HashMap<>();
+        Enumeration<String> nomiAttributi = request.getAttributeNames();
+        while (nomiAttributi.hasMoreElements()) {
+            String nome = nomiAttributi.nextElement();
+            model.put(nome, request.getAttribute(nome));
+        }
+
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            // Poiché i file .ftl sono direttamente dentro /WEB-INF/templates/
+            freemarker.template.Template template =
+                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(vista + ".ftl");
+            template.process(model, response.getWriter());
+        } catch (freemarker.template.TemplateException | IOException e) {
+            throw new ServletException("Errore nel rendering del template " + vista, e);
+        }
     }
 
     private boolean isNumeric(String str) {
