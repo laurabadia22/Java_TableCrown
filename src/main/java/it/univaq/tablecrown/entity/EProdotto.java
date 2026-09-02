@@ -32,7 +32,7 @@ public abstract class EProdotto {
     @Column(name = "quantita", nullable = false)
     private int quantita;
 
-    @Column(name = "data_pubblicazione", nullable = false)
+    @Column(name = "dataPubblicazione", nullable = false)
     private LocalDateTime dataPubblicazione;
 
     @Column(name = "prezzo", nullable = false)

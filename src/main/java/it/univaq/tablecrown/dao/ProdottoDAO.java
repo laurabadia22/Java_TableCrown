@@ -27,13 +27,12 @@ public class ProdottoDAO extends GenericDAO {
             // Nota: il CASE WHEN va direttamente nell'ORDER BY, non serve
             // dichiararlo nel SELECT come "colonna nascosta" (non esiste in JPQL).
             String jpql = "SELECT p FROM EProdotto p " +
-                    "JOIN p.prezzo pr " +
-                    "WHERE pr.sconto > 0 " +
+                    "WHERE p.sconto.sconto > 0 " +
                     "AND p.disponibilitaProdotto = :disponibile " +
                     "AND p.quantita > 0 " +
-                    //ordino i prodotti in offerta, mettondo però prima queli con scadenza imminente
-                    "ORDER BY CASE WHEN pr.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, " +
-                    "pr.scadenzaOfferta ASC";
+                    //ordino i prodotti in offerta, mettendo però prima quelli con scadenza imminente
+                    "ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, " +
+                    "p.sconto.scadenzaOfferta ASC";
 
             TypedQuery<EProdotto> query = em.createQuery(jpql, EProdotto.class)
                     .setParameter("disponibile", DisponibilitaProdotto.DISPONIBILE)
@@ -44,8 +43,7 @@ public class ProdottoDAO extends GenericDAO {
 
 
             String countJpql = "SELECT COUNT(p) FROM EProdotto p " +
-                    "JOIN p.prezzo pr " +
-                    "WHERE pr.sconto > 0 " +
+                    "WHERE p.sconto.sconto > 0 " +
                     "AND p.disponibilitaProdotto = :disponibile " +
                     "AND p.quantita > 0";
 
