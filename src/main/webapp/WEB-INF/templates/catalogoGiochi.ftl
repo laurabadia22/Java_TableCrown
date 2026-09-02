@@ -57,7 +57,7 @@
             </#list>
         </div>
 
-        <@pag.paginazione paginaCorrente=paginaCorrente totalePagine=totalePagine
+        <@pag.paginazione paginaCorrente=paginaCorrente!1 totalePagine=totalePagine!1
         baseUrl="${base_url}/catalogo/giochi-da-tavolo" />
     </div>
 </@layout.page>

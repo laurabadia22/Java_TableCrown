@@ -32,7 +32,7 @@
                 </#list>
             </div>
 
-            <@pag.paginazione paginaCorrente=paginaCorrente totalePagine=totalePagine baseUrl=urlBase />
+            <@pag.paginazione paginaCorrente=paginaCorrente!1 totalePagine=totalePagine!1 baseUrl=urlBase />
         </div>
     </@layout.page>
 </#macro>

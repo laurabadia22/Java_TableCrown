@@ -377,15 +377,12 @@ public abstract class BaseController {
         int totalePagine = calcolaTotalePagine(totaleRisultati);
         pagina = clampPagina(pagina, totalePagine);
 
-//        Map<String, Object> pagination = new HashMap<>();
-//        pagination.put("current_page", pagina);
-//        pagination.put("total_pages", totalePagine);
-
         Map<String, Object> datiPagina = new HashMap<>();
         datiPagina.put("vista", vista);
         datiPagina.put("prodotti", prodotti);
         datiPagina.put("totaleRisultati", totaleRisultati);
         datiPagina.put("paginaCorrente", pagina);
+        datiPagina.put("totalePagine", totalePagine);
         datiPagina.put("query", searchQuery != null ? searchQuery : "");
         datiPagina.put("filtri", filtri);
 
@@ -393,26 +390,34 @@ public abstract class BaseController {
         datiPagina.put("difficoltaOptions", Collections.emptyList());
         datiPagina.put("categorieDisponibili", Collections.emptyList());
 
+        //Riversiamo i dati nella request per renderli compatibili con il metodo renderizza()
+        for (Map.Entry<String, Object> entry : datiPagina.entrySet()) {
+            request.setAttribute(entry.getKey(), entry.getValue());
+        }
+
         preparaDatiLayout(request, vista, datiPagina);
 
-        //TODO: BOH DA CAPIRE STA COSA
-        //Rendering con FreeMarker
-        Map<String, Object> model = new HashMap<>();
-        Enumeration<String> nomiAttributi = request.getAttributeNames();
-        while (nomiAttributi.hasMoreElements()) {
-            String nome = nomiAttributi.nextElement();
-            model.put(nome, request.getAttribute(nome));
-        }
+        //Deleghiamo il rendering al metodo generico creato già nel BaseController
+        renderizza(vista + ".ftl", request, response);
 
-        try {
-            response.setContentType("text/html; charset=UTF-8");
-            // Poiché i file .ftl sono direttamente dentro /WEB-INF/templates/
-            freemarker.template.Template template =
-                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(vista + ".ftl");
-            template.process(model, response.getWriter());
-        } catch (freemarker.template.TemplateException | IOException e) {
-            throw new ServletException("Errore nel rendering del template " + vista, e);
-        }
+//        //TODO: BOH DA CAPIRE STA COSA (DA CANCELLARE??) (SERVONO ENTRAMBI renderCatalogo E renderizza??)
+//        //Rendering con FreeMarker
+//        Map<String, Object> model = new HashMap<>();
+//        Enumeration<String> nomiAttributi = request.getAttributeNames();
+//        while (nomiAttributi.hasMoreElements()) {
+//            String nome = nomiAttributi.nextElement();
+//            model.put(nome, request.getAttribute(nome));
+//        }
+//
+//        try {
+//            response.setContentType("text/html; charset=UTF-8");
+//            // Poiché i file .ftl sono direttamente dentro /WEB-INF/templates/
+//            freemarker.template.Template template =
+//                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(vista + ".ftl");
+//            template.process(model, response.getWriter());
+//        } catch (freemarker.template.TemplateException | IOException e) {
+//            throw new ServletException("Errore nel rendering del template " + vista, e);
+//        }
     }
 
     private boolean isNumeric(String str) {

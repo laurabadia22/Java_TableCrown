@@ -79,10 +79,10 @@
                                         <figure class="image-container-fixed">
 
                                             <!-- Badge Disponibilità -->
-                                            <#if prodotto.disponibilitaProdotto.name() == 'ESAURITO'>
+                                            <#if prodotto.disponibilitaProdotto?? && prodotto.disponibilitaProdotto.name() == 'ESAURITO'>
                                                 <span class="badge-stato badge-esaurito">Esaurito</span>
-                                            <#elseif prodotto.disponibilitaProdotto.name() == 'IN_ARRIVO'>
-                                                <span class="badge-stato badge-in-arrivo">In arrivo</span>
+                                            <#elseif prodotto.disponibilitaProdotto?? && prodotto.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>
+                                                <span class="badge-stato badge-non-disponibile">Non disponibile</span>
                                             </#if>
 
                                             <!-- Logica Immagini -->

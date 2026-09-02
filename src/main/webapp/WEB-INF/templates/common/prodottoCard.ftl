@@ -3,10 +3,10 @@
         <a href="${urlBase}/${p.idProdotto}" class="card-link-wrapper">
             <div class="card-image">
                 <figure class="image-container-fixed">
-                    <#if p.disponibilitaProdotto.name() == 'ESAURITO'>
+                    <#if p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'ESAURITO'>
                         <span class="badge-stato badge-esaurito">Esaurito</span>
-                    <#elseif p.disponibilitaProdotto.name() == 'IN_ARRIVO'>
-                        <span class="badge-stato badge-in-arrivo">In arrivo</span>
+                    <#elseif p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>
+                        <span class="badge-stato badge-non-disponibile">Non disponibile</span>
                     </#if>
                     <img src="${base_url}/public/img/prodotti/${p.imgProdotto!'placeholder.png'}"
                          alt="${p.nomeProdotto?html}">

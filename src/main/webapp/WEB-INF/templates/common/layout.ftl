@@ -1,4 +1,4 @@
-<#macro page page_title="TableCrown" extra_css="" extra_js="">
+<#macro page page_title="TableCrown" extra_css="" extra_js="" current_page="" current_subpage="" breadcrumbs=[]>
 <!DOCTYPE html>
 <html lang="it">
 <head>
