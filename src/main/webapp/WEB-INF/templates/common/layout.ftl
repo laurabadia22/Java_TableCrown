@@ -46,27 +46,26 @@
                     <div class="navbar-center-links">
 
                         <div class="has-catalogo-dropdown" id="catalogo-dropdown">
-                                <span class="navbar-item catalogo-label<#if current_page?? && current_page == 'catalogo'> is-active</#if>">
-                                    Catalogo
-                                    <i class="ti ti-chevron-down navbar-dropdown-arrow"></i>
-                                </span>
-                                <div class="navbar-dropdown-catalogo">
-                                    <a class="navbar-item<#if current_subpage?? && current_subpage == 'giochi-da-tavolo'> is-active</#if>" href="${base_url}/catalogo/giochi-da-tavolo">
-                                        <i class="ti ti-dice-5"></i> Giochi da tavolo
-                                    </a>
-                                    <a class="navbar-item<#if current_subpage?? && current_subpage == 'bustine'> is-active</#if>" href="${base_url}/catalogo/bustine">
-                                        <i class="ti ti-cards"></i> Bustine
-                                    </a>
-                                    <a class="navbar-item<#if current_subpage?? && current_subpage == 'porta-dadi'> is-active</#if>" href="${base_url}/catalogo/porta-dadi">
-                                        <i class="ti ti-package"></i> Porta dadi
-                                    </a>
-                                </div>
+                            <span class="navbar-item catalogo-label<#if current_page?? && current_page == 'catalogo'> is-active</#if>">
+                                Catalogo
+                                <i class="ti ti-chevron-down navbar-dropdown-arrow"></i>
+                            </span>
+                            <div class="navbar-dropdown-catalogo">
+                                <a class="navbar-item<#if current_subpage?? && current_subpage == 'giochi-da-tavolo'> is-active</#if>" href="${base_url}/catalogo/giochi-da-tavolo">
+                                    <i class="ti ti-dice-5"></i> Giochi da tavolo
+                                </a>
+                                <a class="navbar-item<#if current_subpage?? && current_subpage == 'bustine'> is-active</#if>" href="${base_url}/catalogo/bustine">
+                                    <i class="ti ti-cards"></i> Bustine
+                                </a>
+                                <a class="navbar-item<#if current_subpage?? && current_subpage == 'porta-dadi'> is-active</#if>" href="${base_url}/catalogo/porta-dadi">
+                                    <i class="ti ti-package"></i> Porta dadi
+                                </a>
                             </div>
-
-                            <a class="navbar-item<#if current_page?? && current_page == 'eventi'> is-active</#if>" href="${base_url}/eventi">Eventi</a>
-                            <a class="navbar-item<#if current_page?? && current_page == 'offerte'> is-active</#if>" href="${base_url}/offerte">Offerte</a>
-
                         </div>
+
+                        <a class="navbar-item<#if current_page?? && current_page == 'offerte'> is-active</#if>" href="${base_url}/offerte">Offerte</a>
+
+                    </div>
 
                     <div class="navbar-end-actions">
 
@@ -75,14 +74,13 @@
                             <div class="navbar-item has-dropdown" id="user-dropdown">
                                 <a class="navbar-link navbar-user-link">
                                     <i class="ti ti-user-circle navbar-icon"></i>
-                                    <!-- ?html è l'equivalente del vecchio |escape in Smarty -->
-                                    <span class="navbar-username">${utente.name?html}</span>
+                                    <span class="navbar-username">${utente.nome?html}</span>
                                 </a>
                                 <div class="navbar-dropdown is-right">
                                     <a class="navbar-item" href="${base_url}/profilo"><i class="ti ti-user"></i> Il mio account</a>
                                     <a class="navbar-item" href="${base_url}/profilo/ordini"><i class="ti ti-package"></i> I miei ordini</a>
-                                    <a class="navbar-item" href="${base_url}/profilo/eventi"><i class="ti ti-calendar"></i> I miei eventi</a>
-                                    <a class="navbar-item" href="${base_url}/profilo/recensioni"><i class="ti ti-star"></i> Le mie recensioni</a>
+                                    <a class="navbar-item" href="${base_url}/profilo/indirizzi"><i class="ti ti-map-pin"></i> I miei indirizzi</a>
+                                    <a class="navbar-item" href="${base_url}/profilo/pagamenti"><i class="ti ti-credit-card"></i> Metodi di pagamento</a>
                                     <hr class="navbar-divider">
                                     <a class="navbar-item navbar-logout" href="${base_url}/logout"><i class="ti ti-logout"></i> Logout</a>
                                 </div>
@@ -109,7 +107,7 @@
                             <a class="header-top-link" href="${base_url}/carrello" title="Carrello">
                                 <i class="ti ti-shopping-cart navbar-icon"></i>
                                 <span class="header-top-label">Carrello</span>
-                                <#if cart_count?? && cart_count > 0>
+                                <#if cart_count?? && (cart_count > 0)>
                                     <span class="cart-badge" id="cart-count">${cart_count}</span>
                                 </#if>
                             </a>
@@ -135,7 +133,6 @@
             <nav class="breadcrumb is-small" aria-label="breadcrumbs">
                 <ul>
                     <#list breadcrumbs as crumb>
-                        <!-- crumb?is_last verifica se siamo all'ultimo elemento del ciclo -->
                         <#if crumb?is_last>
                             <li class="is-active">
                                 <a href="#" aria-current="page">${crumb.label?html}</a>
@@ -154,7 +151,6 @@
     <#if flash_message??>
     <section class="section flash-section">
         <div class="container">
-            <!-- !'info' è il default: se flash_type non esiste, usa 'info' -->
             <div class="notification is-${flash_type!'info'} is-light auto-hide">
                 <button class="delete" aria-label="Chiudi"></button>
                 ${flash_message?html}
@@ -165,12 +161,11 @@
 
     <!-- CONTENUTO PRINCIPALE -->
     <main>
-        <!-- Qui FreeMarker inietterà il codice della home.ftl -->
         <#nested/>
     </main>
 
     <!-- ========================================================= -->
-    <!-- MODAL LOGIN GLOBALE (navbar: carrello e wishlist per ospiti)-->
+    <!-- MODAL LOGIN GLOBALE -->
     <!-- ========================================================= -->
     <#if !utente??>
     <div class="login-modal" id="login-modal-nav" aria-hidden="true">
@@ -204,7 +199,7 @@
                 <div class="column is-3">
                     <h2 class="footer-heading">TABLECROWN</h2>
                     <p class="footer-desc">Il tuo negozio di giochi da tavolo.</p>
-                    <p class="footer-desc">Prodotti, eventi e community.</p>
+                    <p class="footer-desc">Prodotti e accessori di qualità.</p>
                     <div class="social-icons">
                         <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
                         <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
@@ -289,12 +284,18 @@
                 loginModalNav.setAttribute('aria-hidden', 'true');
             }
 
-            document.getElementById('close-login-modal-nav').addEventListener('click', function(e) {
-                e.preventDefault();
-                chiudiLoginModalNav();
-            });
+            var closeBtn = document.getElementById('close-login-modal-nav');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    chiudiLoginModalNav();
+                });
+            }
 
-            loginModalNav.querySelector('.modal-background').addEventListener('click', chiudiLoginModalNav);
+            var modalBg = loginModalNav.querySelector('.modal-background');
+            if (modalBg) {
+                modalBg.addEventListener('click', chiudiLoginModalNav);
+            }
 
             loginModalNav.querySelectorAll('.login-modal-actions a').forEach(function(btn) {
                 btn.addEventListener('click', function(e) { e.stopPropagation(); });
