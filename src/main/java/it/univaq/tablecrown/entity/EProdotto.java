@@ -13,10 +13,10 @@ public abstract class EProdotto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_prodotto")
+    @Column(name = "idProdotto")
     private Long idProdotto;
 
-    @Column(name = "nome_prodotto", nullable = false, length = 255)
+    @Column(name = "nomeProdotto", nullable = false, length = 255)
     private String nomeProdotto;
 
     @Column(name = "img_prodotto", length = 255)

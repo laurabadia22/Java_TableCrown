@@ -23,7 +23,7 @@
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <!-- update: aggiorna lo schema se modifichi le entity, senza cancellare i dati -->
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
         </properties>
     </persistence-unit>
 </persistence>

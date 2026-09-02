@@ -12,10 +12,10 @@ import java.util.List;
 @Table(name = "utente")
 public class EUtente extends EPersona {
 
-    @Column(name = "data_nascita", nullable = false)
+    @Column(name = "dataNascita", nullable = false)
     private LocalDate dataNascita;
 
-    @Column(name = "data_registrazione", nullable = false)
+    @Column(name = "dataRegistrazione", nullable = false)
     private LocalDateTime dataRegistrazione;
 
     @OneToMany(mappedBy = "utente")

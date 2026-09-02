@@ -13,19 +13,19 @@ public abstract class EPersona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_persona")
+    @Column(name = "idpersona")
     private Long idPersona;
 
-    @Column(name = "nome_persona", nullable = false, length = 100)
+    @Column(name = "nomepersona", nullable = false, length = 100)
     private String nomePersona;
 
-    @Column(name = "img_persona", length = 255)
+    @Column(name = "imgpersona", length = 255)
     private String imgPersona;
 
-    @Column(name = "email_persona", nullable = false, length = 180, unique = true)
+    @Column(name = "emailpersona", nullable = false, length = 180, unique = true)
     private String emailPersona;
 
-    @Column(name = "password_persona", nullable = false)
+    @Column(name = "passwordpersona", nullable = false)
     private String passwordPersona;
 
 
