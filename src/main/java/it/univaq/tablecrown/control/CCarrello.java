@@ -138,7 +138,7 @@ public class CCarrello extends BaseController {
         PersistentManager pm = new PersistentManager(em);
 
         try {
-            String idProdottoRaw = request.getParameter("id_prodotto");
+            String idProdottoRaw = request.getParameter("idProdotto");
             long idProdotto = (idProdottoRaw != null) ? Long.parseLong(idProdottoRaw) : 0L;
 
             String quantitaRaw = request.getParameter("quantita");
@@ -194,7 +194,7 @@ public class CCarrello extends BaseController {
         HttpSession session = request.getSession(true);
 
         try {
-            String idProdottoRaw = request.getParameter("id_prodotto");
+            String idProdottoRaw = request.getParameter("idProdotto");
             long idProdotto = (idProdottoRaw != null) ? Long.parseLong(idProdottoRaw) : 0L;
 
             String quantitaRaw = request.getParameter("quantita");
@@ -241,7 +241,7 @@ public class CCarrello extends BaseController {
         HttpSession session = request.getSession(true);
 
         try {
-            String idProdottoRaw = request.getParameter("id_prodotto");
+            String idProdottoRaw = request.getParameter("idProdotto");
             long idProdotto = (idProdottoRaw != null) ? Long.parseLong(idProdottoRaw) : 0L;
 
             Map<Long, Integer> carrello = recuperaCarrelloSessione(session);

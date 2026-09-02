@@ -109,7 +109,7 @@
 
                                         <!-- Form aggiunta al carrello -->
                                         <form action="${base_url}/carrello/aggiungi" method="POST" style="margin-top: 10px;">
-                                            <input type="hidden" name="id_prodotto" value="${prodotto.idProdotto}">
+                                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
                                             <input type="hidden" name="quantita" value="1">
                                             <button type="submit" class="btn-cart">
                                                 <i class="ti ti-shopping-cart"></i> Aggiungi

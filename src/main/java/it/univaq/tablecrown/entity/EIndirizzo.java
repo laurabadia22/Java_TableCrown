@@ -37,7 +37,7 @@ public class EIndirizzo {
     private String nomeCitofono;
 
     @ManyToOne
-    @JoinColumn(name = "utente_id", referencedColumnName = "id_persona", nullable = false)
+    @JoinColumn(name = "utente_id", referencedColumnName = "idPersona", nullable = false)
     private EUtente utente;
 
     @Column(name = "predefinito", nullable = false)

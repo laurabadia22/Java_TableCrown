@@ -68,7 +68,7 @@ public class CWishlist extends BaseController{
         PersistentManager pm = new PersistentManager(em);
 
         try {
-            String idProdottoRaw = request.getParameter("id_prodotto");
+            String idProdottoRaw = request.getParameter("idProdotto");
             long idProdotto = (idProdottoRaw != null) ? Long.parseLong(idProdottoRaw) : 0L;
 
             EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
@@ -116,7 +116,7 @@ public class CWishlist extends BaseController{
         PersistentManager pm = new PersistentManager(em);
 
         try {
-            String idProdottoRaw = request.getParameter("id_prodotto");
+            String idProdottoRaw = request.getParameter("idProdotto");
             long idProdotto = (idProdottoRaw != null) ? Long.parseLong(idProdottoRaw) : 0L;
 
             EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);

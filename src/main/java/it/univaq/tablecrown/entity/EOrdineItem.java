@@ -27,7 +27,7 @@ public class EOrdineItem {
     private EOrdine ordine;
 
     @ManyToOne
-    @JoinColumn(name = "prodotto_id", referencedColumnName = "id_prodotto", nullable = false)
+    @JoinColumn(name = "prodotto_id", referencedColumnName = "idProdotto", nullable = false)
     private EProdotto prodotto;
 
     //Costruttore vuoto per Hibernate

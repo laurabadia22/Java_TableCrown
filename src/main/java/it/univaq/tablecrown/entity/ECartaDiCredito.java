@@ -34,7 +34,7 @@ public class ECartaDiCredito {
     private String token;
 
     @ManyToOne
-    @JoinColumn(name = "utente_id", referencedColumnName = "id_persona", nullable = false)
+    @JoinColumn(name = "utente_id", referencedColumnName = "idPersona", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EUtente utente;
 

@@ -428,7 +428,7 @@ public abstract class BaseController {
         }
 
         // Se in sessione è stato salvato idPersona (Long o Integer)
-        Object idPersonaObj = session.getAttribute("id_persona");
+        Object idPersonaObj = session.getAttribute("idPersona");
         Long idPersona = null;
         if (idPersonaObj instanceof Long) {
             idPersona = (Long) idPersonaObj;

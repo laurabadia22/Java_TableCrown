@@ -13,18 +13,18 @@ import java.util.Set;
 @DiscriminatorValue("gioco")
 public class EGiocoDaTavolo extends EProdotto{
     @ElementCollection
-    @CollectionTable(name = "gioco_categoria", joinColumns = @JoinColumn(name = "id_prodotto"))
+    @CollectionTable(name = "gioco_categoria", joinColumns = @JoinColumn(name = "idProdotto"))
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria")
     private Set<Categoria> categoria = new LinkedHashSet<>(); //Set evita duplicati; LinkedHashSet mantiene l'ordine di inserimento
 
     @ElementCollection
-    @CollectionTable(name = "gioco_componente", joinColumns = @JoinColumn(name = "id_prodotto"))
+    @CollectionTable(name = "gioco_componente", joinColumns = @JoinColumn(name = "idProdotto"))
     @Column(name = "componente")
     private Set<String> componenti = new LinkedHashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "gioco_base_id", referencedColumnName = "id_prodotto", nullable = true)
+    @JoinColumn(name = "gioco_base_id",nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EGiocoDaTavolo giocoBase;
 

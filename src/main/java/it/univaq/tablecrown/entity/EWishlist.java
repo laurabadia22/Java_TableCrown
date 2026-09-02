@@ -19,14 +19,14 @@ public class EWishlist {
     private LocalDateTime dataCreazione;
 
     @OneToOne
-    @JoinColumn(name = "utente_id", referencedColumnName = "id_persona", nullable = false)
+    @JoinColumn(name = "utente_id", referencedColumnName = "idPersona", nullable = false)
     private EUtente utente;
 
     @ManyToMany
     @JoinTable(
             name = "wishlist_prodotto",
             joinColumns = @JoinColumn(name = "wishlist_id", referencedColumnName = "id_wishlist"),
-            inverseJoinColumns = @JoinColumn(name = "prodotto_id", referencedColumnName = "id_prodotto")
+            inverseJoinColumns = @JoinColumn(name = "prodotto_id", referencedColumnName = "idProdotto")
     )
     private Set<EProdotto> prodotti = new LinkedHashSet<>();
 

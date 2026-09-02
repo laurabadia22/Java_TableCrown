@@ -24,7 +24,7 @@ public class EOrdine {
     private StatoOrdine stato;
 
     @ManyToOne
-    @JoinColumn(name = "utente_id", referencedColumnName = "id_persona", nullable = false)
+    @JoinColumn(name = "utente_id", referencedColumnName = "idPersona", nullable = false)
     private EUtente utente;
 
     @ManyToOne
