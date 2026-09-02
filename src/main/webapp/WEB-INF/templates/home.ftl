@@ -87,8 +87,8 @@
 
                                             <!-- Logica Immagini -->
                                             <#assign imgUrl = base_url + "/public/img/placeholder.png">
-                                            <#if prodotto.imgPath?? && prodotto.imgPath != "">
-                                                <#assign imgUrl = base_url + "/public/img/prodotti/" + prodotto.imgPath>
+                                            <#if prodotto.imgProdotto?? && prodotto.imgProdotto != "">
+                                                <#assign imgUrl = base_url + "/public/img/prodotti/" + prodotto.imgProdotto>
                                             </#if>
                                             <img src="${imgUrl}" alt="${prodotto.nomeProdotto}" />
                                         </figure>
