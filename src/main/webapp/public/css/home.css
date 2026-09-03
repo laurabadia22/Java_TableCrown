@@ -1,0 +1,634 @@
+/* ============================================================
+   TableCrown — home.css
+   Stili specifici della homepage:
+   carosello hero, sezioni vetrina, card prodotto in riga,
+   elemento "Vedi tutti"
+   ============================================================ */
+
+
+/* ── CAROSELLO HERO ───────────────────────────────────────── */
+
+.hero-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    margin-bottom: 3rem;
+    height: 400px;
+    width: 100%;
+}
+
+.carousel-inner {
+    display: flex;
+    width: 300%; /* Gestisce 3 slide (100% * 3) */
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    color: #fff;
+    padding: 2.5rem 2rem;
+}
+
+/* Frecce di Navigazione Carosello */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 1rem;
+    pointer-events: none;
+}
+
+.carousel-nav .button {
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    transition: background var(--transition);
+}
+
+.carousel-nav .button:hover {
+    background: var(--color-primary) !important;
+}
+
+
+/* ── SPAZI E TITOLI DELLE SEZIONI VETRINA ─────────────────── */
+
+.home-section {
+    margin-bottom: 4.5rem;
+    color: var(--color-primary) !important;
+}
+
+.section-title {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 12px;
+    margin-bottom: 1.75rem;
+    font-weight: 700;
+    color: #463B54 !important;
+}
+
+
+/* ============================================================
+   CARD PRODOTTO (HOME)
+   ============================================================ */
+
+/* CONTENITORE CARD GENERALE */
+.card.home-card-fixed {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: var(--color-bg-dark-2) !important;
+    color: var(--color-text-light) !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden !important;
+    border: 1px solid var(--color-border-dark) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* BLOCCO IMMAGINE PRINCIPALE */
+.card.home-card-fixed .card-image {
+    width: 100% !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.image-container-fixed {
+    width: 100% !important;
+    height: 180px !important;
+    position: relative !important;
+    display: block !important;
+    margin: 0 !important;
+    background-color: #111827;
+    overflow: hidden;
+}
+
+.image-container-fixed img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+}
+
+/* CONTENUTO TEXT / INFO CARD */
+.card.home-card-fixed .card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    padding: 1.25rem !important;
+    background-color: transparent !important;
+}
+
+/* Struttura Media object di Bulma (Avatar + Titolo/Editore) */
+.card.home-card-fixed .card-content .media {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 0.75rem !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+.card.home-card-fixed .card-content .media-left {
+    flex-shrink: 0 !important;
+    margin-right: 0 !important;
+}
+
+.card.home-card-fixed .card-content .media-content {
+    flex-grow: 1 !important;
+    overflow: hidden !important;
+}
+
+/* Forzatura Avatar Categoria */
+.card.home-card-fixed .editor-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    object-fit: cover !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+/* Testi interni - Forzatura colore per contrasto */
+.card.home-card-fixed .card-title-custom {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.4rem !important;
+    line-height: 1.2 !important;
+    color: var(--color-text-light) !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.card.home-card-fixed .subtitle {
+    font-size: 0.85rem !important;
+    margin-bottom: 0 !important;
+    color: var(--color-text-subtle) !important;
+    opacity: 0.8 !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Descrizione del gioco */
+.game-description {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1.25rem !important;
+    color: #cbd5e1 !important;
+    flex-grow: 1;
+}
+
+/* Prezzi e icone orizzontali (contenitore) */
+.price-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Sovrascrittura colore prezzi all'interno della card scura */
+.card.home-card-fixed .price {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: var(--color-primary) !important;
+}
+
+.card.home-card-fixed .price-old {
+    font-size: var(--font-size-sm) !important;
+    color: var(--color-text-muted) !important;
+    text-decoration: line-through !important;
+}
+
+/* Footer personalizzato della card per la scadenza/data */
+.footer-card-custom,
+.footer-custom {
+    margin-top: auto !important;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-dark);
+    font-size: 0.8rem !important;
+    color: var(--color-text-subtle) !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-card-custom i,
+.footer-custom i {
+    color: var(--color-primary) !important;
+}
+
+
+/* ============================================================
+   STRUTTURA VETTORE RIGA PER LE CARD (VETRINA) — SCROLL ORIZZONTALE
+   ============================================================ */
+
+.card-row-vector {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    padding: 0.5rem 0.25rem 1.25rem !important;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Scrollbar minimale */
+.card-row-vector::-webkit-scrollbar {
+    height: 6px;
+}
+.card-row-vector::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+}
+.card-row-vector::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: var(--radius-sm);
+}
+
+/* Card prodotto - larghezza fissa */
+.card-vector-item {
+    flex: 0 0 280px !important;
+    max-width: 280px !important;
+    height: auto !important;
+}
+
+/* Responsive per schermi tablet/mobile per favorire lo scroll continuo */
+@media screen and (max-width: 768px) {
+    .card-vector-item {
+        flex: 0 0 240px !important;
+        max-width: 240px !important;
+    }
+}
+
+
+/* ── ELEMENTO "+ VEDI TUTTI" ──────────────────────────────── */
+
+/* Contenitore accodato alle card dello scroll orizzontale */
+.card-row-vector .card-vector-item.card-vector-more {
+    flex: 0 0 140px !important;
+    max-width: 140px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 1rem !important;
+}
+
+/* Link flessibile incolonnato (dati reali) */
+.view-more-link {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    width: 100%;
+}
+
+.view-more-link .circle-plus {
+    width: 56px !important;
+    height: 56px !important;
+    background-color: var(--color-bg-dark-2) !important;
+    border: 2px solid var(--color-border-dark) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: all var(--transition) !important;
+}
+
+.view-more-link .circle-plus span {
+    font-size: 28px !important;
+    line-height: 1 !important;
+    font-weight: 600 !important;
+    color: var(--color-primary) !important;
+    margin-top: -2px;
+    transition: color var(--transition) !important;
+}
+
+.view-more-link .view-more-text {
+    font-size: var(--font-size-md) !important;
+    font-weight: 600 !important;
+    color: var(--color-text-subtle) !important;
+    white-space: nowrap !important;
+    transition: color var(--transition) !important;
+}
+
+.view-more-link:hover .circle-plus {
+    border-color: var(--color-primary) !important;
+    transform: scale(1.08) !important;
+    background-color: var(--color-bg-dark) !important;
+}
+
+.view-more-link:hover .circle-plus span {
+    color: #ffffff !important;
+}
+
+.view-more-link:hover .view-more-text {
+    color: var(--color-primary) !important;
+}
+
+/* Link flessibile incolonnato (card demo) */
+.more-link-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    width: 100%;
+}
+
+.more-link-wrapper .more-circle-btn {
+    width: 56px !important;
+    height: 56px !important;
+    background-color: var(--color-bg-dark-2) !important;
+    border: 2px solid var(--color-border-dark) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: all var(--transition) !important;
+}
+
+.more-link-wrapper .more-plus-icon {
+    font-size: 28px !important;
+    line-height: 1 !important;
+    font-weight: 600 !important;
+    color: var(--color-primary) !important;
+    margin-top: -2px;
+    transition: color var(--transition) !important;
+}
+
+.more-link-wrapper .more-text {
+    font-size: var(--font-size-md) !important;
+    font-weight: 600 !important;
+    color: var(--color-text-subtle) !important;
+    white-space: nowrap !important;
+    transition: color var(--transition) !important;
+}
+
+.more-link-wrapper:hover .more-circle-btn {
+    border-color: var(--color-primary) !important;
+    transform: scale(1.08) !important;
+    background-color: var(--color-bg-dark) !important;
+}
+
+.more-link-wrapper:hover .more-plus-icon {
+    color: #ffffff !important;
+}
+
+.more-link-wrapper:hover .more-text {
+    color: var(--color-primary) !important;
+}
+
+
+/* ── LINK WRAPPER PER CARD CLICCABILI ─────────────────────── */
+.card-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+    transition: transform var(--transition);
+}
+
+.card-link-wrapper:hover {
+    transform: translateY(-4px);
+}
+
+.card-link-wrapper:hover .card.home-card-fixed {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+    border-color: var(--color-primary) !important;
+}
+
+
+/* ── SEARCH BAR HOME ──────────────────────────────────────── */
+
+.home-search-bar {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 2.5rem;
+}
+
+.home-search-form {
+    display: flex;
+    width: 100%;
+    max-width: 680px;
+    align-items: center;
+}
+
+.home-search-input {
+    flex-grow: 1;
+    height: 46px;
+    background-color: #ffffff;
+    border: 2px solid var(--color-border-light);
+    border-right: none;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+    color: #1f2937;
+    font-size: var(--font-size-lg);
+    padding: 0 16px;
+    transition: border-color var(--transition);
+}
+
+.home-search-input::placeholder {
+    color: #9ca3af;
+}
+
+.home-search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.home-search-btn {
+    height: 46px;
+    width: 52px;
+    background-color: var(--color-primary) !important;
+    border: 2px solid var(--color-primary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color var(--transition);
+    padding: 0;
+}
+
+.home-search-btn:hover {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+    .home-search-bar {
+        margin: 1.25rem 0 1.75rem;
+    }
+
+    .home-search-input {
+        height: 42px;
+        font-size: var(--font-size-md);
+    }
+
+    .home-search-btn {
+        height: 42px;
+        width: 46px;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   MODAL 3: PRODOTTO NON DISPONIBILE
+   ═══════════════════════════════════════════ */
+
+.unavailable-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.unavailable-modal.is-active {
+    display: flex;
+}
+
+.unavailable-modal .modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.75);
+}
+
+.unavailable-modal-content {
+    position: relative;
+    z-index: 1001;
+    background-color: #1e1e2f;
+    border: 1px solid #33334a;
+    border-radius: 10px;
+    padding: 2rem 1.75rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.unavailable-modal .modal-close-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.unavailable-modal .modal-close-btn:hover {
+    color: #fff;
+}
+
+.unavailable-modal-icon i {
+    font-size: 2.75rem;
+    color: #d64545;
+}
+
+.unavailable-modal-icon {
+    margin-bottom: 0.75rem;
+}
+
+.unavailable-modal-title {
+    color: #fff;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.unavailable-modal-text {
+    color: #bbb;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+}
+
+.unavailable-modal-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-unavailable-modal {
+    background-color: #d9a441;
+    color: #1a1a1a;
+    font-weight: 600;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background-color 0.15s ease;
+}
+
+.btn-unavailable-modal:hover {
+    background-color: #c8933a;
+}
+/* ── BADGE STATO PRODOTTO (esaurito / in arrivo) ──────────── */
+
+.badge-stato {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.badge-esaurito {
+    background-color: #d64545;
+}
+
+.badge-in-arrivo {
+    background-color: #3b82f6;
+}
