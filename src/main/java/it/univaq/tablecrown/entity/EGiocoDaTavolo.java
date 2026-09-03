@@ -66,9 +66,9 @@ public class EGiocoDaTavolo extends EProdotto{
         this.verificaCategoria();
         this.componenti = new LinkedHashSet<>(componenti);
         this.verificaComponenti();
-        this.difficolta = difficolta;
-        this.lingua = lingua;
-        this.giocoBase = giocoBase;
+        this.impostaDifficolta(difficolta);
+        this.impostaLingua(lingua);
+        this.impostaGiocoBase(giocoBase);
         this.verificaVincoliEspansione();
         this.numeroGiocatoriMin = numeroGiocatoriMin;
         this.numeroGiocatoriMax = numeroGiocatoriMax;
@@ -138,6 +138,13 @@ public class EGiocoDaTavolo extends EProdotto{
 
     public void impostaDifficolta(DifficoltaGioco difficolta) {
         this.difficolta = difficolta;
+    }
+
+    public void impostaGiocoBase(EGiocoDaTavolo giocoBase) {
+        if (giocoBase != null && giocoBase.equals(this)) {
+            throw new IllegalArgumentException("Un gioco da tavolo non può essere espansione di se stesso.");
+        }
+        this.giocoBase = giocoBase;
     }
 
     public void aggiungiCategoria(Categoria categoria) {

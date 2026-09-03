@@ -118,28 +118,10 @@ public class CProfilo extends BaseController {
                 utente.cambiaEmail(email);
             }
 
-            Part imgPart = request.getPart("img_profilo");
-            if (imgPart != null && imgPart.getSize() > 0) {
-                //Estrae il nome originale del file
-                String fileName = java.nio.file.Paths.get(imgPart.getSubmittedFileName()).getFileName().toString();
-
-                //Genera un nome univoco per evitare sovrascritture di file con lo stesso nome
-                String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
-
-                //Definisce la cartella di destinazione sul server
-                String uploadPath = request.getServletContext().getRealPath("") + java.io.File.separator + "uploads" + java.io.File.separator + "profili";
-                java.io.File uploadDir = new java.io.File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-
-                //Salva fisicamente il file
-                String filePath = uploadPath + java.io.File.separator + uniqueFileName;
-                imgPart.write(filePath);
-
-                //Salva il percorso relativo nel database tramite l'entity
-                String relativePath = "uploads/profili/" + uniqueFileName;
-                utente.aggiornaImmagine(relativePath);
+            // GESTIONE IMMAGINE PROFILO: Un'unica chiamata al metodo di BaseController
+            String nuovaImmagine = salvaImmagineSuDisco(request, "img_profilo", "profili");
+            if (nuovaImmagine != null) {
+                utente.aggiornaImmagine(nuovaImmagine);
             }
 
             boolean salvato = pm.PMsaveObj(utente);

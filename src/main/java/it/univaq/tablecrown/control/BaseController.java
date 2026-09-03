@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -199,32 +201,66 @@ public abstract class BaseController {
      */
     protected String formattaImporto(double importo) {
         return String.format(Locale.US, "%.2f", importo);
-    }
+    }//TODO: MAI USATOOO???
 
     /**
      * Recupera in sicurezza un Part (file caricato) dalla richiesta HTTP multipart.
+     * Restituisce null se il campo non esiste o non è stato caricato alcun file.
      */
-    //TODO: DA RIVEDERE
     protected Part estraiPart(HttpServletRequest request, String nomeCampo) {
         try {
-            return request.getPart(nomeCampo);
+            Part part = request.getPart(nomeCampo);
+            if (part != null && part.getSize() > 0 && part.getSubmittedFileName() != null
+                    && !part.getSubmittedFileName().trim().isEmpty()) {
+                return part;
+            }
         } catch (Exception e) {
+            // In caso di eccezioni di parsing multipart o campo assente
             return null;
         }
+        return null;
     }
 
     /**
-     * Converte il Part di un'immagine caricata nel relativo array di byte (byte[]).
-     * Restituisce null se l'immagine non è stata selezionata nel form.
+     * Salva un file caricato su disco generandone un nome univoco e restituisce
+     * il percorso relativo pronto da salvare nel Database.
+     *
+     * @param request       La richiesta HTTP per ricavare la root del ServletContext
+     * @param nomeCampo     Il nome del campo input type="file" nel form HTML
+     * @param sottoCartella La cartella specifica dentro 'uploads' (es. "profili", "prodotti")
+     * @return Percorso relativo (es. "uploads/profili/uuid_nome.png") oppure null se nessun file caricato.
+     * @throws IOException In caso di errori durante la scrittura del file su disco.
      */
-    //TODO: DA RIVEDERE
-    protected byte[] estraiImmagine(Part filePart) throws IOException {
-        if (filePart == null || filePart.getSize() == 0 || filePart.getSubmittedFileName() == null || filePart.getSubmittedFileName().trim().isEmpty()) {
+    protected String salvaImmagineSuDisco(HttpServletRequest request, String nomeCampo, String sottoCartella)
+            throws IOException {
+
+        Part part = estraiPart(request, nomeCampo);
+        if (part == null) {
             return null;
         }
-        try (InputStream is = filePart.getInputStream()) {
-            return is.readAllBytes();
+
+        // 1. Estrazione del nome originale del file
+        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+
+        // 2. Generazione nome univoco per evitare sovrascritture (UUID)
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+
+        // 3. Calcolo del percorso fisico sul server
+        String uploadPath = request.getServletContext().getRealPath("")
+                + File.separator + "uploads"
+                + File.separator + sottoCartella;
+
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
         }
+
+        // 4. Scrittura del file su disco
+        String filePath = uploadPath + File.separator + uniqueFileName;
+        part.write(filePath);
+
+        // 5. Restituisce il percorso relativo formattato
+        return "uploads/" + sottoCartella + "/" + uniqueFileName;
     }
 
     // CATALOGO/PRODOTTI
