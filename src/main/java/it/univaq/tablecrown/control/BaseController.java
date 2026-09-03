@@ -436,24 +436,6 @@ public abstract class BaseController {
         //Deleghiamo il rendering al metodo generico creato già nel BaseController
         renderizza(vista + ".ftl", request, response);
 
-//        //TODO: BOH DA CAPIRE STA COSA (DA CANCELLARE??) (SERVONO ENTRAMBI renderCatalogo E renderizza??)
-//        //Rendering con FreeMarker
-//        Map<String, Object> model = new HashMap<>();
-//        Enumeration<String> nomiAttributi = request.getAttributeNames();
-//        while (nomiAttributi.hasMoreElements()) {
-//            String nome = nomiAttributi.nextElement();
-//            model.put(nome, request.getAttribute(nome));
-//        }
-//
-//        try {
-//            response.setContentType("text/html; charset=UTF-8");
-//            // Poiché i file .ftl sono direttamente dentro /WEB-INF/templates/
-//            freemarker.template.Template template =
-//                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(vista + ".ftl");
-//            template.process(model, response.getWriter());
-//        } catch (freemarker.template.TemplateException | IOException e) {
-//            throw new ServletException("Errore nel rendering del template " + vista, e);
-//        }
     }
 
     private boolean isNumeric(String str) {

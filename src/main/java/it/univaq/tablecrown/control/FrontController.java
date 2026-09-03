@@ -197,6 +197,29 @@ public class FrontController extends HttpServlet {
                     }
                     break;
 
+                case "checkout":
+                    CCheckout checkoutController = new CCheckout();
+                    switch (sottoRoute) {
+                        case "":
+                            if ("GET".equals(metodoHTTP)) {
+                                checkoutController.mostraCheckout(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        case "acquista":
+                            if ("POST".equals(metodoHTTP)) {
+                                checkoutController.elaboraAcquisto(request, response, em);
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+                        default:
+                            mostra404(response);
+                            break;
+                    }
+                    break;
+
                 case "profilo":
                     CProfilo profiloController = new CProfilo();
                     switch (sottoRoute) {
@@ -257,12 +280,169 @@ public class FrontController extends HttpServlet {
                             }
                             break;
                         case "pagamenti":
+                            if (parti.length > 2) {
+                                String sottoPagamenti = parti[2].toLowerCase();
+                                CMetodiPagamento metodiPagamentoController = new CMetodiPagamento();
+
+                                switch (sottoPagamenti) {
+                                    case "aggiungi":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            metodiPagamentoController.aggiungiCarta(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    case "elimina":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            metodiPagamentoController.eliminaCarta(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    default:
+                                        mostra404(response);
+                                        break;
+                                }
+                            } else {
+                                if ("GET".equals(metodoHTTP)) {
+                                    profiloController.mostraMetodiPagamento(request, response, em);
+                                } else {
+                                    mostra404(response);
+                                }
+                            }
+                            break;
+
+                        default:
+                            mostra404(response);
+                            break;
+                    }
+                    break;
+
+                case "gestore":
+                    CGestore gestoreController = new CGestore();
+                    switch (sottoRoute) {
+                        case "":
+                        case "dashboard":
                             if ("GET".equals(metodoHTTP)) {
-                                profiloController.mostraMetodiPagamento(request, response, em);
+                                gestoreController.mostraDashboardGestore(request, response, em);
                             } else {
                                 mostra404(response);
                             }
                             break;
+
+                        case "catalogo":
+                            if (parti.length > 2) {
+                                String sottoCatalogo = parti[2].toLowerCase();
+                                boolean haSottoAzione = parti.length > 3;
+                                String sottoAzione = haSottoAzione ? parti[3].toLowerCase() : "";
+
+                                switch (sottoCatalogo) {
+                                    case "giochi-da-tavolo":
+                                        if (haSottoAzione && "nuovo".equals(sottoAzione)) {
+                                            if ("POST".equals(metodoHTTP)) {
+                                                gestoreController.creaGiocoDaTavolo(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        } else {
+                                            if ("GET".equals(metodoHTTP)) {
+                                                gestoreController.mostraCatalogoGiochiGestore(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        }
+                                        break;
+
+                                    case "bustine":
+                                        if (haSottoAzione && "nuovo".equals(sottoAzione)) {
+                                            if ("POST".equals(metodoHTTP)) {
+                                                gestoreController.creaBustine(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        } else {
+                                            if ("GET".equals(metodoHTTP)) {
+                                                gestoreController.mostraCatalogoBustineGestore(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        }
+                                        break;
+
+                                    case "porta-dadi":
+                                        if (haSottoAzione && "nuovo".equals(sottoAzione)) {
+                                            if ("POST".equals(metodoHTTP)) {
+                                                gestoreController.creaPortaDadi(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        } else {
+                                            if ("GET".equals(metodoHTTP)) {
+                                                gestoreController.mostraCatalogoPortaDadiGestore(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        }
+                                        break;
+
+                                    case "prodotto":
+                                        if (haSottoAzione && "elimina".equals(sottoAzione)) {
+                                            if ("POST".equals(metodoHTTP)) {
+                                                gestoreController.eliminaProdottoGestore(request, response, em);
+                                            } else {
+                                                mostra404(response);
+                                            }
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    default:
+                                        mostra404(response);
+                                        break;
+                                }
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+
+                        case "crea":
+                            if (parti.length > 2) {
+                                String tipoProdotto = parti[2].toLowerCase();
+                                if ("GET".equals(metodoHTTP)) {
+                                    switch (tipoProdotto) {
+                                        case "gioco-da-tavolo" -> gestoreController.mostraFormCreaGiocoGestore(request, response, em);
+                                        case "bustine" -> gestoreController.mostraFormCreaBustineGestore(request, response);
+                                        case "porta-dadi" -> gestoreController.mostraFormCreaPortaDadiGestore(request, response);
+                                        default -> mostra404(response);
+                                    }
+                                } else {
+                                    mostra404(response);
+                                }
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+
+                        case "prodotti":
+                            if (parti.length > 2) {
+                                String azioneProdotti = parti[2].toLowerCase();
+                                if ("POST".equals(metodoHTTP)) {
+                                    switch (azioneProdotti) {
+                                        case "quantita" -> gestoreController.aggiornaQuantitaProdottoGestore(request, response, em);
+                                        case "modifica" -> gestoreController.modificaProdottoGestore(request, response, em);
+                                        default -> mostra404(response);
+                                    }
+                                } else {
+                                    mostra404(response);
+                                }
+                            } else {
+                                mostra404(response);
+                            }
+                            break;
+
                         default:
                             mostra404(response);
                             break;
