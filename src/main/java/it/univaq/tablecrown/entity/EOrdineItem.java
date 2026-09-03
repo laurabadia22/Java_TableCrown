@@ -8,7 +8,7 @@ public class EOrdineItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_ordine_item")
+    @Column(name = "idOrdineItem")
     private Long idOrdineItem;
 
     @Column(name = "quantita", nullable = false)
@@ -16,14 +16,14 @@ public class EOrdineItem {
 
     // Snapshot del prezzo/sconto al momento dell'acquisto: se il prezzo del
     // prodotto cambia in futuro, lo storico dell'ordine rimane corretto.
-    @Column(name = "prezzo_unitario", nullable = false)
+    @Column(name = "prezzoUnitario", nullable = false)
     private float prezzoUnitario;
 
-    @Column(name = "sconto_applicato", nullable = false)
+    @Column(name = "scontoApplicato", nullable = false)
     private float scontoApplicato;
 
     @ManyToOne
-    @JoinColumn(name = "ordine_id", referencedColumnName = "id_ordine", nullable = false)
+    @JoinColumn(name = "ordine_id", referencedColumnName = "idOrdine", nullable = false)
     private EOrdine ordine;
 
     @ManyToOne

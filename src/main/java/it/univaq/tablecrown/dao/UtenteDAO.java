@@ -93,19 +93,6 @@ public class UtenteDAO extends GenericDAO {
     }
 
 
-    public List<ERecensione> getRecensioniSegnalateDiUtente(int idUtente) {
-        try {
-            String jpql = "SELECT DISTINCT r FROM ESegnalazione s JOIN s.recensione r " +
-                    "WHERE s.utente.idpersona = :idUtente AND s.statosegnalazione = :stato";
 
-            return em.createQuery(jpql, ERecensione.class)
-                    .setParameter("idUtente", idUtente)
-                    .setParameter("stato", StatoSegnalazione.IN_ATTESA)
-                    .getResultList();
-        } catch (Exception e) {
-            System.err.println("Errore in getRecensioniSegnalateDiUtente: " + e.getMessage());
-            return new ArrayList<>();
-        }
-    }
 }
 */

@@ -33,7 +33,7 @@ public class EIndirizzo {
     @Column(name = "nazione", nullable = false, length = 100)
     private String nazione;
 
-    @Column(name = "nome_citofono", nullable = false, length = 100)
+    @Column(name = "nomeCitofono", nullable = false, length = 100)
     private String nomeCitofono;
 
     @ManyToOne

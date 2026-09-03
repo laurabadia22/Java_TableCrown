@@ -13,7 +13,7 @@ public class EOrdine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_ordine")
+    @Column(name = "idOrdine")
     private Long idOrdine;
 
     @Column(name = "data", nullable = false)
@@ -34,10 +34,10 @@ public class EOrdine {
     // Snapshot carta di credito: non salviamo il riferimento alla carta ma solo
     // i dati necessari, così se la carta viene eliminata o scade, lo storico
     // degli ordini rimane intatto.
-    @Column(name = "ultime_quattro_cifre_carta", nullable = false, length = 4)
+    @Column(name = "ultimeQuattroCifreCarta", nullable = false, length = 4)
     private String ultimeQuattroCifreCarta;
 
-    @Column(name = "nome_titolare_carta", nullable = false, length = 100)
+    @Column(name = "nomeTitolareCarta", nullable = false, length = 100)
     private String nomeTitolareCarta;
 
     @OneToMany(mappedBy = "ordine", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

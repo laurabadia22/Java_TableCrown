@@ -28,23 +28,23 @@ public class EGiocoDaTavolo extends EProdotto{
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EGiocoDaTavolo giocoBase;
 
-    @Column(name = "numero_giocatori_min", nullable = false)
+    @Column(name = "numeroGiocatoriMin", nullable = false)
     private int numeroGiocatoriMin;
 
-    @Column(name = "numero_giocatori_max", nullable = false)
+    @Column(name = "numeroGiocatoriMax", nullable = false)
     private int numeroGiocatoriMax;
 
-    @Column(name = "eta_minima", nullable = false)
+    @Column(name = "etaMinima", nullable = false)
     private int etaMinima;
 
-    @Column(name = "durata_media", nullable = false)
+    @Column(name = "durataMedia", nullable = false)
     private int durataMedia;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "livello_danno")
     private LivelloDannoGiochi livelloDanno;
 
-    @Column(name = "descrizione_danno", columnDefinition = "TEXT")
+    @Column(name = "descrizioneDanno", columnDefinition = "TEXT")
     private String descrizioneDanno;
 
     @Enumerated(EnumType.STRING)

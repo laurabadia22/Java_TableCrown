@@ -18,16 +18,16 @@ public class ECartaDiCredito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_carta_di_credito")
+    @Column(name = "idCartaDiCredito")
     private Long idCartaDiCredito;
 
     @Column(name = "titolare", nullable = false, length = 100)
     private String titolare;
 
-    @Column(name = "data_scadenza", nullable = false)
+    @Column(name = "dataScadenza", nullable = false)
     private YearMonth dataScadenza;
 
-    @Column(name = "ultime_quattro_cifre", nullable = false, length = 4)
+    @Column(name = "ultimeQuattroCifre", nullable = false, length = 4)
     private String ultimeQuattroCifre;
 
     @Column(name = "token", nullable = false, length = 255, unique = true)

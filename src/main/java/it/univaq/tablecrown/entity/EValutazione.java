@@ -6,7 +6,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class EValutazione {
 
-    @Column(name = "valutazione_media", nullable = false)
+    @Column(name = "valutazioneMedia", nullable = false)
     private float media = 0.0f;
 
     @Column(name = "numero_valutazioni", nullable = false)
