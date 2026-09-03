@@ -19,18 +19,19 @@ public class BustineDAO extends GenericDAO {
 
     public Map<String, Object> findBustine(Map<String, Object> filtri, int limit, int offset) {
         try {
-            StringBuilder jpqlBase = new StringBuilder("FROM EBustine b JOIN b.prezzo pr ");
+            // RIMOSSO: il JOIN su b.prezzo
+            StringBuilder jpqlBase = new StringBuilder("FROM EBustine b ");
             List<String> condizioni = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
             // 1. Filtri Prezzo
             if (filtri.containsKey("price_min")) {
-                condizioni.add("pr.valore >= :price_min");
+                condizioni.add("b.prezzo >= :price_min"); // MODIFICATO
                 parametri.put("price_min", filtri.get("price_min"));
             }
 
             if (filtri.containsKey("price_max")) {
-                condizioni.add("pr.valore <= :price_max");
+                condizioni.add("b.prezzo <= :price_max"); // MODIFICATO
                 parametri.put("price_max", filtri.get("price_max"));
             }
 
@@ -73,7 +74,7 @@ public class BustineDAO extends GenericDAO {
                         parametri.put("datalimite", LocalDate.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("pr.sconto > 0");
+                        condizioni.add("b.sconto.sconto > 0"); // MODIFICATO
                     }
                 }
             }
@@ -95,7 +96,7 @@ public class BustineDAO extends GenericDAO {
             Long totale = (Long) queryCount.getSingleResult();
 
             // Query 2: Prezzi minimi e massimi
-            Query queryMinMax = em.createQuery("SELECT MIN(pr.valore), MAX(pr.valore) " + jpqlBase.toString());
+            Query queryMinMax = em.createQuery("SELECT MIN(b.prezzo), MAX(b.prezzo) " + jpqlBase.toString()); // MODIFICATO
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = (Object[]) queryMinMax.getSingleResult();
 
@@ -108,8 +109,8 @@ public class BustineDAO extends GenericDAO {
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo-asc":  jpqlMain.append("ORDER BY pr.valore ASC"); break;
-                    case "prezzo-desc": jpqlMain.append("ORDER BY pr.valore DESC"); break;
+                    case "prezzo-asc":  jpqlMain.append("ORDER BY b.prezzo ASC"); break; // MODIFICATO
+                    case "prezzo-desc": jpqlMain.append("ORDER BY b.prezzo DESC"); break; // MODIFICATO
                     case "popolarita":  jpqlMain.append("ORDER BY b.numeroVendite DESC"); break;
                     case "rating":      jpqlMain.append("ORDER BY b.valutazioneMedia DESC"); break;
                     default:            jpqlMain.append("ORDER BY b.dataPubblicazione DESC"); break;

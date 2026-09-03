@@ -23,14 +23,13 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
     public Map<String, Object> findGiochi(Map<String, Object> filtri, int limit, int offset) {
         try {
-            //una stringa che crescerà dinamicamente per costruire la query completa, al momento ne contiene solo il corpo principale
-            StringBuilder jpqlBase = new StringBuilder("FROM EGiocoDaTavolo g JOIN g.prezzo pr ");
-            //un array ocn tutte le condizioni che verranno applicate, sarano poi unite tramite degli AND
+            // RIMOSSO: il JOIN su g.prezzo, ora usiamo direttamente g
+            StringBuilder jpqlBase = new StringBuilder("FROM EGiocoDaTavolo g ");
+
             List<String> condizioni = new ArrayList<>();
-            //serve per evitare SQLinjection, conterrà tutti i "setparameter" che saranno applicati tutti insieme
             Map<String, Object> parametri = new HashMap<>();
 
-            //Filtri Enum Base
+            // Filtri Enum Base
             if (filtri.containsKey("difficolta")) {
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
                 if (!enumDiff.isEmpty()) {
@@ -47,7 +46,6 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 }
             }
 
-            // AGGIORNATO: Il danno ora è un campo diretto di g
             if (filtri.containsKey("danno_selected")) {
                 List<LivelloDannoGiochi> enumDanno = parseEnumList(filtri.get("danno_selected"), LivelloDannoGiochi.class);
                 if (!enumDanno.isEmpty()) {
@@ -64,7 +62,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 }
             }
 
-            // AGGIORNATO: Filtro Categorie (Set di Enum con JOIN dinamico)
+            // Filtro Categorie (Set di Enum con JOIN dinamico) - QUESTO RIMANE perché le categorie sono una collezione (tabella a parte)
             if (filtri.containsKey("categoria_selected")) {
                 List<Categoria> enumCat = parseEnumList(filtri.get("categoria_selected"), Categoria.class);
                 if (!enumCat.isEmpty()) {
@@ -76,12 +74,12 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
             // 3. Filtri Numerici ed Esatti
             if (filtri.containsKey("price_min")) {
-                condizioni.add("pr.valore >= :price_min");
+                condizioni.add("g.prezzo >= :price_min"); // MODIFICATO da pr.valore a g.prezzo
                 parametri.put("price_min", filtri.get("price_min"));
             }
 
             if (filtri.containsKey("price_max")) {
-                condizioni.add("pr.valore <= :price_max");
+                condizioni.add("g.prezzo <= :price_max"); // MODIFICATO da pr.valore a g.prezzo
                 parametri.put("price_max", filtri.get("price_max"));
             }
 
@@ -120,7 +118,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                         parametri.put("dispNovita", DisponibilitaProdotto.DISPONIBILE);
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("pr.sconto > 0");
+                        condizioni.add("g.sconto.sconto > 0"); // MODIFICATO per accedere all'embedded
                     }
                 }
             }
@@ -135,8 +133,8 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             parametri.forEach(queryCount::setParameter);
             Long totale = (Long) queryCount.getSingleResult();
 
-            // Query MIN/MAX
-            Query queryMinMax = em.createQuery("SELECT MIN(pr.valore), MAX(pr.valore) " + jpqlBase.toString());
+            // Query MIN/MAX - MODIFICATO da pr.valore a g.prezzo
+            Query queryMinMax = em.createQuery("SELECT MIN(g.prezzo), MAX(g.prezzo) " + jpqlBase.toString());
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = (Object[]) queryMinMax.getSingleResult();
 
@@ -149,8 +147,8 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo-asc":  jpqlMain.append("ORDER BY pr.valore ASC"); break;
-                    case "prezzo-desc": jpqlMain.append("ORDER BY pr.valore DESC"); break;
+                    case "prezzo-asc":  jpqlMain.append("ORDER BY g.prezzo ASC"); break; // MODIFICATO
+                    case "prezzo-desc": jpqlMain.append("ORDER BY g.prezzo DESC"); break; // MODIFICATO
                     case "popolarita":  jpqlMain.append("ORDER BY g.numeroVendite DESC"); break;
                     case "rating":      jpqlMain.append("ORDER BY g.valutazioneMedia DESC"); break;
                     default:            jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;

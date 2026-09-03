@@ -19,19 +19,19 @@ public class PortaDadiDAO extends GenericDAO {
 
     public Map<String, Object> findPortaDadi(Map<String, Object> filtri, int limit, int offset) {
         try {
-            // 1. Inizializziamo i costruttori per la query dinamica
-            StringBuilder jpqlBase = new StringBuilder("FROM EPortaDadi p JOIN p.prezzo pr ");
+            // 1. Inizializziamo i costruttori per la query dinamica (RIMOSSA LA JOIN)
+            StringBuilder jpqlBase = new StringBuilder("FROM EPortaDadi p ");
             List<String> condizioni = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
             // 2. Costruzione dinamica dei filtri
             if (filtri.containsKey("price_min")) {
-                condizioni.add("pr.valore >= :prezzo_min");
+                condizioni.add("p.prezzo >= :prezzo_min"); // MODIFICATO
                 parametri.put("prezzo_min", filtri.get("price_min"));
             }
 
             if (filtri.containsKey("price_max")) {
-                condizioni.add("pr.valore <= :prezzo_max");
+                condizioni.add("p.prezzo <= :prezzo_max"); // MODIFICATO
                 parametri.put("prezzo_max", filtri.get("price_max"));
             }
 
@@ -79,7 +79,7 @@ public class PortaDadiDAO extends GenericDAO {
                         parametri.put("datalimite", LocalDateTime.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("pr.sconto > 0");
+                        condizioni.add("p.sconto.sconto > 0"); // MODIFICATO
                     }
                 }
             }
@@ -100,7 +100,7 @@ public class PortaDadiDAO extends GenericDAO {
             Long totale = queryCount.getSingleResult();
 
             // 5. Query: MIN / MAX Prezzo
-            TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(pr.valore), MAX(pr.valore) " + jpqlBase.toString(), Object[].class);
+            TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(p.prezzo), MAX(p.prezzo) " + jpqlBase.toString(), Object[].class); // MODIFICATO
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = queryMinMax.getSingleResult();
 
@@ -113,8 +113,8 @@ public class PortaDadiDAO extends GenericDAO {
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo-asc":  jpqlMain.append("ORDER BY pr.valore ASC"); break;
-                    case "prezzo-desc": jpqlMain.append("ORDER BY pr.valore DESC"); break;
+                    case "prezzo-asc":  jpqlMain.append("ORDER BY p.prezzo ASC"); break; // MODIFICATO
+                    case "prezzo-desc": jpqlMain.append("ORDER BY p.prezzo DESC"); break; // MODIFICATO
                     case "popolarita":  jpqlMain.append("ORDER BY p.numeroVendite DESC"); break;
                     case "rating":      jpqlMain.append("ORDER BY p.valutazioneMedia DESC"); break;
                     default:            jpqlMain.append("ORDER BY p.dataPubblicazione DESC"); break;

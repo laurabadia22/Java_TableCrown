@@ -98,7 +98,7 @@
 
                                         <!-- Prezzi formattati -->
                                         <div class="price-container">
-                                            <#if prodotto.sconto?? && prodotto.sconto.sconto > 0>
+                                            <#if prodotto.sconto.hasSconto()>
                                                 <#assign prezzoScontato = prodotto.prezzo * (1 - prodotto.sconto.sconto / 100)>
                                                 <span class="price">${prezzoScontato?string("0.00")} €</span>
                                                 <span class="price-old">${prodotto.prezzo?string("0.00")} €</span>
