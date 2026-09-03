@@ -115,6 +115,18 @@ public class UHTTPMethods {
         return value.equals("true") || value.equals("1") || value.equals("on") || value.equals("yes");
     }
 
+    public static Long postLong(HttpServletRequest request, String paramName, Long defaultValue) {
+        String value = request.getParameter(paramName);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        try {
+            return Long.parseLong(value.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
     public static boolean isAjax(HttpServletRequest request) {
         String requestedWith = request.getHeader("X-Requested-With");
         if (requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest")) {

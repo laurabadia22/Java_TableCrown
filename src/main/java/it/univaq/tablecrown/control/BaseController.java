@@ -485,6 +485,8 @@ public abstract class BaseController {
         return prodottiCorrelati(em, idsEsclusi, 8);
     }
 
+    // UTENTI
+
     /**
      * Simile a utenteCorrente(), ma utile in contesti in cui il login è facoltativo
      * (es. pagine pubbliche che mostrano contenuto diverso se l'utente è loggato).
@@ -554,5 +556,51 @@ public abstract class BaseController {
         return utente;
     }
 
+    // CARRELLO
+
+    /**
+     * Trasforma la mappa del carrello della sessione in una lista di Map contenenti
+     * l'entità EProdotto, la quantità, il prezzo unitario scontato e il subtotale.
+     */
+    protected List<Map<String, Object>> buildCarrelloItems(Map<Long, Integer> carrelloMap, PersistentManager pm) {
+        List<Map<String, Object>> carrelloItems = new ArrayList<>();
+        if (carrelloMap == null || carrelloMap.isEmpty()) {
+            return carrelloItems;
+        }
+
+        for (Map.Entry<Long, Integer> entry : carrelloMap.entrySet()) {
+            Long idProdotto = entry.getKey();
+            Integer quantita = entry.getValue();
+
+            EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
+            if (prodotto != null) {
+                double prezzoUnitario = prodotto.getPrezzoScontato();
+                double subtotale = prezzoUnitario * quantita;
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("prodotto", prodotto);
+                item.put("quantita", quantita);
+                item.put("prezzoUnitario", prezzoUnitario);
+                item.put("subtotale", subtotale);
+
+                carrelloItems.add(item);
+            }
+        }
+        return carrelloItems;
+    }
+
+    /**
+     * Calcola la somma dei subtotali per gli elementi del carrello.
+     */
+    protected double calcolaTotaleCarrello(List<Map<String, Object>> carrelloItems) {
+        double totale = 0.0;
+        for (Map<String, Object> item : carrelloItems) {
+            Object subtotaleObj = item.get("subtotale");
+            if (subtotaleObj instanceof Number) {
+                totale += ((Number) subtotaleObj).doubleValue();
+            }
+        }
+        return totale;
+    }
 
 }
