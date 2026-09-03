@@ -19,7 +19,7 @@ public abstract class EProdotto {
     @Column(name = "nomeProdotto", nullable = false, length = 255)
     private String nomeProdotto;
 
-    @Column(name = "img_prodotto", length = 255)
+    @Column(name = "imgProdotto", length = 255)
     private String imgProdotto;
 
     @Column(name = "descrizioneProdotto", columnDefinition = "TEXT", nullable = false)

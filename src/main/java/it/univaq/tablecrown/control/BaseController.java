@@ -35,7 +35,7 @@ public abstract class BaseController {
             "porta-dadi", "Porta Dadi"
     );
 
-    protected static final int RISULTATI_PER_PAGINA = 20;
+    protected static final int RISULTATI_PER_PAGINA = 15;
     protected static final List<String> ORDINAMENTO_VALIDI = List.of("prezzo_asc", "prezzo_desc", "novita", "valutazione");
     protected static final List<String> IN_EVIDENZA_VALIDI = List.of("offerte", "novita", "piu_venduti");
 

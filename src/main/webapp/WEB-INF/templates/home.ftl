@@ -1,26 +1,52 @@
 <#import "common/layout.ftl" as layout>
 
 <#-- Script per il carosello iniettato in extra_js -->
+
+<#assign home_css>
+    <link rel="stylesheet" href="${base_url}/public/css/home.css">
+</#assign>
+
 <#assign carosello_script>
     <script>
-        $(document).ready(function() {
+        document.addEventListener("DOMContentLoaded", function() {
             let currentSlide = 0;
-            const totalSlides = 3;
-            const $inner = $('#carousel-inner');
+            const items = document.querySelectorAll('#carousel-inner .carousel-item');
+            const totalSlides = items.length; // Prende il totale dinamicamente
+            const inner = document.getElementById('carousel-inner');
 
             function moveSlide(index) {
                 currentSlide = (index + totalSlides) % totalSlides;
-                $inner.css('transform', 'translateX(-' + (currentSlide * 100 / totalSlides) + '%)');
+                //Sposta la percentuale corretta in base al numero totale delle slides
+                let percentage = currentSlide * (100 / totalSlides);
+                inner.style.transform = 'translateX(-' + percentage + '%)';
             }
 
-            $('#next-slide').click(function() { moveSlide(currentSlide + 1); });
-            $('#prev-slide').click(function() { moveSlide(currentSlide - 1); });
-            setInterval(function() { moveSlide(currentSlide + 1); }, 5000);
+            const nextBtn = document.getElementById('next-slide');
+            const prevBtn = document.getElementById('prev-slide');
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    moveSlide(currentSlide + 1);
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    moveSlide(currentSlide - 1);
+                });
+            }
+
+            //Cambio automatico ogni 5 secondi
+            setInterval(function() {
+                moveSlide(currentSlide + 1);
+                }, 5000);
         });
     </script>
 </#assign>
 
-<@layout.page page_title="Home - TableCrown" extra_js=carosello_script>
+<@layout.page page_title="Home - TableCrown" extra_css=home_css extra_js=carosello_script>
 
     <div class="container px-4">
 
@@ -38,21 +64,21 @@
         <div class="hero-carousel" id="home-carousel">
             <div class="carousel-inner" id="carousel-inner">
                 <div class="carousel-item">
-                    <img src="${base_url}/public/img/carousel/slide1.jpg" alt="Nuovi Giochi">
+                    <img src="${base_url}/public/img/carousel/carousel_slide1.jpg" alt="Nuovi Giochi">
                     <div class="carousel-caption">
                         <h2 class="title is-3 has-text-white">Esplora le ultime novità</h2>
                         <p class="subtitle is-5 has-text-warning">I migliori titoli del 2026 arrivano su TableCrown</p>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="${base_url}/public/img/carousel/slide2.jpg" alt="Bustine e Accessori">
+                    <img src="${base_url}/public/img/carousel/carousel_slide2.jpg" alt="Bustine e Accessori">
                     <div class="carousel-caption">
                         <h2 class="title is-3 has-text-white">Proteggi la tua collezione</h2>
                         <p class="subtitle is-5 has-text-warning">Bustine protettive e porta dadi per le tue partite</p>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="${base_url}/public/img/carousel/slide3.jpg" alt="Offerte Speciali">
+                    <img src="${base_url}/public/img/carousel/carousel_slide3.jpg" alt="Offerte Speciali">
                     <div class="carousel-caption">
                         <h2 class="title is-3 has-text-white">Sconti imbattibili</h2>
                         <p class="subtitle is-5 has-text-warning">Fino al 40% di sconto sui giochi di strategia</p>

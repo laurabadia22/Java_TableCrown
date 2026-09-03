@@ -25,9 +25,10 @@
 }
 
 .carousel-item {
-    width: 100%;
+    width: calc(100% / 3);
     height: 100%;
     position: relative;
+    flex-shrink: 0; /* Impedisce alle slide di restringersi */
 }
 
 .carousel-item img {

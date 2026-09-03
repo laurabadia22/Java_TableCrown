@@ -249,9 +249,12 @@
     </footer>
 
     <!-- JS -->
-    <script src="${base_url}/public/plugins/jQuery/jquery.min.js"></script>
-    <script src="${base_url}/public/plugins/match-height/jquery.matchHeight-min.js"></script>
-    <script src="${base_url}/public/js/script.js"></script>
+<#--    <script src="${base_url}/public/plugins/jQuery/jquery.min.js"></script>-->
+<#--    <script src="${base_url}/public/plugins/match-height/jquery.matchHeight-min.js"></script>-->
+<#--    <script src="${base_url}/public/js/script.js"></script>-->
+
+    <!-- JS Extra inserito dalle pagine figlie -->
+    ${extra_js}
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

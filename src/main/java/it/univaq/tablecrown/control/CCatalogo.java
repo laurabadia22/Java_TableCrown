@@ -129,12 +129,13 @@ public class CCatalogo extends BaseController{
 
         Map<String, Object> risultatoGrezzo = pm.PMfindProdottiInOfferta(RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
 
-        renderCatalogo(request, response, "offerte", risultatoGrezzo, pagina, new HashMap<>(), null);
+        renderCatalogo(request, response, "catalogoOfferte", risultatoGrezzo, pagina, new HashMap<>(), null);
     }
 
     /**
      * Restituisce l'URL del catalogo specifico in base all'istanza del prodotto.
      */
+    //TODO: forse va spostato nel base controller/usato per il dettaglio del prodotto
     protected String urlCatalogo(EProdotto prodotto) {
         if (prodotto instanceof EGiocoDaTavolo) {
             return "/catalogo/giochi-da-tavolo";
@@ -158,20 +159,20 @@ public class CCatalogo extends BaseController{
         breadcrumbs.add(home);
 
         Map<String, String> current = new HashMap<>();
-        switch (currentPage) {
-            case "catalogo_giochi":
+        switch (currentPage != null ? currentPage : "") {
+            case "catalogoGiochi":
                 current.put("label", "Giochi da tavolo");
                 current.put("url", "/catalogo/giochi-da-tavolo");
                 break;
-            case "catalogo_bustine":
+            case "catalogoBustine":
                 current.put("label", "Bustine");
                 current.put("url", "/catalogo/bustine");
                 break;
-            case "catalogo_portadadi":
+            case "catalogoPortaDadi":
                 current.put("label", "Porta Dadi");
                 current.put("url", "/catalogo/porta-dadi");
                 break;
-            case "offerte":
+            case "catalogoOfferte":
                 current.put("label", "Offerte");
                 current.put("url", "/offerte");
                 break;
