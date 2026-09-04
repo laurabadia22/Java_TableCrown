@@ -106,8 +106,12 @@ public class PortaDadiDAO extends GenericDAO {
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = queryMinMax.getSingleResult();
 
-            double prezzoMinimo = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
-            double prezzoMassimo = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
+            double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
+            double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
+
+            // Arrotonda a due cifre decimali (es. 14.039949 -> 14.04)
+            double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
+            double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
             // 6. Query: ORDINAMENTO E PAGINAZIONE (Risultati finali)
             StringBuilder jpqlMain = new StringBuilder("SELECT p ").append(jpqlBase.toString());

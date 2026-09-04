@@ -125,28 +125,34 @@ public class CCatalogo extends BaseController{
 
         int pagina = estraiPaginaRichiesta(request);
 
+        // 1. Estrazione dei filtri dall'URL (request)
+        Map<String, Object> filtri = new HashMap<>();
+
+        String prezzoMin = request.getParameter("prezzoMin");
+        if (prezzoMin != null && !prezzoMin.trim().isEmpty()) {
+            try {
+                filtri.put("prezzoMin", Double.parseDouble(prezzoMin));
+            } catch (NumberFormatException ignored) {}
+        }
+
+        String prezzoMax = request.getParameter("prezzoMax");
+        if (prezzoMax != null && !prezzoMax.trim().isEmpty()) {
+            try {
+                filtri.put("prezzoMax", Double.parseDouble(prezzoMax));
+            } catch (NumberFormatException ignored) {}
+        }
+
         PersistentManager pm = new PersistentManager(em);
 
-        Map<String, Object> risultatoGrezzo = pm.PMfindProdottiInOfferta(RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+        // 2. Passaggio della mappa filtri al metodo del PersistentManager / DAO
+        Map<String, Object> risultatoGrezzo = pm.PMfindProdottiInOfferta(
+                filtri,
+                RISULTATI_PER_PAGINA,
+                (pagina - 1) * RISULTATI_PER_PAGINA
+        );
 
-        renderCatalogo(request, response, "catalogoOfferte", risultatoGrezzo, pagina, new HashMap<>(), null);
-    }
-
-    /**
-     * Restituisce l'URL del catalogo specifico in base all'istanza del prodotto.
-     */
-    //TODO: forse va spostato nel base controller/usato per il dettaglio del prodotto
-    protected String urlCatalogo(EProdotto prodotto) {
-        if (prodotto instanceof EGiocoDaTavolo) {
-            return "/catalogo/giochi-da-tavolo";
-        }
-        if (prodotto instanceof EBustine) {
-            return "/catalogo/bustine";
-        }
-        if (prodotto instanceof EPortaDadi) {
-            return "/catalogo/porta-dadi";
-        }
-        return "/";
+        // 3. Passaggio della mappa filtri alla vista (invece di new HashMap<>())
+        renderCatalogo(request, response, "catalogoOfferte", risultatoGrezzo, pagina, filtri, null);
     }
 
     @Override

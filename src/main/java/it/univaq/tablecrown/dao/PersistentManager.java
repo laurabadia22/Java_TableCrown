@@ -67,9 +67,9 @@ public class PersistentManager {
     // 2. METODI SPECIFICI (Delegati ai DAO specifici come ProdottoDAO)
     // =========================================================================
 
-    public Map<String, Object> PMfindProdottiInOfferta(int limit, int offset) {
+    public Map<String, Object> PMfindProdottiInOfferta(Map<String, Object> filtri, int limit, int offset) {
         ProdottoDAO dao = new ProdottoDAO(em);
-        return dao.findProdottiInOfferta(limit, offset);
+        return dao.findProdottiInOfferta(filtri, limit, offset);
     }
 
     public boolean PMutenteHasProdotto(int idUtente, int idProdotto) {

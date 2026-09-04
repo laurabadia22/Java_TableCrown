@@ -36,8 +36,11 @@ public class CHome extends BaseController {
         //Istanziazione del PersistentManager
         PersistentManager pm = new PersistentManager(em);
 
-        //Recupero dei prodotti in offerta (max 5 prodotti)
-        Map<String, Object> mappaOfferte = pm.PMfindProdottiInOfferta(5, 0);
+        // 1. Creazione mappa filtri vuota (la Home non applica filtri di prezzo)
+        Map<String, Object> filtri = new HashMap<>();
+
+        // 2. Recupero dei prodotti in offerta passando i filtri (max 5 prodotti, offset 0)
+        Map<String, Object> mappaOfferte = pm.PMfindProdottiInOfferta(filtri, 5, 0);
 
         @SuppressWarnings("unchecked")
         List<EProdotto> offerte = (List<EProdotto>) mappaOfferte.getOrDefault("risultati", new ArrayList<EProdotto>());

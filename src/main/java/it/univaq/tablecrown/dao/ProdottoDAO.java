@@ -7,6 +7,7 @@ import it.univaq.tablecrown.entity.enumerativi.StatoOrdine;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,51 +23,81 @@ public class ProdottoDAO extends GenericDAO {
         super(em);
     }
 
-    public Map<String, Object> findProdottiInOfferta(int limit, int offset) {
+    public Map<String, Object> findProdottiInOfferta(Map<String, Object> filtri, int limit, int offset) {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Nota: il CASE WHEN va direttamente nell'ORDER BY, non serve
-            // dichiararlo nel SELECT come "colonna nascosta" (non esiste in JPQL).
-            String jpql = "SELECT p FROM EProdotto p " +
-                    "WHERE p.sconto.sconto > 0 " +
-                    "AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi) " +
-                    "AND p.disponibilitaProdotto = :disponibile " +
-                    "AND p.quantita > 0 " +
-                    //ordino i prodotti in offerta, mettendo però prima quelli con scadenza imminente
+            StringBuilder jpqlBase = new StringBuilder("FROM EProdotto p ");
+            List<String> condizioni = new ArrayList<>();
+            Map<String, Object> parametri = new HashMap<>();
+
+            // 1. Condizioni Fisse (Offerte attive e prodotti disponibili)
+            condizioni.add("p.sconto.sconto > 0");
+            condizioni.add("(p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi)");
+            parametri.put("oggi", LocalDateTime.now());
+
+            condizioni.add("p.disponibilitaProdotto = :disponibile");
+            parametri.put("disponibile", DisponibilitaProdotto.DISPONIBILE);
+
+            condizioni.add("p.quantita > 0");
+
+            // 2. Filtri Dinamici: Prezzo Min e Max (calcolati sul prezzo scontato)
+            if (filtri.get("prezzoMin") != null) {
+                condizioni.add("(p.prezzo * (1.0 - p.sconto.sconto / 100.0)) >= :prezzoMin");
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
+            }
+
+            if (filtri.get("prezzoMax") != null) {
+                condizioni.add("(p.prezzo * (1.0 - p.sconto.sconto / 100.0)) <= :prezzoMax");
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
+            }
+
+            // Assemblaggio blocco WHERE
+            if (!condizioni.isEmpty()) {
+                jpqlBase.append("WHERE ").append(String.join(" AND ", condizioni)).append(" ");
+            }
+
+            // 3. Query: MIN / MAX Prezzo per gestire eventuali slider (calcolato sul prezzo scontato)
+            TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(p.prezzo * (1.0 - p.sconto.sconto / 100.0)), MAX(p.prezzo * (1.0 - p.sconto.sconto / 100.0)) " + jpqlBase.toString(), Object[].class);
+            parametri.forEach(queryMinMax::setParameter);
+            Object[] estremi = queryMinMax.getSingleResult();
+
+            double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
+            double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 200.0;
+
+            // Applichiamo la correzione degli arrotondamenti per i float (es. 14.0399)
+            double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
+            double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
+
+            // 4. Query: COUNT
+            TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(p) " + jpqlBase.toString(), Long.class);
+            parametri.forEach(queryCount::setParameter);
+            Long totale = queryCount.getSingleResult();
+
+            // 5. Query: Risultati e Ordinamento
+            String jpqlMain = "SELECT p " + jpqlBase.toString() +
                     "ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, " +
                     "p.sconto.scadenzaOfferta ASC";
-//            String jpql = "SELECT p FROM EProdotto p " +
-//                    "WHERE p.sconto.sconto > 0 " +
-//                    "AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi) " +
-//                    "AND p.disponibilitaProdotto = :disponibile " +
-//                    "AND p.quantita > 0 " +
-//                    "ORDER BY p.sconto.scadenzaOfferta ASC NULLS LAST";
 
-            TypedQuery<EProdotto> query = em.createQuery(jpql, EProdotto.class)
-                    .setParameter("disponibile", DisponibilitaProdotto.DISPONIBILE)
-                    .setParameter("oggi", LocalDateTime.now())
-                    .setFirstResult(offset)
-                    .setMaxResults(limit);
+            TypedQuery<EProdotto> query = em.createQuery(jpqlMain, EProdotto.class);
+            parametri.forEach(query::setParameter);
+
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
 
             List<EProdotto> risultati = query.getResultList();
 
-
-            String countJpql = "SELECT COUNT(p) FROM EProdotto p " +
-                    "WHERE p.sconto.sconto > 0 " +
-                    "AND p.disponibilitaProdotto = :disponibile " +
-                    "AND p.quantita > 0";
-
-            Long totale = em.createQuery(countJpql, Long.class)
-                    .setParameter("disponibile", DisponibilitaProdotto.DISPONIBILE)
-                    .getSingleResult();
-
+            // Costruzione Risposta
             response.put("risultati", risultati);
             response.put("totale", totale);
+            response.put("rangemin", prezzoMinimo);
+            response.put("rangemax", prezzoMassimo);
 
         } catch (Exception e) {
             System.err.println("Errore in findProdottiInOfferta: " + e.getMessage());
-            response.put("risultati", List.of());
+            response.put("risultati", new ArrayList<>());
             response.put("totale", 0L);
+            response.put("rangemin", 0.0);
+            response.put("rangemax", 200.0);
         }
         return response;
     }

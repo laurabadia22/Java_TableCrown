@@ -103,8 +103,12 @@ public class BustineDAO extends GenericDAO {
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = (Object[]) queryMinMax.getSingleResult();
 
-            double prezzoMinimo = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
-            double prezzoMassimo = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
+            double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
+            double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
+
+            // Arrotonda a due cifre decimali (es. 14.039949 -> 14.04)
+            double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
+            double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
             // Query 3: Dati effettivi e Ordinamento
             StringBuilder jpqlMain = new StringBuilder("SELECT b ").append(jpqlBase.toString());
