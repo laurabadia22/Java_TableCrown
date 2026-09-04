@@ -12,7 +12,7 @@
     <#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
     <#assign qParams = "">
     <#if query?? && query?has_content>
-        <#assign qParams = qParams + "&q=" + query?url>
+        <#assign qParams = qParams + "&q=" + query?url('UTF-8')>
     </#if>
     <#if filtri??>
         <#if filtri.prezzoMin?? && filtri.prezzoMin?has_content>
