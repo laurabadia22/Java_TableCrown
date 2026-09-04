@@ -7,7 +7,7 @@
 <#--
   Richiama la macro passando i parametri specifici per la rotta delle offerte.
 -->
-<@cs.renderCatalogoSemplice
+<@cs.renderCatalogoBase
 titolo="Offerte Speciali"
 subpage="offerte"
 urlBase="${base_url}/offerte"

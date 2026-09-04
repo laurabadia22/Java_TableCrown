@@ -928,8 +928,8 @@
 .btn-add-cart:disabled {
     opacity: 0.6 !important;
     cursor: not-allowed !important;
-    background-color: #e0e0e0 !important;
-    color: #6c757d !important;
+    background-color: var(--color-primary) !important;
+    color: #000 !important;
 }
 
 

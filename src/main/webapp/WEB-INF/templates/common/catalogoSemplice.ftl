@@ -3,11 +3,34 @@
 <#import "paginazione.ftl" as pag>
 <#import "ricerca.ftl" as r>
 
-<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs extraFiltriMacro="">
+<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs>
     <#assign cssCatalogo>
         <link rel="stylesheet" href="${base_url}/public/css/catalogo.css">
         <link rel="stylesheet" href="${base_url}/public/css/home.css">
     </#assign>
+
+    <#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
+    <#assign qParams = "">
+    <#if query?? && query?has_content>
+        <#assign qParams = qParams + "&q=" + query?url>
+    </#if>
+    <#if filtri??>
+        <#if filtri.prezzoMin?? && filtri.prezzoMin?has_content>
+            <#assign qParams = qParams + "&prezzoMin=" + filtri.prezzoMin>
+        </#if>
+        <#if filtri.prezzoMax?? && filtri.prezzoMax?has_content>
+            <#assign qParams = qParams + "&prezzoMax=" + filtri.prezzoMax>
+        </#if>
+        <#if filtri.giocatoriMin?? && filtri.giocatoriMin?has_content>
+            <#assign qParams = qParams + "&giocatoriMin=" + filtri.giocatoriMin>
+        </#if>
+        <#if filtri.etaMinima?? && filtri.etaMinima?has_content>
+            <#assign qParams = qParams + "&etaMinima=" + filtri.etaMinima>
+        </#if>
+        <#if filtri.difficolta?? && filtri.difficolta?has_content>
+            <#assign qParams = qParams + "&difficolta=" + filtri.difficolta>
+        </#if>
+    </#if>
 
     <@layout.page
     page_title="${titolo} - TableCrown"
@@ -27,7 +50,12 @@
             <#-- BOX FILTRI -->
             <div class="box catalog-filters-box mb-6" style="background-color: var(--color-bg-dark-2); border: 1px solid var(--color-border-dark);">
                 <form method="get" action="${urlBase}">
-                    <div class="columns is-multiline align-items-center">
+                    <#-- Mantiene la query di ricerca se presente -->
+                    <#if query?? && query?has_content>
+                        <input type="hidden" name="q" value="${query?html}">
+                    </#if>
+
+                    <div class="columns is-multiline align-items-flex-end">
 
                         <#-- Prezzo Minimo -->
                         <div class="column is-6-mobile is-3-tablet is-2-desktop">
@@ -49,10 +77,8 @@
                             </div>
                         </div>
 
-                        <#-- Filtri extra specifici per categoria (se passati) -->
-                        <#if extraFiltriMacro?is_macro>
-                            <@extraFiltriMacro />
-                        </#if>
+                        <#-- Iniezione dei filtri specifici inviati dal chiamante tramite <#nested> -->
+                        <#nested>
 
                         <#-- Bottone Submit -->
                         <div class="column is-12-mobile is-3-tablet is-2-desktop" style="margin-top: auto;">
@@ -90,16 +116,3 @@
     </@layout.page>
 </#macro>
 
-<#-- Macro di fallback per i cataloghi semplici senza filtri aggiuntivi -->
-<#macro renderCatalogoSemplice titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs>
-    <@renderCatalogoBase
-    titolo=titolo
-    subpage=subpage
-    urlBase=urlBase
-    prodotti=prodotti
-    filtri=filtri
-    paginaCorrente=paginaCorrente
-    totalePagine=totalePagine
-    query=query
-    breadcrumbs=breadcrumbs />
-</#macro>

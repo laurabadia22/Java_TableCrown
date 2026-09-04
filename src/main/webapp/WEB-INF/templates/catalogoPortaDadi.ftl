@@ -1,5 +1,5 @@
 <#import "common/catalogoSemplice.ftl" as cs>
-<@cs.renderCatalogoSemplice
+<@cs.renderCatalogoBase
 titolo="Porta Dadi"
 subpage="porta-dadi"
 urlBase="${base_url}/catalogo/porta-dadi"
