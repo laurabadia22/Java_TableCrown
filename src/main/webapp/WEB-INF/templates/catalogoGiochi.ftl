@@ -35,10 +35,32 @@ breadcrumbs=breadcrumbs>
             <label class="label has-text-light is-size-7">Difficoltà</label>
             <div class="control">
                 <div class="select is-fullwidth">
-                    <select name="difficolta">
+                    <select name="difficolta" onchange="this.form.submit()">
                         <option value="">Tutte</option>
                         <#list difficoltaOptions![] as d>
-                            <option value="${d.value}" <#if (filtri.difficolta!'') == d.value>selected</#if>>${d.label}</option>
+                            <option value="${d.name()}"
+                                    <#if filtri.difficolta?? && filtri.difficolta?seq_contains(d.name())>selected</#if>>
+                                ${d}
+                            </option>
+                        </#list>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-12-mobile is-3-tablet is-2-desktop">
+        <div class="field">
+            <label class="label has-text-light is-size-7">Categoria</label>
+            <div class="control">
+                <div class="select is-multiple is-fullwidth">
+                    <select name="categoria" multiple size="3" style="height: 38px; padding-top: 4px;" onchange="this.form.submit()">
+                        <option value="">Tutte</option>
+                        <#list categorieDisponibili![] as c>
+                            <option value="${c.name()}"
+                                    <#if filtri.categoria?? && filtri.categoria?seq_contains(c.name())>selected</#if>>
+                                ${c}
+                            </option>
                         </#list>
                     </select>
                 </div>

@@ -4,6 +4,8 @@ import it.univaq.tablecrown.dao.PersistentManager;
 import it.univaq.tablecrown.entity.EGestore;
 import it.univaq.tablecrown.entity.EProdotto;
 import it.univaq.tablecrown.entity.EUtente;
+import it.univaq.tablecrown.entity.enumerativi.Categoria;
+import it.univaq.tablecrown.entity.enumerativi.DifficoltaGioco;
 import it.univaq.tablecrown.utility.UFlashMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletException;
@@ -423,8 +425,8 @@ public abstract class BaseController {
         datiPagina.put("filtri", filtri);
 
         // Valori di default per le opzioni dei select/checkbox nei template
-        datiPagina.put("difficoltaOptions", Collections.emptyList());
-        datiPagina.put("categorieDisponibili", Collections.emptyList());
+        datiPagina.put("difficoltaOptions", DifficoltaGioco.values());
+        datiPagina.put("categorieDisponibili", Categoria.values());
 
         //Riversiamo i dati nella request per renderli compatibili con il metodo renderizza()
         for (Map.Entry<String, Object> entry : datiPagina.entrySet()) {

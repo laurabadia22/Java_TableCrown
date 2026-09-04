@@ -27,8 +27,16 @@
         <#if filtri.etaMinima?? && filtri.etaMinima?has_content>
             <#assign qParams = qParams + "&etaMinima=" + filtri.etaMinima>
         </#if>
-        <#if filtri.difficolta?? && filtri.difficolta?has_content>
-            <#assign qParams = qParams + "&difficolta=" + filtri.difficolta>
+        <#if filtri.difficolta??>
+            <#if filtri.difficolta?is_sequence>
+                <#list filtri.difficolta as d>
+                    <#if d?has_content>
+                        <#assign qParams = qParams + "&difficolta=" + d?url('UTF-8')>
+                    </#if>
+                </#list>
+            <#elseif filtri.difficolta?has_content>
+                <#assign qParams = qParams + "&difficolta=" + filtri.difficolta?url('UTF-8')>
+            </#if>
         </#if>
     </#if>
 
@@ -110,7 +118,7 @@
 
             <#-- PAGINAZIONE -->
             <div class="mt-6">
-                <@pag.paginazione paginaCorrente=paginaCorrente!1 totalePagine=totalePagine!1 baseUrl=urlBase />
+                <@pag.paginazione paginaCorrente=paginaCorrente!1 totalePagine=totalePagine!1 baseUrl=urlBase queryParams=qParams/>
             </div>
         </div>
     </@layout.page>

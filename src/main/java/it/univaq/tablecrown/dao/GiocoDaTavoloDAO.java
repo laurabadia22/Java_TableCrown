@@ -32,7 +32,9 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
             // Filtri Enum Base
             if (filtri.get("difficolta") != null) {
+                System.out.println("DEBUG - Valore grezzo in filtri: " + filtri.get("difficolta"));
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
+                System.out.println("DEBUG - Risultato enumDiff: " + enumDiff);
                 if (!enumDiff.isEmpty()) {
                     condizioni.add("g.difficolta IN (:difficolta)");
                     parametri.put("difficolta", enumDiff);
@@ -235,6 +237,23 @@ public class GiocoDaTavoloDAO extends GenericDAO {
     private <E extends Enum<E>> List<E> parseEnumList(Object obj, Class<E> enumClass) {
         List<E> result = new ArrayList<>();
         if (obj == null) return result;
+
+        //l'oggetto è già una singola istanza dell'Enum
+        if (enumClass.isInstance(obj)) {
+            result.add(enumClass.cast(obj));
+            return result;
+        }
+
+        //l'oggetto è una singola Stringa
+        if (obj instanceof String) {
+            String str = ((String) obj).trim();
+            if (!str.isEmpty()) {
+                try {
+                    result.add(Enum.valueOf(enumClass, str.toUpperCase()));
+                } catch (IllegalArgumentException ignored) {}
+            }
+            return result;
+        }
 
         //l'oggetto è un'istanza di una qualsiasi lista di oggetti generici?
         if (obj instanceof List<?>) {
