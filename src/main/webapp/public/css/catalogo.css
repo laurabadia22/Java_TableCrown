@@ -219,7 +219,7 @@
     padding: 0.4rem 0.75rem !important;
     font-size: var(--font-size-sm) !important;
     font-weight: 600 !important;
-    border-radius: #fff !important;
+    border-radius: var(--radius-sm) !important;
     cursor: pointer;
     transition: background-color var(--transition);
 }
@@ -278,6 +278,18 @@
     border-radius: var(--radius-sm);
 }
 
+
+/* ── BOTTONE FILTRO ────────────────────────────────────────── */
+/* Sovrascrive il colore del bottone Filtra nel catalogo */
+.catalog-filters-box .button.is-primary {
+    background-color: var(--color-primary) !important; /* Inserisci qui l'HEX del colore */
+    color: #000000 !important;
+    border: none !important;
+}
+
+.catalog-filters-box .button.is-primary:hover {
+    background-color: var(--color-primary) !important;
+}
 
 /* ── GRUPPI FILTRI ────────────────────────────────────────── */
 
