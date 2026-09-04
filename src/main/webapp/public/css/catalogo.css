@@ -1191,3 +1191,43 @@
         font-size: 1.25rem;
     }
 }
+
+/* ── CATEGORY PILLS (Pulsantoni Categoria) ──────── */
+
+.category-pill {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+}
+
+/* Nasconde la spunta quadrata di default */
+.category-pill input[type="checkbox"] {
+    display: none;
+}
+
+/* Stile del pulsante spento */
+.category-pill .pill-text {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+    border-radius: 20px;
+    color: var(--color-text-light);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Hover sul pulsante */
+.category-pill:hover .pill-text {
+    border-color: var(--color-primary);
+}
+
+/* Stile del pulsante acceso (giallo/primary) */
+.category-pill input[type="checkbox"]:checked + .pill-text {
+    background-color: var(--color-primary);
+    color: #000000;
+    font-weight: 700;
+    border-color: var(--color-primary);
+}
