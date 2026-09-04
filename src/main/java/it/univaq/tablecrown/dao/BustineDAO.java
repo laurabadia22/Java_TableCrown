@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 public class BustineDAO extends GenericDAO {
 
@@ -74,7 +75,9 @@ public class BustineDAO extends GenericDAO {
                         parametri.put("datalimite", LocalDate.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("b.sconto.sconto > 0"); // MODIFICATO
+                        // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
+                        condizioni.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta < :oggiSconti)");
+                        parametri.put("oggiSconti", LocalDateTime.now());
                     }
                 }
             }

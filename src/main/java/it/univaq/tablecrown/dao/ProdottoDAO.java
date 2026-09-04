@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 /**
  * Estende GenericDAO per ereditare l'EntityManager condiviso
@@ -28,14 +29,22 @@ public class ProdottoDAO extends GenericDAO {
             // dichiararlo nel SELECT come "colonna nascosta" (non esiste in JPQL).
             String jpql = "SELECT p FROM EProdotto p " +
                     "WHERE p.sconto.sconto > 0 " +
+                    "AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi) " +
                     "AND p.disponibilitaProdotto = :disponibile " +
                     "AND p.quantita > 0 " +
                     //ordino i prodotti in offerta, mettendo però prima quelli con scadenza imminente
                     "ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, " +
                     "p.sconto.scadenzaOfferta ASC";
+//            String jpql = "SELECT p FROM EProdotto p " +
+//                    "WHERE p.sconto.sconto > 0 " +
+//                    "AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi) " +
+//                    "AND p.disponibilitaProdotto = :disponibile " +
+//                    "AND p.quantita > 0 " +
+//                    "ORDER BY p.sconto.scadenzaOfferta ASC NULLS LAST";
 
             TypedQuery<EProdotto> query = em.createQuery(jpql, EProdotto.class)
                     .setParameter("disponibile", DisponibilitaProdotto.DISPONIBILE)
+                    .setParameter("oggi", LocalDateTime.now())
                     .setFirstResult(offset)
                     .setMaxResults(limit);
 
@@ -65,7 +74,7 @@ public class ProdottoDAO extends GenericDAO {
 
     public boolean utenteHasProdotto(int idUtente, int idProdotto) {
         try {
-            String jpql = "SELECT COUNT(o) FROM Ordine o " +
+            String jpql = "SELECT COUNT(o) FROM EOrdine o " +
                     "JOIN o.ordineItems oi " +
                     "JOIN oi.prodotto p " +
                     "WHERE o.utente.idPersona = :idUtente " +

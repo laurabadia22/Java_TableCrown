@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 public class GiocoDaTavoloDAO extends GenericDAO {
 
@@ -107,6 +108,8 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 parametri.put("ratingMin", filtri.get("rating_min"));
             }
 
+
+
             // 4. Novità e Sconti
             if (filtri.containsKey("in_evidenza_filtro")) {
                 @SuppressWarnings("unchecked")
@@ -118,7 +121,9 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                         parametri.put("dispNovita", DisponibilitaProdotto.DISPONIBILE);
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("g.sconto.sconto > 0"); // MODIFICATO per accedere all'embedded
+                        // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
+                        condizioni.add("g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > :oggiSconti)");
+                        parametri.put("oggiSconti", LocalDateTime.now());
                     }
                 }
             }

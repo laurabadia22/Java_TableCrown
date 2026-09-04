@@ -3,15 +3,23 @@
         <a href="${urlBase}/${p.idProdotto}" class="product-card-link">
             <#-- CONTENITORE IMMAGINE -->
             <div class="product-image-wrapper">
-                <#if p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'ESAURITO'>
-                    <div class="product-badges-left">
+
+                <#-- Contenitore per i bollini in alto a sinistra -->
+                <div class="product-badges-left">
+                    <#-- Badge Disponibilità -->
+                    <#if p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'ESAURITO'>
                         <span class="product-badge product-badge-esaurito">Esaurito</span>
-                    </div>
-                <#elseif p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>
-                    <div class="product-badges-left">
+                    <#elseif p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>
                         <span class="product-badge product-badge-non-disponibile">Non disponibile</span>
-                    </div>
-                </#if>
+                    </#if>
+
+                    <#-- Badge Danno (appare sotto a quello di disponibilità se presenti entrambi) -->
+                    <#if (p.livelloDanno)??>
+                        <span class="product-badge product-badge-danno">
+                            ${p.livelloDanno.name()?replace("_", " ")}
+                        </span>
+                    </#if>
+                </div>
 
                 <img src="${base_url}/public/img/prodotti/${p.imgProdotto!'placeholder.png'}"
                      alt="${p.nomeProdotto?html}"
@@ -22,8 +30,9 @@
             <div class="product-info">
                 <h3 class="product-name">${p.nomeProdotto?html}</h3>
 
+                <#-- PREZZO DEPENNATO E SCONTO -->
                 <div class="product-price-wrapper">
-                    <#if p.prezzoScontato?? && (p.prezzoScontato < p.prezzo)>
+                    <#if (p.prezzoScontato < p.prezzo)>
                         <span class="product-price">${p.prezzoScontato?string("0.00")} €</span>
                         <span class="product-price-old">${p.prezzo?string("0.00")} €</span>
                     <#else>

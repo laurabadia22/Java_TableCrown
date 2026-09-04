@@ -219,7 +219,7 @@
     padding: 0.4rem 0.75rem !important;
     font-size: var(--font-size-sm) !important;
     font-weight: 600 !important;
-    border-radius: var(--radius-sm) !important;
+    border-radius: #fff !important;
     cursor: pointer;
     transition: background-color var(--transition);
 }
@@ -821,6 +821,13 @@
 .product-badge-danneggiato {
     background-color: rgba(217, 119, 6, 0.9);
     color: #fff;
+}
+
+.product-badge-danno {
+    background-color: #F28241; /* Giallo senape/arancio per indicare attenzione */
+    color: #1a1a1a;
+    margin-top: 4px; /* Distanza se c'è un altro badge sopra */
+    display: table;
 }
 
 .product-badge-annunciato {

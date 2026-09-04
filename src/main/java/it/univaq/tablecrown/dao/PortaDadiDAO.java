@@ -79,7 +79,9 @@ public class PortaDadiDAO extends GenericDAO {
                         parametri.put("datalimite", LocalDateTime.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        condizioni.add("p.sconto.sconto > 0"); // MODIFICATO
+                        // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
+                        condizioni.add("p.sconto.sconto > 0 AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggiSconti)");
+                        parametri.put("oggiSconti", LocalDateTime.now());
                     }
                 }
             }

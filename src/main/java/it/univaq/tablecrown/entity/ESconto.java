@@ -58,9 +58,15 @@ public class ESconto {
      * Controlla se lo sconto è attualmente attivo (diverso da zero e non scaduto).
      */
     public boolean hasSconto() {
-        return this.sconto != 0
-                && this.scadenzaOfferta != null
-                && this.scadenzaOfferta.isAfter(LocalDateTime.now());
+        if (this.sconto == 0) {
+            return false;
+        }
+        // Se non c'è una data di scadenza (es. sconto per danno), è sempre valido
+        if (this.scadenzaOfferta == null) {
+            return true;
+        }
+        // Se c'è una data, verifica che non sia passata
+        return this.scadenzaOfferta.isAfter(LocalDateTime.now());
     }
 
     /**
