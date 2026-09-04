@@ -31,7 +31,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             Map<String, Object> parametri = new HashMap<>();
 
             // Filtri Enum Base
-            if (filtri.containsKey("difficolta")) {
+            if (filtri.get("difficolta") != null) {
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
                 if (!enumDiff.isEmpty()) {
                     condizioni.add("g.difficolta IN (:difficolta)");
@@ -39,23 +39,23 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 }
             }
 
-            if (filtri.containsKey("lingua_selected")) {
-                List<LinguaGioco> enumLingua = parseEnumList(filtri.get("lingua_selected"), LinguaGioco.class);
+            if (filtri.get("lingua") != null) {
+                List<LinguaGioco> enumLingua = parseEnumList(filtri.get("lingua"), LinguaGioco.class);
                 if (!enumLingua.isEmpty()) {
                     condizioni.add("g.lingua IN (:lingua)");
                     parametri.put("lingua", enumLingua);
                 }
             }
 
-            if (filtri.containsKey("danno_selected")) {
-                List<LivelloDannoGiochi> enumDanno = parseEnumList(filtri.get("danno_selected"), LivelloDannoGiochi.class);
+            if (filtri.get("danno") != null) {
+                List<LivelloDannoGiochi> enumDanno = parseEnumList(filtri.get("danno"), LivelloDannoGiochi.class);
                 if (!enumDanno.isEmpty()) {
                     condizioni.add("g.livelloDanno IN (:danni)");
                     parametri.put("danni", enumDanno);
                 }
             }
 
-            if (filtri.containsKey("disponibilita")) {
+            if (filtri.get("disponibilita") != null) {
                 List<DisponibilitaProdotto> enumDisp = parseEnumList(filtri.get("disponibilita"), DisponibilitaProdotto.class);
                 if (!enumDisp.isEmpty()) {
                     condizioni.add("g.disponibilitaProdotto IN (:disponibilita)");
@@ -64,8 +64,8 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             }
 
             // Filtro Categorie (Set di Enum con JOIN dinamico) - QUESTO RIMANE perché le categorie sono una collezione (tabella a parte)
-            if (filtri.containsKey("categoria_selected")) {
-                List<Categoria> enumCat = parseEnumList(filtri.get("categoria_selected"), Categoria.class);
+            if (filtri.get("categoria") != null) {
+                List<Categoria> enumCat = parseEnumList(filtri.get("categoria"), Categoria.class);
                 if (!enumCat.isEmpty()) {
                     jpqlBase.append("JOIN g.categoria cat ");
                     condizioni.add("cat IN (:categorie)");
@@ -74,46 +74,46 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             }
 
             // 3. Filtri Numerici ed Esatti
-            if (filtri.containsKey("price_min")) {
-                condizioni.add("g.prezzo >= :price_min"); // MODIFICATO da pr.valore a g.prezzo
-                parametri.put("price_min", filtri.get("price_min"));
+            if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
+                condizioni.add("g.prezzo >= :prezzoMin"); // MODIFICATO da pr.valore a g.prezzo
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
             }
 
-            if (filtri.containsKey("price_max")) {
-                condizioni.add("g.prezzo <= :price_max"); // MODIFICATO da pr.valore a g.prezzo
-                parametri.put("price_max", filtri.get("price_max"));
+            if (filtri.get("prezzoMax") != null) {
+                condizioni.add("g.prezzo <= :prezzoMax"); // MODIFICATO da pr.valore a g.prezzo
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            if (filtri.containsKey("mostra_espansioni") && Boolean.FALSE.equals(filtri.get("mostra_espansioni"))) {
+            if (filtri.get("mostraEspansioni") != null && Boolean.FALSE.equals(filtri.get("mostraEspansioni"))) {
                 condizioni.add("g.giocoBase IS NULL");
             }
 
-            if (filtri.containsKey("players_min")) {
-                condizioni.add("g.numeroGiocatoriMin = :players_min");
-                parametri.put("players_min", filtri.get("players_min"));
+            if (filtri.get("giocatoriMin") != null) {
+                condizioni.add("g.numeroGiocatoriMin <= :giocatoriMin AND g.numeroGiocatoriMax >= :giocatoriMin");
+                parametri.put("giocatoriMin", filtri.get("giocatoriMin"));
             }
 
-            if (filtri.containsKey("players_max")) {
-                condizioni.add("g.numeroGiocatoriMax = :players_max");
-                parametri.put("players_max", filtri.get("players_max"));
+            if (filtri.get("giocatoriMax") != null) {
+                condizioni.add("g.numeroGiocatoriMax = :giocatoriMax");
+                parametri.put("giocatoriMax", filtri.get("giocatoriMax"));
             }
 
-            if (filtri.containsKey("age_min")) {
-                condizioni.add("g.etaMinima = :age_min");
-                parametri.put("age_min", filtri.get("age_min"));
+            if (filtri.get("etaMinima") != null) {
+                condizioni.add("g.etaMinima = :etaMinima");
+                parametri.put("etaMinima", filtri.get("etaMinima"));
             }
 
-            if (filtri.containsKey("rating_min") && ((Number) filtri.get("rating_min")).doubleValue() > 0) {
+            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
                 condizioni.add("g.valutazioneMedia >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("rating_min"));
+                parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
 
 
             // 4. Novità e Sconti
-            if (filtri.containsKey("in_evidenza_filtro")) {
+            if (filtri.get("inEvidenzaFiltro") != null) {
                 @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("in_evidenza_filtro");
+                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
                         condizioni.add("g.dataPubblicazione >= :datalimite AND g.disponibilitaProdotto = :dispNovita");

@@ -26,18 +26,18 @@ public class BustineDAO extends GenericDAO {
             Map<String, Object> parametri = new HashMap<>();
 
             // 1. Filtri Prezzo
-            if (filtri.containsKey("price_min")) {
-                condizioni.add("b.prezzo >= :price_min"); // MODIFICATO
-                parametri.put("price_min", filtri.get("price_min"));
+            if (filtri.get("prezzoMin") != null) {
+                condizioni.add("b.prezzo >= :prezzoMin"); // MODIFICATO
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
             }
 
-            if (filtri.containsKey("price_max")) {
-                condizioni.add("b.prezzo <= :price_max"); // MODIFICATO
-                parametri.put("price_max", filtri.get("price_max"));
+            if (filtri.get("prezzoMax") != null) {
+                condizioni.add("b.prezzo <= :prezzoMax"); // MODIFICATO
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
             // 2. Filtro Disponibilità (con protezione sicura per parsing flessibile)
-            if (filtri.containsKey("disponibilita")) {
+            if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
 
@@ -66,9 +66,9 @@ public class BustineDAO extends GenericDAO {
             }
 
             // 3. Filtro Novità e Sconti
-            if (filtri.containsKey("in_evidenza_filtro")) {
+            if (filtri.get("inEvidenzaFiltro") != null) {
                 @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("in_evidenza_filtro");
+                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
                         condizioni.add("b.dataPubblicazione >= :datalimite");
@@ -76,16 +76,16 @@ public class BustineDAO extends GenericDAO {
                     }
                     if (evidenza.contains("sconti")) {
                         // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
-                        condizioni.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta < :oggiSconti)");
+                        condizioni.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > :oggiSconti)");
                         parametri.put("oggiSconti", LocalDateTime.now());
                     }
                 }
             }
 
             // 4. Filtro Rating
-            if (filtri.containsKey("rating_min") && ((Number) filtri.get("rating_min")).doubleValue() > 0) {
+            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
                 condizioni.add("b.valutazioneMedia >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("rating_min"));
+                parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
             // Assemblaggio del blocco WHERE

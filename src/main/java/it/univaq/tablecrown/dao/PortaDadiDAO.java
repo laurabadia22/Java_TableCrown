@@ -25,17 +25,17 @@ public class PortaDadiDAO extends GenericDAO {
             Map<String, Object> parametri = new HashMap<>();
 
             // 2. Costruzione dinamica dei filtri
-            if (filtri.containsKey("price_min")) {
-                condizioni.add("p.prezzo >= :prezzo_min"); // MODIFICATO
-                parametri.put("prezzo_min", filtri.get("price_min"));
+            if (filtri.get("prezzoMin") != null) {
+                condizioni.add("p.prezzo >= :prezzoMin"); // MODIFICATO
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
             }
 
-            if (filtri.containsKey("price_max")) {
-                condizioni.add("p.prezzo <= :prezzo_max"); // MODIFICATO
-                parametri.put("prezzo_max", filtri.get("price_max"));
+            if (filtri.get("prezzoMax") != null) {
+                condizioni.add("p.prezzo <= :prezzoMax"); // MODIFICATO
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            if (filtri.containsKey("disponibilita")) {
+            if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
 
@@ -70,9 +70,9 @@ public class PortaDadiDAO extends GenericDAO {
                 }
             }
 
-            if (filtri.containsKey("in_evidenza_filtro")) {
+            if (filtri.get("inEvidenzaFiltro") != null) {
                 @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("in_evidenza_filtro");
+                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
                         condizioni.add("p.dataPubblicazione >= :datalimite");
@@ -86,9 +86,9 @@ public class PortaDadiDAO extends GenericDAO {
                 }
             }
 
-            if (filtri.containsKey("rating_min") && ((Number) filtri.get("rating_min")).doubleValue() > 0) {
+            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
                 condizioni.add("p.valutazioneMedia >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("rating_min"));
+                parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
             // 3. Unione delle condizioni

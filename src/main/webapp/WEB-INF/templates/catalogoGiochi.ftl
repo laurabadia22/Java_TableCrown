@@ -14,7 +14,7 @@ breadcrumbs=breadcrumbs>
 <#-- Filtri extra specifici per i giochi -->
     <div class="column is-6-mobile is-3-tablet is-2-desktop">
         <div class="field">
-            <label class="label has-text-light is-size-7">N° Giocatori</label>
+            <label class="label has-text-light is-size-7">N° Giocatori Min</label>
             <div class="control">
                 <input class="input" type="number" name="giocatoriMin" value="${(filtri.giocatoriMin!'')}" placeholder="Min.">
             </div>

@@ -62,7 +62,7 @@
                             <div class="field">
                                 <label class="label has-text-light is-size-7">Prezzo Min</label>
                                 <div class="control">
-                                    <input class="input" type="number" step="0.01" name="prezzoMin" value="${filtri.prezzoMin!''}" placeholder="€ Min">
+                                    <input class="input" type="number" step="0.01" name="prezzoMin" value="<#if filtri?? && filtri.prezzoMin??>${filtri.prezzoMin?c}</#if>" placeholder="€ Min">
                                 </div>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="field">
                                 <label class="label has-text-light is-size-7">Prezzo Max</label>
                                 <div class="control">
-                                    <input class="input" type="number" step="0.01" name="prezzoMax" value="${filtri.prezzoMax!''}" placeholder="€ Max">
+                                    <input class="input" type="number" step="0.01" name="prezzoMax" value="<#if filtri?? && filtri.prezzoMax??>${filtri.prezzoMax?c}</#if>" placeholder="€ Max">
                                 </div>
                             </div>
                         </div>
