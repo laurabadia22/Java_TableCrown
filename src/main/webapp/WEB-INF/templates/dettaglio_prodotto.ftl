@@ -1,8 +1,11 @@
 <#import "common/layout.ftl" as layout>
 <#import "common/prodottoCard.ftl" as pc>
 
+
 <#assign cssProdotto>
     <link rel="stylesheet" href="${base_url}/public/css/prodotto.css">
+    <link rel="stylesheet" href="${base_url}/public/css/prodotto.css">
+    <link rel="stylesheet" href="${base_url}/public/css/home.css">
 </#assign>
 
 <@layout.page
@@ -56,10 +59,10 @@ extra_css=cssProdotto>
                         </#if>
                     </div>
 
-                    <h1 class="title is-3 has-text-light mb-3">${(prodotto.nomeProdotto)?html}</h1>
+                    <h1 class="title is-3 has-text-light mb-3 titolo-sezione-custom">${(prodotto.nomeProdotto)?html}</h1>
 
                     <div class="is-flex is-align-items-center mb-4 gap-2">
-                        <div class="has-text-primary">
+                        <div class="prodotto-stelle">
                             <#list 1..5 as s>
                                 <#if s <= valutazioneMedia!0>
                                     <i class="ti ti-star-filled"></i>
@@ -73,7 +76,7 @@ extra_css=cssProdotto>
                         <span class="has-text-grey-light is-size-7">(${(valutazioneMedia!0)?string("0.0")} / 5.0) - ${numeroValutazioni!0} voti</span>
                     </div>
 
-                    <div class="has-text-grey-light is-size-6 mb-5 is-flex is-flex-direction-column gap-2">
+                    <div class="prodotto-meta-info is-size-6 mb-5 is-flex is-flex-direction-column gap-2">
                         <#if numeroGiocatoriMin?? && numeroGiocatoriMax??>
                             <span><i class="ti ti-users mr-2"></i> ${numeroGiocatoriMin}–${numeroGiocatoriMax} giocatori</span>
                         </#if>
@@ -96,10 +99,14 @@ extra_css=cssProdotto>
 
                     <div class="mt-auto mb-3">
                         <#if (prodotto.prezzoScontato < prodotto.prezzo)>
-                            <span class="is-size-3 has-text-primary font-weight-bold">€${prodotto.prezzoScontato?string("0.00")}</span>
-                            <span class="is-size-5 has-text-grey-light text-decoration-line-through ml-2">€${prodotto.prezzo?string("0.00")}</span>
+                        <#-- Prezzo finale da pagare -->
+                            <span class="is-size-3 prodotto-prezzo-corrente">€${prodotto.prezzoScontato?string("0.00")}</span>
+
+                        <#-- Prezzo originale depennato -->
+                            <span class="is-size-5 ml-2 prodotto-prezzo-vecchio">€${prodotto.prezzo?string("0.00")}</span>
                         <#else>
-                            <span class="is-size-3 has-text-primary font-weight-bold">€${prodotto.prezzo?string("0.00")}</span>
+                        <#-- Prezzo normale senza sconti -->
+                            <span class="is-size-3 prodotto-prezzo-corrente">€${prodotto.prezzo?string("0.00")}</span>
                         </#if>
                     </div>
                 </div>
@@ -118,7 +125,7 @@ extra_css=cssProdotto>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="button is-primary is-fullwidth font-weight-bold">
+                                <button type="submit" class="button btn-dettaglio-carrello is-fullwidth font-weight-bold">
                                     <i class="ti ti-shopping-cart mr-2"></i> Aggiungi al Carrello
                                 </button>
                             </form>
@@ -144,8 +151,8 @@ extra_css=cssProdotto>
 
             <div class="columns">
                 <div class="column is-8">
-                    <h2 class="title is-4 has-text-light mb-4">Descrizione</h2>
-                    <div class="content has-text-grey-light mb-6">
+                    <h2 class="title is-4 has-text-light mb-4 titolo-sezione-custom">Descrizione</h2>
+                    <div class="content prodotto-meta-info mb-6">
                         ${(prodotto.descrizioneProdotto!"Nessuna descrizione.")?replace('\n', '<br>')}
                     </div>
 
@@ -157,8 +164,8 @@ extra_css=cssProdotto>
                     </#if>
 
                     <#if componenti?? && (componenti?size > 0)>
-                        <h2 class="title is-4 has-text-light mb-4">Componenti</h2>
-                        <ul class="has-text-grey-light ml-4" style="list-style-type: disc;">
+                        <h2 class="title is-4 has-text-light mb-4 titolo-sezione-custom ">Componenti</h2>
+                        <ul class="prodotto-meta-info ml-4" style="list-style-type: disc;">
                             <#list componenti as comp>
                                 <li class="mb-1">${comp?html}</li>
                             </#list>
@@ -169,12 +176,50 @@ extra_css=cssProdotto>
 
             <#if correlati?? && (correlati?size > 0)>
                 <hr class="prodotto-divider">
-                <h2 class="title is-4 has-text-light mb-5">Forse ti può interessare...</h2>
+                <h2 class="title is-4 has-text-light mb-5 titolo-sezione-custom ">Forse ti può interessare...</h2>
 
                 <div class="columns is-multiline">
                     <#list correlati as c>
-                        <div class="column is-12-mobile is-4-tablet is-3-desktop flex-card-column">
-                            <@pc.card p=c urlBase="${base_url}/prodotto" mostraAggiungiCarrello=true />
+                        <div class="column is-12-mobile is-4-tablet is-3-desktop">
+
+                            <a href="${base_url}/prodotto?id=${c.idProdotto}" class="card-link-wrapper">
+                                <#-- Ripristinata la classe base senza forzare il bianco (torna viola) -->
+                                <div class="card home-card-fixed" style="border-radius: 12px !important;">
+
+                                    <#-- Immagine -->
+                                    <div class="card-image image-container-fixed" style="border-radius: 12px 12px 0 0 !important; overflow: hidden;">
+                                        <img src="${base_url}/public/img/prodotti/${(c.imgProdotto)!''}" alt="${(c.nomeProdotto)?html}">
+                                    </div>
+
+                                    <#-- Contenuto testuale -->
+                                    <div class="card-content">
+                                        <div class="media">
+                                            <div class="media-content">
+                                                <p class="card-title-custom">${(c.nomeProdotto)?html}</p>
+                                            </div>
+                                        </div>
+
+                                        <#-- Prezzo -->
+                                        <div class="price-container mb-4">
+                                            <#if (c.prezzoScontato < c.prezzo)>
+                                                <span class="price">€${c.prezzoScontato?string("0.00")}</span>
+                                                <span class="price-old">€${c.prezzo?string("0.00")}</span>
+                                            <#else>
+                                                <span class="price">€${c.prezzo?string("0.00")}</span>
+                                            </#if>
+                                        </div>
+
+                                        <#-- Finto bottone giallo "Aggiungi al carrello" -->
+                                        <div class="mt-auto">
+                                            <div class="button is-fullwidth" style="background-color: var(--color-primary) !important; color: #000000 !important; font-weight: 700; border: none; pointer-events: none;">
+                                                <i class="ti ti-shopping-cart mr-2"></i> Aggiungi al Carrello
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </a>
+
                         </div>
                     </#list>
                 </div>

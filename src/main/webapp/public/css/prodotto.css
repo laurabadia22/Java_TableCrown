@@ -60,3 +60,49 @@
     margin: 3rem 0;
     border: none;
 }
+
+.titolo-sezione-custom {
+    color: #492073FF !important;
+}
+
+.button-sezione-custom {
+    color: #E8A020FF !important;
+}
+
+/* ── BOTTONE CARRELLO GIALLO ── */
+.btn-dettaglio-carrello {
+    background-color: #E8A020FF !important; /* Usa il tuo giallo primary */
+    color: #000000 !important; /* Testo nero per contrasto */
+    border: none !important;
+    transition: filter 0.2s ease;
+}
+
+.btn-dettaglio-carrello:hover {
+    filter: brightness(0.9); /* Scurisce leggermente al passaggio del mouse */
+}
+
+/* ── PREZZO DETTAGLIO PRODOTTO ── */
+.prodotto-prezzo-corrente {
+    color: #33334a !important;
+    font-family: 'Poppins', 'Nunito', 'Montserrat', system-ui, sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+}
+
+.prodotto-prezzo-vecchio {
+    color: #9ca3af !important;
+    text-decoration: line-through !important;
+    font-family: 'Poppins', 'Nunito', 'Montserrat', system-ui, sans-serif !important;
+    font-weight: 600 !important;
+}
+
+/* ── STELLE VALUTAZIONE GIALLE ── */
+.prodotto-stelle {
+    color: var(--color-primary) !important; /* Forza il tuo giallo #e8a020 */
+}
+
+/* ── TESTO SPECIFICHE PIÙ SCURO ── */
+.prodotto-meta-info {
+    color: #4b5563 !important; /* Un grigio scuro molto leggibile */
+    font-weight: 500;
+}
