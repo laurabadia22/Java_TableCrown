@@ -72,7 +72,8 @@ public class CProdotto extends BaseController{
         preparaDatiLayout(request, "prodotto", datiPagina);
 
         // Inoltro alla vista
-        request.getRequestDispatcher("/WEB-INF/templates/dettaglio_prodotto.ftl").forward(request, response);
+        //request.getRequestDispatcher("/WEB-INF/templates/dettaglio_prodotto.ftl").forward(request, response);
+        renderizza("dettaglio_prodotto.ftl", request, response);
     }
 
     //==========================================================================

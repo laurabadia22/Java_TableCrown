@@ -1,0 +1,62 @@
+/* ============================================================
+   TableCrown — prodotto.css
+   Stili dedicati per la pagina di dettaglio del prodotto
+   ============================================================ */
+
+/* ── GALLERIA IMMAGINI ── */
+.prodotto-gallery-box {
+    overflow: hidden;
+    background-color: var(--color-bg-dark-2);
+    padding: 0;
+}
+
+.prodotto-gallery-img {
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    display: block;
+}
+
+/* ── BOX ACQUISTO E CARRELLO ── */
+.prodotto-acquisto-box {
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+}
+
+.prodotto-qty-input {
+    max-width: 100px;
+    text-align: center;
+}
+
+/* ── COMPONENTI "ZERO-JS" (Menu a tendina nativi) ── */
+.details-zero-js {
+    position: relative;
+}
+
+/* Nasconde la freccetta di default del browser */
+.details-zero-js > summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.details-zero-js > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Animazione di entrata quando il menu viene aperto */
+.details-zero-js[open] summary ~ * {
+    animation: fadeInDropdown 0.3s ease-in-out;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Separatori orizzontali */
+.prodotto-divider {
+    height: 1px;
+    background-color: var(--color-border-dark);
+    margin: 3rem 0;
+    border: none;
+}

@@ -1,6 +1,6 @@
 <#macro card p urlBase mostraAggiungiCarrello=false>
     <div class="product-card">
-        <a href="${urlBase}/${p.idProdotto}" class="product-card-link">
+        <a href="${base_url}/prodotto?id=${p.idProdotto}" class="product-card-link">
             <#-- CONTENITORE IMMAGINE -->
             <div class="product-image-wrapper">
 
