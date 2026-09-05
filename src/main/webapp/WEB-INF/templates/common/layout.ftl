@@ -74,7 +74,7 @@
                             <div class="navbar-item has-dropdown" id="user-dropdown">
                                 <a class="navbar-link navbar-user-link">
                                     <i class="ti ti-user-circle navbar-icon"></i>
-                                    <span class="navbar-username">${utente.nome?html}</span>
+                                    <span class="navbar-username">${utente.nomePersona?html}</span>
                                 </a>
                                 <div class="navbar-dropdown is-right">
                                     <a class="navbar-item" href="${base_url}/profilo"><i class="ti ti-user"></i> Il mio account</a>
@@ -313,9 +313,6 @@
         }
     });
     </script>
-
-    <!-- JS Extra inserito dalle pagine figlie -->
-    ${extra_js}
 
 </body>
 </html>

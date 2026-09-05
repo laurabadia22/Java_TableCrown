@@ -55,7 +55,7 @@ public class CAutenticazione extends BaseController{
 
         preparaDatiLayout(request, "accedi", datiPagina);
 
-        request.getRequestDispatcher("/WEB-INF/templates/login.ftl").forward(request, response);
+        renderizza("login.ftl", request, response);
     }
 
     /**
@@ -70,7 +70,7 @@ public class CAutenticazione extends BaseController{
 
         preparaDatiLayout(request, "registrati", new HashMap<>());
 
-        request.getRequestDispatcher("/WEB-INF/templates/registrazione.ftl").forward(request, response);
+        renderizza("registrazione.ftl", request, response);
     }
 
     /**
@@ -102,9 +102,9 @@ public class CAutenticazione extends BaseController{
         PersistentManager pm = new PersistentManager(em);
 
         //Controllo credenziali sul db (Utente o Gestore)
-        Object persona = pm.PMgetObjOnAttribute(EUtente.class, "email", email);
+        Object persona = pm.PMgetObjOnAttribute(EUtente.class, "emailPersona", email);
         if (persona == null) {
-            persona = pm.PMgetObjOnAttribute(EGestore.class, "email", email);
+            persona = pm.PMgetObjOnAttribute(EGestore.class, "emailPersona", email);
         }
 
         boolean passwordValida = false;
@@ -172,7 +172,7 @@ public class CAutenticazione extends BaseController{
         //Istanziazione del PersistentManager
         PersistentManager pm = new PersistentManager(em);
 
-        boolean esiste = pm.PMverificaEsistenza(EUtente.class, "email", email);
+        boolean esiste = pm.PMverificaEsistenza(EUtente.class, "emailPersona", email);
         if (esiste) {
             UFlashMessage.addMessage(session, "danger", "Questa email è già registrata.");
             response.sendRedirect(request.getContextPath() + "/registrati");

@@ -1,0 +1,339 @@
+/* ============================================================
+   TableCrown — auth.css
+   Pagine accesso/registrazione: card centrata su sfondo scuro
+   ============================================================ */
+
+.auth-container {
+    padding: 4rem 0;
+    min-height: calc(100vh - var(--header-height, 80px));
+    display: flex;
+    align-items: center;
+}
+
+.auth-container .container {
+    display: flex;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.auth-card-wide {
+    max-width: 520px;
+}
+
+
+/* ── HEADER CARD ──────────────────────────────────────────── */
+
+.auth-card-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auth-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(var(--color-primary-rgb, 99, 102, 241), 0.18), rgba(var(--color-primary-rgb, 99, 102, 241), 0.05));
+    border: 1px solid rgba(var(--color-primary-rgb, 99, 102, 241), 0.25);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+.auth-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+
+/* ── ALERT (errori / messaggi) ───────────────────────────── */
+
+.auth-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.auth-alert-error {
+    background-color: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+.auth-alert-success {
+    background-color: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+
+/* ── FORM ─────────────────────────────────────────────────── */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.auth-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.auth-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-subtle);
+}
+
+.auth-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-input-wrapper > i {
+    position: absolute;
+    left: 12px;
+    color: var(--color-text-muted);
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.7rem 1rem 0.7rem 2.4rem !important;
+    background-color: var(--color-bg-dark) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--color-text-light) !important;
+    font-size: var(--font-size-md) !important;
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+}
+
+.auth-input:hover {
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 99, 102, 241), 0.15);
+}
+
+.auth-toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 0;
+}
+
+.auth-toggle-password:hover {
+    color: var(--color-text-light);
+}
+/* ── INPUT DATA DI NASCITA ────────────────────────────────── */
+
+.auth-input[type="date"] {
+    color-scheme: dark;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+}
+
+/* Icona calendario nativa: invisibile di default su sfondo scuro, la rendiamo visibile */
+.auth-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.3);
+    opacity: 0.75;
+    cursor: pointer;
+    padding: 5px;
+    margin-right: -4px;
+    border-radius: 4px;
+    transition: opacity var(--transition), background-color var(--transition);
+}
+
+.auth-input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Quando il campo è vuoto (required + nessuna data scelta), testo gg/mm/aaaa smorzato come gli altri placeholder */
+.auth-input[type="date"]:invalid::-webkit-datetime-edit-fields-wrapper,
+.auth-input[type="date"]:invalid::-webkit-datetime-edit-text,
+.auth-input[type="date"]:invalid::-webkit-datetime-edit-month-field,
+.auth-input[type="date"]:invalid::-webkit-datetime-edit-day-field,
+.auth-input[type="date"]:invalid::-webkit-datetime-edit-year-field {
+    color: var(--color-text-muted);
+}
+
+/* Quando l'utente ha scelto una data valida, il testo diventa leggibile/chiaro */
+.auth-input[type="date"]:valid::-webkit-datetime-edit-fields-wrapper,
+.auth-input[type="date"]:valid::-webkit-datetime-edit-text,
+.auth-input[type="date"]:valid::-webkit-datetime-edit-month-field,
+.auth-input[type="date"]:valid::-webkit-datetime-edit-day-field,
+.auth-input[type="date"]:valid::-webkit-datetime-edit-year-field {
+    color: var(--color-text-light);
+}
+
+
+/* ── CHECKBOX / LINK INLINE ──────────────────────────────── */
+
+.auth-row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+}
+
+.auth-checkbox-terms {
+    align-items: flex-start;
+    line-height: 1.4;
+}
+
+.auth-checkbox-terms input {
+    margin-top: 3px;
+}
+
+.auth-link-inline {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.auth-link-inline:hover {
+    text-decoration: underline;
+}
+
+
+/* ── SUBMIT BUTTON ────────────────────────────────────────── */
+
+.auth-submit-btn {
+    width: 100%;
+    background-color: var(--color-primary) !important;
+    color: #000 !important;
+    font-size: var(--font-size-md) !important;
+    font-weight: 700 !important;
+    padding: 0.85rem 1.5rem !important;
+    border: none !important;
+    border-radius: var(--radius-sm) !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.auth-submit-btn:hover {
+    background-color: var(--color-primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.auth-submit-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ── DIVIDER E FOOTER ─────────────────────────────────────── */
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--color-border-dark);
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+}
+
+.auth-footer-text {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.auth-link {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+
+/* ============================================================
+   ── RESPONSIVE ───────────────────────────────────────────── */
+
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 1.75rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .auth-fields-row {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}
