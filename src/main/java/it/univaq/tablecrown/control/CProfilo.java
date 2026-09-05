@@ -58,8 +58,7 @@ public class CProfilo extends BaseController {
         datiHub.put("menuVoci", MENU_VOCI);
 
         request.setAttribute("datiHub", datiHub);
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_hub.ftl").forward(request, response);
-    }
+        renderizza("profiloHub.ftl", request, response);    }
 
     //==========================================================================
     // MODIFICA ACCOUNT (GET & POST)
@@ -85,8 +84,7 @@ public class CProfilo extends BaseController {
         request.setAttribute("immagineUtente", utente.getImgPersona());
         request.setAttribute("dataNascitaUtente", utente.getDataNascita() != null ? utente.getDataNascita().toString() : "");
 
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_account.ftl").forward(request, response);
-    }
+        renderizza("profiloAccount.ftl", request, response);    }
 
     /**
      * Aggiorna nome, email ed eventuale nuova foto di profilo.
@@ -252,8 +250,7 @@ public class CProfilo extends BaseController {
         List<EOrdine> ordini = pm.PMgetObjListOnAttribute(EOrdine.class, "utente", utente);
 
         request.setAttribute("ordini", ordini);
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_ordini.ftl").forward(request, response);
-    }
+        renderizza("profiloOrdini.ftl", request, response);    }
 
     //==========================================================================
     // WISHLIST (GET)
@@ -268,7 +265,7 @@ public class CProfilo extends BaseController {
         if (reindirizzaGestore(request, response)) {
             return;
         }
-
+        //TODO: forse non serve questo controllo?
         EUtente utente = utenteCorrente(request, response, em);
         if (utente == null) {
             return;
@@ -279,9 +276,11 @@ public class CProfilo extends BaseController {
 
         Set<EProdotto> prodotti = (wishlist != null) ? wishlist.getProdotti() : Collections.emptySet();
 
-        request.setAttribute("prodotti", prodotti);
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_wishlist.ftl").forward(request, response);
-    }
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("prodotti", prodotti);
+        preparaDatiLayout(request, "wishlist", datiPagina);
+
+        renderizza("profiloWishlist.ftl", request, response);    }
 
     //==========================================================================
     // INDIRIZZI (GET)
@@ -306,8 +305,7 @@ public class CProfilo extends BaseController {
         List<EIndirizzo> indirizzi = pm.PMgetObjListOnAttribute(EIndirizzo.class, "utente", utente);
 
         request.setAttribute("indirizzi", indirizzi);
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_indirizzi.ftl").forward(request, response);
-    }
+        renderizza("profiloIndirizzi.ftl", request, response);    }
 
     //==========================================================================
     // METODI DI PAGAMENTO (GET)
@@ -332,6 +330,5 @@ public class CProfilo extends BaseController {
         List<ECartaDiCredito> carte = pm.PMgetObjListOnAttribute(ECartaDiCredito.class, "utente", utente);
 
         request.setAttribute("metodi", carte);
-        request.getRequestDispatcher("/WEB-INF/templates/profilo_pagamenti.ftl").forward(request, response);
-    }
+        renderizza("profiloPagamenti.ftl", request, response);    }
 }
