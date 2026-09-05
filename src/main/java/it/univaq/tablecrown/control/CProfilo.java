@@ -57,8 +57,11 @@ public class CProfilo extends BaseController {
         datiHub.put("immagineUtente", utente.getImgPersona());
         datiHub.put("menuVoci", MENU_VOCI);
 
-        request.setAttribute("datiHub", datiHub);
-        renderizza("profiloHub.ftl", request, response);    }
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("datiHub", datiHub);
+        preparaDatiLayout(request, "profilo", datiPagina);
+
+        renderizza("areaPersonale.ftl", request, response);    }
 
     //==========================================================================
     // MODIFICA ACCOUNT (GET & POST)
@@ -79,10 +82,12 @@ public class CProfilo extends BaseController {
             return;
         }
 
-        request.setAttribute("nomeUtente", utente.getNomePersona());
-        request.setAttribute("emailUtente", utente.getEmailPersona());
-        request.setAttribute("immagineUtente", utente.getImgPersona());
-        request.setAttribute("dataNascitaUtente", utente.getDataNascita() != null ? utente.getDataNascita().toString() : "");
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("nomeUtente", utente.getNomePersona());
+        datiPagina.put("emailUtente", utente.getEmailPersona());
+        datiPagina.put("immagineUtente", utente.getImgPersona());
+        datiPagina.put("dataNascitaUtente", utente.getDataNascita() != null ? utente.getDataNascita().toString() : "");
+        preparaDatiLayout(request, "profilo", datiPagina);
 
         renderizza("profiloAccount.ftl", request, response);    }
 
@@ -249,7 +254,10 @@ public class CProfilo extends BaseController {
         PersistentManager pm = new PersistentManager(em);
         List<EOrdine> ordini = pm.PMgetObjListOnAttribute(EOrdine.class, "utente", utente);
 
-        request.setAttribute("ordini", ordini);
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("ordini", ordini);
+        preparaDatiLayout(request, "profilo", datiPagina);
+
         renderizza("profiloOrdini.ftl", request, response);    }
 
     //==========================================================================
@@ -304,7 +312,10 @@ public class CProfilo extends BaseController {
         PersistentManager pm = new PersistentManager(em);
         List<EIndirizzo> indirizzi = pm.PMgetObjListOnAttribute(EIndirizzo.class, "utente", utente);
 
-        request.setAttribute("indirizzi", indirizzi);
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("indirizzi", indirizzi);
+        preparaDatiLayout(request, "profilo", datiPagina);
+
         renderizza("profiloIndirizzi.ftl", request, response);    }
 
     //==========================================================================
@@ -329,6 +340,9 @@ public class CProfilo extends BaseController {
         PersistentManager pm = new PersistentManager(em);
         List<ECartaDiCredito> carte = pm.PMgetObjListOnAttribute(ECartaDiCredito.class, "utente", utente);
 
-        request.setAttribute("metodi", carte);
+        Map<String, Object> datiPagina = new HashMap<>();
+        datiPagina.put("metodi", carte);
+        preparaDatiLayout(request, "profilo", datiPagina);
+
         renderizza("profiloPagamenti.ftl", request, response);    }
 }

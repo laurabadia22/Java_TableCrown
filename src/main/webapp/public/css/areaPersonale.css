@@ -1,0 +1,415 @@
+/* ============================================================
+   TableCrown — AreaPersonale.css
+   Pagina area personale: header utente, griglia voci account
+   e box laterale gamification (tornei vinti / livello giocatore)
+   ============================================================ */
+
+
+/* ── CONTENITORE PRINCIPALE ───────────────────────────────── */
+
+.account-container {
+    padding: 2.5rem 0 4rem;
+}
+
+.account-container .container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+
+/* ── LAYOUT PRINCIPALE (Asimmetrico 1fr + 340px) ──────────── */
+
+.account-layout {
+    display: block;
+    grid-template-columns: 1fr 340px;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.account-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+
+/* ── HEADER: AVATAR + SALUTO ──────────────────────────────── */
+
+.account-header {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 1.75rem 2rem;
+    background: linear-gradient(120deg, var(--color-bg-dark-2) 0%, var(--color-bg-dark) 100%);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.account-avatar {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background-color: var(--color-bg-dark);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.03), 0 6px 18px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.account-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.account-avatar i {
+    font-size: 2.5rem;
+    color: var(--color-text-muted);
+}
+
+.account-welcome {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.account-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+}
+
+.account-titolo {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.account-header-links {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+}
+
+.account-link-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.account-link-secondary:hover {
+    color: var(--color-primary);
+}
+
+.account-link-sep {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+
+/* ── GRIGLIA VOCI ACCOUNT ─────────────────────────────────── */
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.account-card {
+    position: relative;
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    padding: 1.75rem 1.5rem;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+}
+
+.account-card:hover::before {
+    transform: scaleX(1);
+}
+
+.account-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.04);
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: background-color var(--transition);
+}
+
+.account-card:hover .account-card-icon {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+}
+
+.account-card-label {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--color-text-light);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.account-card-arrow {
+    color: var(--color-text-muted);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity var(--transition), transform var(--transition), color var(--transition);
+}
+
+.account-card:hover .account-card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-primary);
+}
+
+
+/* ── COLONNA DESTRA: GAMIFICATION ─────────────────────────── */
+
+.account-summary {
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 100px;
+}
+
+.account-summary-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.account-summary-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.account-summary-title i {
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.account-summary-tornei-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.account-tornei-sep {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin: 0 2px;
+}
+
+.account-tornei-totali {
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+}
+
+.account-progress-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background-color: rgba(255,255,255,0.06);
+    overflow: hidden;
+    margin-top: 0.25rem;
+}
+
+.account-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-primary), rgba(255,255,255,0.6));
+    transition: width 0.4s ease;
+}
+
+/* Livello giocatore + tooltip info */
+.account-livello-wrapper {
+    position: relative;
+    border-top: 1px solid var(--color-border-dark);
+    padding-top: 1.25rem;
+}
+
+.account-livello-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.account-livello-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+
+.account-livello-label i {
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.account-livello-info {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    transition: color var(--transition);
+}
+
+.account-livello-info:hover,
+.account-livello-info[aria-expanded="true"] {
+    color: var(--color-primary);
+}
+
+.account-livello-info i {
+    font-size: 18px;
+}
+
+.account-livello-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+}
+
+.account-livello-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-bg-dark);
+    border-left: 1px solid var(--color-border-dark);
+    border-top: 1px solid var(--color-border-dark);
+    transform: rotate(45deg);
+}
+
+.account-livello-tooltip.is-visibile {
+    display: block;
+}
+
+/* Hover su desktop, oltre al click gestito via JS */
+@media (hover: hover) {
+    .account-livello-wrapper:hover .account-livello-tooltip {
+        display: block;
+    }
+}
+
+
+/* ============================================================
+   ── RESPONSIVE DESIGN (MEDIA QUERIES) ───────────────────────
+   ============================================================ */
+
+@media (max-width: 992px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .account-summary {
+        position: static;
+    }
+
+    .account-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .account-header {
+        flex-wrap: wrap;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .account-titolo {
+        font-size: 1.5rem;
+    }
+
+    .account-header {
+        padding: 1.25rem;
+        gap: 1.25rem;
+    }
+}
