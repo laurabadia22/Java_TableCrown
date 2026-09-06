@@ -38,6 +38,9 @@ public class ECartaDiCredito {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EUtente utente;
 
+    @Column(name = "predefinita", nullable = false)
+    private boolean predefinita;
+
     //Costruttore vuote per Hibernate
     protected ECartaDiCredito() {
     }
@@ -50,6 +53,7 @@ public class ECartaDiCredito {
         this.traduciStringaData(dataScadenzaStringa);
         this.impostaUltimeQuattroCifre(ultimeQuattroCifre);
         this.token = token;
+        this.predefinita = false;
     }
 
     // --- GETTER ---
@@ -84,6 +88,10 @@ public class ECartaDiCredito {
 
     public String getToken() {
         return token;
+    }
+
+    public boolean isPredefinita() {
+        return predefinita;
     }
 
     // --- METODI DI DOMINIO ---
@@ -130,6 +138,14 @@ public class ECartaDiCredito {
     public boolean isScaduta() {
         LocalDate fineValidita = this.dataScadenza.atEndOfMonth();
         return LocalDate.now().isAfter(fineValidita);
+    }
+
+    public void impostaPredefinita() {
+        this.predefinita = true;
+    }
+
+    public void rimuoviPredefinita() {
+        this.predefinita = false;
     }
 
 }

@@ -336,6 +336,14 @@ public class FrontController extends HttpServlet {
                                         }
                                         break;
 
+                                    case "predefinita":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            metodiPagamentoController.impostaPredefinita(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
                                     default:
                                         mostra404(response);
                                         break;

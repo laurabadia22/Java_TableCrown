@@ -123,12 +123,14 @@
 
                         <div class="indirizzi-form-field">
                             <label class="indirizzi-form-label" for="indirizzi-form-provincia">Provincia</label>
-                            <input type="text" class="indirizzi-form-input" id="indirizzi-form-provincia" name="provincia" maxlength="2" required>
+                            <input type="text" class="indirizzi-form-input" id="indirizzi-form-provincia" name="provincia" maxlength="2" pattern="[A-Za-z]{2}" required>
                         </div>
 
                         <div class="indirizzi-form-field">
                             <label class="indirizzi-form-label" for="indirizzi-form-cap">CAP</label>
-                            <input type="text" class="indirizzi-form-input" id="indirizzi-form-cap" name="cap" required>
+                            <input type="text" class="indirizzi-form-input" id="indirizzi-form-cap" name="cap"
+                                   maxlength="5" pattern="\d{5}" inputmode="numeric" title="Il CAP deve essere composto da 5 cifre"
+                                   required>
                         </div>
 
                         <div class="indirizzi-form-field">

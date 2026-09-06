@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,12 +28,12 @@ public class CMetodiPagamento extends BaseController{
     public void aggiungiCarta(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        // 1. Se un gestore/admin tenta di accedere, viene reindirizzato alla sua dashboard
+        // Se un gestore/admin tenta di accedere, viene reindirizzato alla sua dashboard
         if (reindirizzaGestore(request, response)) {
             return;
         }
 
-        // 2. Verifica che l'utente sia autenticato (EUtente)
+        // Verifica che l'utente sia autenticato (EUtente)
         EUtente utente = utenteCorrente(request, response, em);
         if (utente == null) {
             return; // Redirect a /accedi già gestito da utenteCorrente
@@ -41,7 +42,7 @@ public class CMetodiPagamento extends BaseController{
         HttpSession session = request.getSession(true);
 
         try {
-            // 3. Recupero dei parametri inviati da form tramite POST
+            // Recupero dei parametri inviati da form tramite POST
             String numeroCarta = UHTTPMethods.postString(request, "numero_carta", null);
             String cvv = UHTTPMethods.postString(request, "cvv", null);
             String titolare = UHTTPMethods.postString(request, "titolare_carta", null);
@@ -58,18 +59,18 @@ public class CMetodiPagamento extends BaseController{
                 return;
             }
 
-            // 4. Simulazione validazione con il servizio bancario e generazione token
+            // Simulazione validazione con il servizio bancario e generazione token
             UBancaMockService bancaService = new UBancaMockService();
             Map<String, String> datiToken = bancaService.generaToken(numeroCarta, cvv);
             String token = datiToken.get("token");
 
             // Estrazione delle ultime 4 cifre
-            String trimmedNumero = numeroCarta.trim();
-            String ultimeQuattroCifre = trimmedNumero.length() >= 4
-                    ? trimmedNumero.substring(trimmedNumero.length() - 4)
-                    : trimmedNumero;
+            String numeroCartaPulito = numeroCarta.replaceAll("\\D", ""); // rimuove tutto tranne le cifre
+            String ultimeQuattroCifre = numeroCartaPulito.length() >= 4
+                    ? numeroCartaPulito.substring(numeroCartaPulito.length() - 4)
+                    : numeroCartaPulito;
 
-            // 5. Istanziazione dell'entità ECartaDiCredito (utente, titolare, scadenza, ultimeQuattroCifre, token)
+            // Istanziazione dell'entità ECartaDiCredito (utente, titolare, scadenza, ultimeQuattroCifre, token)
             ECartaDiCredito nuovaCarta = new ECartaDiCredito(
                     utente,
                     titolare,
@@ -78,8 +79,19 @@ public class CMetodiPagamento extends BaseController{
                     token
             );
 
-            // 6. Salvataggio nel DB tramite PersistentManager
             PersistentManager pm = new PersistentManager(em);
+
+            // Se è la prima carta dell'utente, o se ha scelto esplicitamente di renderla predefinita
+            List<ECartaDiCredito> carteEsistenti = pm.PMgetObjListOnAttribute(ECartaDiCredito.class, "utente", utente);
+            boolean haGiaCarte = carteEsistenti != null && !carteEsistenti.isEmpty();
+            boolean voglioPredefinita = UHTTPMethods.postBool(request, "predefinita", false);
+
+            if (!haGiaCarte || voglioPredefinita) {
+                azzeraPredefinita(carteEsistenti, pm);
+                nuovaCarta.impostaPredefinita();
+            }
+
+            // Salvataggio nel DB tramite PersistentManager
             boolean salvato = pm.PMsaveObj(nuovaCarta);
 
             if (salvato) {
@@ -145,19 +157,99 @@ public class CMetodiPagamento extends BaseController{
                 return;
             }
 
+            boolean eraPredefinita = cartaDaEliminare.isPredefinita();
+
             // Rimozione dal DB
             boolean eliminata = pm.PMdeleteObj(cartaDaEliminare);
 
-            if (eliminata) {
-                UFlashMessage.addMessage(session, "success", "Metodo di pagamento eliminato con successo!");
-            } else {
+            if (!eliminata) {
                 throw new Exception("Si è verificato un errore durante la rimozione della carta di credito.");
             }
+
+            if (eraPredefinita) {
+                List<ECartaDiCredito> carteRimaste = pm.PMgetObjListOnAttribute(ECartaDiCredito.class, "utente", utente);
+                if (carteRimaste != null && !carteRimaste.isEmpty()) {
+                    ECartaDiCredito nuovaPredefinita = carteRimaste.get(0);
+                    nuovaPredefinita.impostaPredefinita();
+                    pm.PMsaveObj(nuovaPredefinita);
+                }
+            }
+
+            UFlashMessage.addMessage(session, "success", "Metodo di pagamento eliminato con successo!");
 
         } catch (Exception e) {
             UFlashMessage.addMessage(session, "danger", "Impossibile completare l'operazione: " + e.getMessage());
         }
 
         response.sendRedirect(request.getContextPath() + "/profilo/pagamenti");
+    }
+
+    /**
+     * Imposta una carta esistente come predefinita.
+     * URL: POST /profilo/pagamenti/predefinita
+     */
+    public void impostaPredefinita(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws ServletException, IOException {
+
+        if (reindirizzaGestore(request, response)) {
+            return;
+        }
+
+        EUtente utente = utenteCorrente(request, response, em);
+        if (utente == null) {
+            return;
+        }
+
+        HttpSession session = request.getSession(true);
+        PersistentManager pm = new PersistentManager(em);
+
+        try {
+            Long idCarta = UHTTPMethods.postLong(request, "id_carta", null);
+
+            if (idCarta == null) {
+                throw new IllegalArgumentException("La carta selezionata non esiste.");
+            }
+
+            ECartaDiCredito carta = pm.PMgetObjOnAttribute(ECartaDiCredito.class, "idCartaDiCredito", idCarta);
+
+            if (carta == null) {
+                throw new IllegalArgumentException("La carta selezionata non esiste.");
+            }
+
+            if (!carta.getUtente().getIdPersona().equals(utente.getIdPersona())) {
+                throw new SecurityException("Non sei autorizzato a modificare questa carta.");
+            }
+
+            List<ECartaDiCredito> carteUtente = pm.PMgetObjListOnAttribute(ECartaDiCredito.class, "utente", utente);
+
+            azzeraPredefinita(carteUtente, pm);
+
+            carta.impostaPredefinita();
+            boolean salvato = pm.PMsaveObj(carta);
+
+            if (!salvato) {
+                throw new RuntimeException("Si è verificato un errore durante l'impostazione della carta come predefinita.");
+            }
+
+            UFlashMessage.addMessage(session, "success", "Carta predefinita aggiornata con successo!");
+
+        } catch (Exception e) {
+            UFlashMessage.addMessage(session, "danger", e.getMessage());
+        }
+
+        response.sendRedirect(request.getContextPath() + "/profilo/pagamenti");
+    }
+
+    // HELPER PRIVATI
+
+    private void azzeraPredefinita(List<ECartaDiCredito> carte, PersistentManager pm) {
+        if (carte == null) return;
+
+        for (ECartaDiCredito carta : carte) {
+            if (carta.isPredefinita()) {
+                carta.rimuoviPredefinita();
+                pm.PMsaveObj(carta);
+            }
+        }
     }
 }

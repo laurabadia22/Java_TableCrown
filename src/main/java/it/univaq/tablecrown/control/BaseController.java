@@ -513,18 +513,18 @@ public abstract class BaseController {
             return null;
         }
 
+        Long idPersona = null;
+
         Object utenteLoggato = session.getAttribute("utenteLoggato");
         if (utenteLoggato instanceof EUtente) {
-            return (EUtente) utenteLoggato;
-        }
-
-        // Se in sessione è stato salvato idPersona (Long o Integer)
-        Object idPersonaObj = session.getAttribute("idPersona");
-        Long idPersona = null;
-        if (idPersonaObj instanceof Long) {
-            idPersona = (Long) idPersonaObj;
-        } else if (idPersonaObj instanceof Integer) {
-            idPersona = ((Integer) idPersonaObj).longValue();
+            idPersona = ((EUtente) utenteLoggato).getIdPersona();
+        } else {
+            Object idPersonaObj = session.getAttribute("idPersona");
+            if (idPersonaObj instanceof Long) {
+                idPersona = (Long) idPersonaObj;
+            } else if (idPersonaObj instanceof Integer) {
+                idPersona = ((Integer) idPersonaObj).longValue();
+            }
         }
 
         if (idPersona == null) {

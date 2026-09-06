@@ -324,7 +324,7 @@ public class CProfilo extends BaseController {
 
         Map<String, Object> datiPagina = new HashMap<>();
         datiPagina.put("indirizzi", indirizzi);
-        preparaDatiLayout(request, "profilo", datiPagina);
+        preparaDatiLayout(request, "profilo-indirizzi", datiPagina);
 
         renderizza("profiloIndirizzi.ftl", request, response);    }
 
@@ -352,9 +352,9 @@ public class CProfilo extends BaseController {
 
         Map<String, Object> datiPagina = new HashMap<>();
         datiPagina.put("metodi", carte);
-        preparaDatiLayout(request, "profilo", datiPagina);
+        preparaDatiLayout(request, "profilo-pagamenti", datiPagina);
 
-        renderizza("profiloPagamenti.ftl", request, response);
+        renderizza("profiloMetodiPagamento.ftl", request, response);
     }
 
     @Override

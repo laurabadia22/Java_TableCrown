@@ -12,7 +12,7 @@ public class EIndirizzo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_indirizzo")
+    @Column(name = "idIndirizzo")
     private Long idIndirizzo;
 
     @Column(name = "nome", nullable = false, length = 100)

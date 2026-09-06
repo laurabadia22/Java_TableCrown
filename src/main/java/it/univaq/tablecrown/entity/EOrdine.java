@@ -28,7 +28,7 @@ public class EOrdine {
     private EUtente utente;
 
     @ManyToOne
-    @JoinColumn(name = "indirizzo_id", referencedColumnName = "id_indirizzo", nullable = false)
+    @JoinColumn(name = "indirizzo_id", referencedColumnName = "idIndirizzo", nullable = false)
     private EIndirizzo indirizzoSpedizione;
 
     // Snapshot carta di credito: non salviamo il riferimento alla carta ma solo
