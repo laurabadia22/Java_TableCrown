@@ -1,0 +1,222 @@
+/* ============================================================
+   TableCrown — prodottoRiga.css
+   Componente condiviso: riga prodotto orizzontale
+   (usato in wishlist, carrello, ecc.)
+   ============================================================ */
+
+.prodotto-riga {
+    position: relative;
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    background-color: var(--color-bg-dark-2);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.prodotto-riga:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.prodotto-riga-esaurito {
+    opacity: 0.75;
+}
+
+/* ── MEDIA ─────────────────────────────────────────────────── */
+
+.prodotto-riga-media {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background-color: var(--color-bg-dark);
+    flex-shrink: 0;
+}
+
+.prodotto-riga-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.prodotto-riga:hover .prodotto-riga-img {
+    transform: scale(1.06);
+}
+
+.prodotto-riga-badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    background-color: rgba(0,0,0,0.75);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+/* ── INFO ──────────────────────────────────────────────────── */
+
+.prodotto-riga-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.prodotto-riga-nome {
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    color: var(--color-text-light);
+    text-decoration: none;
+    line-height: 1.3;
+    transition: color var(--transition);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.prodotto-riga-nome:hover {
+    color: var(--color-primary);
+}
+
+.prodotto-riga-prezzo-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+}
+
+.prodotto-riga-prezzo {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.prodotto-riga-prezzo-old {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+}
+
+/* ── QUANTITÀ (usata dal carrello) ─────────────────────────── */
+
+.prodotto-riga-quantita {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0 1rem;
+}
+
+.prodotto-riga-quantita-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.prodotto-riga-quantita-val {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+}
+
+/* ── AZIONI ────────────────────────────────────────────────── */
+
+.prodotto-riga-azioni {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+}
+
+.prodotto-riga-form {
+    display: flex;
+}
+
+.prodotto-riga-btn-carrello {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+}
+
+.prodotto-riga-btn-carrello:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
+
+.prodotto-riga-btn-carrello:disabled {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-dark);
+    cursor: not-allowed;
+}
+
+.prodotto-riga-btn-rimuovi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border-dark);
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform var(--transition), background-color var(--transition), color var(--transition);
+}
+
+.prodotto-riga-btn-rimuovi:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    transform: scale(1.08);
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+
+@media (max-width: 560px) {
+    .prodotto-riga {
+        grid-template-columns: 72px 1fr;
+        grid-template-areas:
+            "media info"
+            "azioni azioni";
+    }
+
+    .prodotto-riga-media {
+        grid-area: media;
+        width: 72px;
+        height: 72px;
+    }
+
+    .prodotto-riga-info {
+        grid-area: info;
+    }
+
+    .prodotto-riga-azioni {
+        grid-area: azioni;
+        justify-content: flex-end;
+        margin-top: 0.75rem;
+    }
+}

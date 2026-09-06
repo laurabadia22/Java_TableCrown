@@ -344,5 +344,39 @@ public class CProfilo extends BaseController {
         datiPagina.put("metodi", carte);
         preparaDatiLayout(request, "profilo", datiPagina);
 
-        renderizza("profiloPagamenti.ftl", request, response);    }
+        renderizza("profiloPagamenti.ftl", request, response);
+    }
+
+    @Override
+    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+
+        Map<String, String> home = new HashMap<>();
+        home.put("label", "Home");
+        home.put("url", "/");
+        breadcrumbs.add(home);
+
+        Map<String, String> areaPersonale = new HashMap<>();
+        areaPersonale.put("label", "Area Personale");
+        areaPersonale.put("url", "profilo".equals(currentPage) ? "#" : "/profilo");
+        breadcrumbs.add(areaPersonale);
+
+        String labelUltimoStep = switch (currentPage) {
+            case "profilo-account" -> "Modifica Account";
+            case "profilo-ordini" -> "I Miei Ordini";
+            case "profilo-wishlist" -> "Wishlist";
+            case "profilo-indirizzi" -> "I Miei Indirizzi";
+            case "profilo-pagamenti" -> "Metodi di Pagamento";
+            default -> null; // "profilo" (l'hub stesso): niente terzo step
+        };
+
+        if (labelUltimoStep != null) {
+            Map<String, String> ultimoStep = new HashMap<>();
+            ultimoStep.put("label", labelUltimoStep);
+            ultimoStep.put("url", "#");
+            breadcrumbs.add(ultimoStep);
+        }
+
+        return breadcrumbs;
+    }
 }

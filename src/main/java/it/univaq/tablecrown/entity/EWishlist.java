@@ -12,10 +12,10 @@ public class EWishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_wishlist")
+    @Column(name = "idWishlist")
     private Long idWishlist;
 
-    @Column(name = "data_creazione", nullable = false)
+    @Column(name = "dataCreazione", nullable = false)
     private LocalDateTime dataCreazione;
 
     @OneToOne
@@ -25,7 +25,7 @@ public class EWishlist {
     @ManyToMany
     @JoinTable(
             name = "wishlist_prodotto",
-            joinColumns = @JoinColumn(name = "wishlist_id", referencedColumnName = "id_wishlist"),
+            joinColumns = @JoinColumn(name = "wishlist_id", referencedColumnName = "idWishlist"),
             inverseJoinColumns = @JoinColumn(name = "prodotto_id", referencedColumnName = "idProdotto")
     )
     private Set<EProdotto> prodotti = new LinkedHashSet<>();

@@ -25,6 +25,9 @@ public class CProdotto extends BaseController{
         super();
     }
 
+    private EProdotto prodottoCorrente; // usato da getBreadcrumbs per questa singola richiesta
+
+
     /**
      * Mostra la pagina di dettaglio di un prodotto specifico.
      * URL: GET /prodotto?id=X (Accesso libero)
@@ -64,6 +67,8 @@ public class CProdotto extends BaseController{
             response.sendRedirect(request.getContextPath() + "/catalogo/giochi-da-tavolo");
             return;
         }
+
+        this.prodottoCorrente = prodotto; // <-- reso disponibile a getBreadcrumbs
 
         // Costruiamo la mappa di dati per la vista
         Map<String, Object> datiPagina = costruisciDatiVista(request, prodotto, pm, em);
@@ -142,7 +147,7 @@ public class CProdotto extends BaseController{
         }
 
         for (EProdotto p : wishlist.getProdotti()) {
-            if (p.getIdProdotto() == idProdotto) {
+            if (idProdotto.equals(p.getIdProdotto())) {
                 return true;
             }
         }
@@ -162,12 +167,17 @@ public class CProdotto extends BaseController{
         homeStep.put("url", "/");
         breadcrumbs.add(homeStep);
 
-        // Nel caso specifico dei breadcrumbs per CProdotto, la rotta viene personalizzata
-        // direttamente nel ciclo della richiesta se necessario o gestita con un fallback generico
-        Map<String, String> currentStep = new HashMap<>();
-        currentStep.put("label", "Dettaglio Prodotto");
-        currentStep.put("url", "#");
-        breadcrumbs.add(currentStep);
+        if (prodottoCorrente != null) {
+            Map<String, String> catalogoStep = new HashMap<>();
+            catalogoStep.put("label", labelCatalogo(prodottoCorrente));
+            catalogoStep.put("url", urlCatalogo(prodottoCorrente));
+            breadcrumbs.add(catalogoStep);
+
+            Map<String, String> prodottoStep = new HashMap<>();
+            prodottoStep.put("label", prodottoCorrente.getNomeProdotto());
+            prodottoStep.put("url", "#");
+            breadcrumbs.add(prodottoStep);
+        }
 
         return breadcrumbs;
     }

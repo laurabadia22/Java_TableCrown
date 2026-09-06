@@ -2,6 +2,7 @@
 <#import "common/prodottoRiga.ftl" as righe>
 
 <#assign extra_css>
+    <link rel="stylesheet" href="${base_url}/public/css/prodottoRiga.css">
     <link rel="stylesheet" href="${base_url}/public/css/wishlist.css">
 </#assign>
 

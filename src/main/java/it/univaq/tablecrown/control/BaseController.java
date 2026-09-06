@@ -1,9 +1,7 @@
 package it.univaq.tablecrown.control;
 
 import it.univaq.tablecrown.dao.PersistentManager;
-import it.univaq.tablecrown.entity.EGestore;
-import it.univaq.tablecrown.entity.EProdotto;
-import it.univaq.tablecrown.entity.EUtente;
+import it.univaq.tablecrown.entity.*;
 import it.univaq.tablecrown.entity.enumerativi.Categoria;
 import it.univaq.tablecrown.entity.enumerativi.DifficoltaGioco;
 import it.univaq.tablecrown.utility.UFlashMessage;
@@ -467,6 +465,39 @@ public abstract class BaseController {
      */
     protected List<EProdotto> prodottiCorrelati(EntityManager em, List<Long> idsEsclusi) {
         return prodottiCorrelati(em, idsEsclusi, 8);
+    }
+
+    /**
+     * Determina l'URL del catalogo specifico in base alla classe concreta del prodotto.
+     */
+    protected String urlCatalogo(EProdotto prodotto) {
+        if (prodotto instanceof EGiocoDaTavolo) {
+            return "/catalogo/giochi-da-tavolo";
+        }
+        if (prodotto instanceof EBustine) {
+            return "/catalogo/bustine";
+        }
+        if (prodotto instanceof EPortaDadi) {
+            return "/catalogo/porta-dadi";
+        }
+        // Fallback generico di sicurezza
+        return "/";
+    }
+
+    /**
+     * Determina l'etichetta leggibile del catalogo in base alla classe concreta del prodotto.
+     */
+    protected String labelCatalogo(EProdotto prodotto) {
+        if (prodotto instanceof EGiocoDaTavolo) {
+            return "Giochi da tavolo";
+        }
+        if (prodotto instanceof EBustine) {
+            return "Bustine";
+        }
+        if (prodotto instanceof EPortaDadi) {
+            return "Porta Dadi";
+        }
+        return "Catalogo";
     }
 
     // UTENTI

@@ -137,7 +137,7 @@ extra_css=cssProdotto>
                         </#if>
 
                         <form action="${base_url}/wishlist/<#if isInWishlist!false>rimuovi<#else>aggiungi</#if>" method="POST">
-                            <input type="hidden" name="id_prodotto" value="${prodotto.idProdotto}">
+                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
                             <button type="submit" class="button is-fullwidth is-outlined <#if isInWishlist!false>is-danger<#else>is-light</#if>">
                                 <i class="ti <#if isInWishlist!false>ti-heart-filled<#else>ti-heart</#if> mr-2"></i>
                                 <#if isInWishlist!false>Rimuovi dalla Wishlist<#else>Aggiungi alla Wishlist</#if>
