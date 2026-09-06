@@ -264,19 +264,54 @@ public class FrontController extends HttpServlet {
                             } else {
                                 mostra404(response);
                             }
-                            break;
+                            break; //TODO: mancano dei metodi POST di CCheckout
                         case "wishlist":
                             if ("GET".equals(metodoHTTP)) {
                                 profiloController.mostraWishlist(request, response, em);
                             } else {
                                 mostra404(response);
                             }
-                            break;
+                            break; //TODO: mancano dei metodi??
                         case "indirizzi":
-                            if ("GET".equals(metodoHTTP)) {
-                                profiloController.mostraIndirizzi(request, response, em);
+                            if (parti.length > 2) {
+                                String sottoIndirizzi = parti[2].toLowerCase();
+                                CIndirizzo indirizzoController = new CIndirizzo();
+
+                                switch (sottoIndirizzi) {
+                                    case "aggiungi":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            indirizzoController.aggiungiIndirizzo(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    case "elimina":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            indirizzoController.eliminaIndirizzo(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    case "predefinito":
+                                        if ("POST".equals(metodoHTTP)) {
+                                            indirizzoController.impostaPredefinito(request, response, em);
+                                        } else {
+                                            mostra404(response);
+                                        }
+                                        break;
+
+                                    default:
+                                        mostra404(response);
+                                        break;
+                                }
                             } else {
-                                mostra404(response);
+                                if ("GET".equals(metodoHTTP)) {
+                                    profiloController.mostraIndirizzi(request, response, em);
+                                } else {
+                                    mostra404(response);
+                                }
                             }
                             break;
                         case "pagamenti":

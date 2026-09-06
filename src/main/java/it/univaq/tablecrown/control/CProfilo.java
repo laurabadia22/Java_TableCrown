@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -254,9 +255,18 @@ public class CProfilo extends BaseController {
         PersistentManager pm = new PersistentManager(em);
         List<EOrdine> ordini = pm.PMgetObjListOnAttribute(EOrdine.class, "utente", utente);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
+        List<Map<String, Object>> ordiniVista = new ArrayList<>();
+        for (EOrdine ordine : ordini) {
+            Map<String, Object> riga = new HashMap<>();
+            riga.put("ordine", ordine);
+            riga.put("dataFormattata", ordine.getData().format(formatter));
+            ordiniVista.add(riga);
+        }
+
         Map<String, Object> datiPagina = new HashMap<>();
-        datiPagina.put("ordini", ordini);
-        preparaDatiLayout(request, "profilo", datiPagina);
+        datiPagina.put("ordiniVista", ordiniVista);
+        preparaDatiLayout(request, "profilo-ordini", datiPagina);
 
         renderizza("profiloOrdini.ftl", request, response);    }
 

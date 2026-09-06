@@ -146,7 +146,7 @@ public class CIndirizzo extends BaseController{
                 throw new IllegalArgumentException("L'indirizzo selezionato non esiste.");
             }
 
-            if (indirizzo.getUtente().getIdPersona() != utente.getIdPersona()) {
+            if (indirizzo.getUtente().getIdPersona().equals(utente.getIdPersona())) {
                 throw new SecurityException("Non sei autorizzato a modificare questo indirizzo.");
             }
 
