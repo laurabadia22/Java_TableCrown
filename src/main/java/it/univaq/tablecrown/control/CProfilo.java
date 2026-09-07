@@ -90,7 +90,8 @@ public class CProfilo extends BaseController {
         datiPagina.put("dataNascitaUtente", utente.getDataNascita() != null ? utente.getDataNascita().toString() : "");
         preparaDatiLayout(request, "profilo", datiPagina);
 
-        renderizza("profiloModificaAccount.ftl", request, response);    }
+        renderizza("profiloModificaAccount.ftl", request, response);
+    }
 
     /**
      * Aggiorna nome, email ed eventuale nuova foto di profilo.

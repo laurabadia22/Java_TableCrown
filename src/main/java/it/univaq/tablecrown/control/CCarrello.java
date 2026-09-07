@@ -74,6 +74,7 @@ public class CCarrello extends BaseController {
 
         List<Map<String, Object>> carrelloItems = new ArrayList<>();
         double totaleComplessivo = 0.0;
+        double risparmioTotale = 0.0;
         int totaleArticoli = 0;
 
         // Recuperiamo i dettagli dei prodotti presenti nel carrello dal DB
@@ -83,11 +84,17 @@ public class CCarrello extends BaseController {
 
             EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
             if (prodotto != null) {
+                double prezzoListino = prodotto.getPrezzo();
                 double prezzoUnitario = prodotto.getPrezzoScontato();
                 double subtotale = prezzoUnitario * quantita;
 
                 totaleComplessivo += subtotale;
                 totaleArticoli += quantita;
+
+                // Calcolo del risparmio per ciascuna riga
+                if (prezzoListino > prezzoUnitario) {
+                    risparmioTotale += (prezzoListino - prezzoUnitario) * quantita;
+                }
 
                 Map<String, Object> item = new HashMap<>();
                 item.put("prodotto", prodotto);
@@ -101,16 +108,24 @@ public class CCarrello extends BaseController {
 
         Map<String, Object> carrelloSummary = new HashMap<>();
         carrelloSummary.put("totale", totaleComplessivo);
+        carrelloSummary.put("risparmio", risparmioTotale);
         carrelloSummary.put("n_articoli", totaleArticoli);
+
+        // Recupero prodotti correlati escludendo quelli già nel carrello
+        List<Long> idsEsclusi = new ArrayList<>(carrelloMap.keySet());
+        List<EProdotto> correlati = prodottiCorrelati(em, idsEsclusi);
 
         // Impostiamo gli attributi di richiesta per la vista FreeMarker
         request.setAttribute("carrello_items", carrelloItems);
         request.setAttribute("carrello_summary", carrelloSummary);
+        request.setAttribute("correlati", correlati);
         request.setAttribute("update_url", request.getContextPath() + "/carrello/aggiorna");
         request.setAttribute("remove_url", request.getContextPath() + "/carrello/rimuovi");
 
+        preparaDatiLayout(request, "carrello", null);
+
         // Inoltro alla vista
-        request.getRequestDispatcher("/WEB-INF/templates/carrello.ftl").forward(request, response);
+        renderizza("carrello.ftl", request, response);
     }
 
     //==========================================================================
