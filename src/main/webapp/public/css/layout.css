@@ -67,7 +67,7 @@
     align-items: center;
     gap: 6px;
     color: rgba(255, 255, 255, 0.75) !important;
-    font-size: var(--font-size-sm);
+    font-size: 15px; /* Modificato da var(--font-size-sm) */
     transition: color var(--transition);
     position: relative;
     cursor: pointer;
@@ -81,7 +81,7 @@
 
 .header-top-label,
 .navbar-username {
-    font-size: var(--font-size-sm);
+    font-size: 15px; /* Modificato da var(--font-size-sm) */
 }
 
 .navbar-icon {
@@ -90,12 +90,13 @@
 }
 
 .navbar-avatar-img {
-    width: 50px!important;
-    height: 50px!important;
-    max-height: 50px !important;
+    width: 60px!important;
+    height: 60px!important;
+    max-height: 60px !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
+    margin-right: 8px; /* Distanzia l'immagine dal testo a destra */
 }
 
 .navbar-row-bottom-search {
