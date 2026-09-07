@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import java.io.IOException;
  * e le smista ai rispettivi Controller.
  */
 @WebServlet(urlPatterns = "/*")
+@MultipartConfig
 public class FrontController extends HttpServlet {
 
     //Factory singleton per la gestione delle connessioni JPA verso il db

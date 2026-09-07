@@ -89,6 +89,15 @@
     line-height: 1;
 }
 
+.navbar-avatar-img {
+    width: 50px!important;
+    height: 50px!important;
+    max-height: 50px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 .navbar-row-bottom-search {
     width: 100%;
     display: flex;

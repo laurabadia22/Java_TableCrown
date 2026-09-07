@@ -73,7 +73,14 @@
                         <#if utente??>
                             <div class="navbar-item has-dropdown" id="user-dropdown">
                                 <a class="navbar-link navbar-user-link">
-                                    <i class="ti ti-user-circle navbar-icon"></i>
+                                    <#if utente.imgPersona?has_content>
+                                        <img src="${base_url}/${utente.imgPersona}"
+                                             onerror="this.onerror=null; this.replaceWith(Object.assign(document.createElement('i'), {className: 'ti ti-user-circle navbar-icon'}));"
+                                             alt=""
+                                             class="navbar-avatar-img">
+                                    <#else>
+                                        <i class="ti ti-user-circle navbar-icon"></i>
+                                    </#if>
                                     <span class="navbar-username">${utente.nomePersona?html}</span>
                                 </a>
                                 <div class="navbar-dropdown is-right">

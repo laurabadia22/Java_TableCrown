@@ -35,11 +35,12 @@
                     <p class="auth-subtitle">Accedi al tuo account TableCrown</p>
                 </div>
 
-                <#if flash_message??>
-                    <div class="alert alert-${flash_type!'danger'}">
-                        ${flash_message}
-                    </div>
-                </#if>
+<#--                <#if flash_message??>-->
+<#--                    <div class="alert alert-${flash_type!'danger'}">-->
+<#--                        ${flash_message}-->
+<#--                    </div>-->
+<#--                </#if>-->
+<#--                Non serve perché il flash message lo stampa già il layout.ftl-->
 
                 <form class="auth-form" action="${base_url!''}/login" method="post" id="login-form">
 

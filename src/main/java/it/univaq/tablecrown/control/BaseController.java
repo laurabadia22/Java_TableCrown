@@ -239,13 +239,13 @@ public abstract class BaseController {
             return null;
         }
 
-        // 1. Estrazione del nome originale del file
+        // Estrazione del nome originale del file
         String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
-        // 2. Generazione nome univoco per evitare sovrascritture (UUID)
+        // Generazione nome univoco per evitare sovrascritture (UUID)
         String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
-        // 3. Calcolo del percorso fisico sul server
+        // Calcolo del percorso fisico sul server
         String uploadPath = request.getServletContext().getRealPath("")
                 + File.separator + "uploads"
                 + File.separator + sottoCartella;
@@ -255,11 +255,11 @@ public abstract class BaseController {
             uploadDir.mkdirs();
         }
 
-        // 4. Scrittura del file su disco
+        // Scrittura del file su disco
         String filePath = uploadPath + File.separator + uniqueFileName;
         part.write(filePath);
 
-        // 5. Restituisce il percorso relativo formattato
+        // Restituisce il percorso relativo formattato
         return "uploads/" + sottoCartella + "/" + uniqueFileName;
     }
 

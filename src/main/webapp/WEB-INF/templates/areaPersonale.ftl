@@ -17,8 +17,7 @@
 
                         <div class="account-avatar">
                             <#if datiHub.immagineUtente?has_content>
-                                <img src="${base_url}/public/img/profili/${datiHub.immagineUtente}"
-                                     onerror="this.onerror=null; this.src='${base_url}/public/img/avatar-default.png'"
+                                <img src="${base_url}/${datiHub.immagineUtente}"                                     onerror="this.onerror=null; this.src='${base_url}/public/img/avatar-default.png'"
                                      alt="${datiHub.nomeUtente?html}"
                                      class="account-avatar-img">
                             <#else>
