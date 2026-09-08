@@ -251,7 +251,7 @@ public class CGestore extends BaseController {
             // 2. Salvataggio Immagine tramite BaseController
             String imgProdotto = salvaImmagineSuDisco(request, "img_prodotto", "prodotti");
             if (imgProdotto == null) {
-                imgProdotto = "uploads/prodotti/default_game.png";
+                imgProdotto = "public/img/prodotti/gioco_da_tavolo_img.jpg";
             }
 
             // 3. Categorie e Componenti
@@ -354,7 +354,7 @@ public class CGestore extends BaseController {
             // Salvataggio Immagine
             String imgProdotto = salvaImmagineSuDisco(request, "img_prodotto", "prodotti");
             if (imgProdotto == null) {
-                imgProdotto = "uploads/prodotti/default_sleeves.png";
+                imgProdotto = "public/img/prodotti/bustine_img.jpg";
             }
 
             DisponibilitaProdotto disponibilita = Enum.valueOf(DisponibilitaProdotto.class,
@@ -405,7 +405,7 @@ public class CGestore extends BaseController {
             // Salvataggio Immagine
             String imgProdotto = salvaImmagineSuDisco(request, "img_prodotto", "prodotti");
             if (imgProdotto == null) {
-                imgProdotto = "uploads/prodotti/default_diceholder.png";
+                imgProdotto = "public/img/prodotti/porta_dadi_img.jpg";
             }
 
             DisponibilitaProdotto disponibilita = Enum.valueOf(DisponibilitaProdotto.class,
