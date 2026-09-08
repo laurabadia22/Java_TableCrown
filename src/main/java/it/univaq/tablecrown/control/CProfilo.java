@@ -295,8 +295,22 @@ public class CProfilo extends BaseController {
 
         Set<EProdotto> prodotti = (wishlist != null) ? wishlist.getProdotti() : Collections.emptySet();
 
+        // Estraiamo gli ID dei prodotti già in wishlist per escluderli dai correlati
+        List<Long> idsEsclusi = new ArrayList<>();
+        if (prodotti != null) {
+            for (EProdotto p : prodotti) {
+                idsEsclusi.add(p.getIdProdotto());
+            }
+        }
+
+        // Recuperiamo i correlati
+        List<EProdotto> correlati = prodottiCorrelati(em, idsEsclusi);
+
+        // Prepariamo i dati per la vista
         Map<String, Object> datiPagina = new HashMap<>();
         datiPagina.put("prodotti", prodotti);
+        datiPagina.put("correlati", correlati);
+
         preparaDatiLayout(request, "wishlist", datiPagina);
 
         renderizza("profiloWishlist.ftl", request, response);    }

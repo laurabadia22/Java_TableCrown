@@ -1,4 +1,5 @@
 <#import "common/layout.ftl" as layout>
+<#import "common/prodottoCardVector.ftl" as cardVector>
 
 <#-- Script per il carosello iniettato in extra_js -->
 
@@ -98,54 +99,7 @@
 
                 <#if offerte?? && offerte?has_content>
                     <#list offerte as prodotto>
-                        <div class="card-vector-item">
-                            <a href="${base_url}/prodotto?id=${prodotto.idProdotto}" class="card-link-wrapper">
-                                <div class="card home-card-fixed">
-                                    <div class="card-image">
-                                        <figure class="image-container-fixed">
-
-                                            <!-- Badge Disponibilità -->
-                                            <#if prodotto.disponibilitaProdotto?? && prodotto.disponibilitaProdotto.name() == 'ESAURITO'>
-                                                <span class="badge-stato badge-esaurito">Esaurito</span>
-                                            <#elseif prodotto.disponibilitaProdotto?? && prodotto.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>
-                                                <span class="badge-stato badge-non-disponibile">Non disponibile</span>
-                                            </#if>
-
-                                            <!-- Logica Immagini -->
-                                            <#assign imgUrl = base_url + "/public/img/placeholder.png">
-                                            <#if prodotto.imgProdotto?? && prodotto.imgProdotto != "">
-                                                <#assign imgUrl = base_url + "/public/img/prodotti/" + prodotto.imgProdotto>
-                                            </#if>
-                                            <img src="${imgUrl}" alt="${prodotto.nomeProdotto}" />
-                                        </figure>
-                                    </div>
-                                    <div class="card-content">
-                                        <p class="card-title-custom">${prodotto.nomeProdotto}</p>
-
-                                        <!-- Prezzi formattati -->
-                                        <div class="price-container">
-                                            <#if prodotto.sconto.hasSconto()>
-                                                <#assign prezzoScontato = prodotto.prezzo * (1 - prodotto.sconto.sconto / 100)>
-                                                <span class="price">${prezzoScontato?string("0.00")} €</span>
-                                                <span class="price-old">${prodotto.prezzo?string("0.00")} €</span>
-                                            <#else>
-                                                <span class="price">${prodotto.prezzo?string("0.00")} €</span>
-                                            </#if>
-                                        </div>
-
-                                        <!-- Form aggiunta al carrello -->
-                                        <form action="${base_url}/carrello/aggiungi" method="POST" style="margin-top: 10px;">
-                                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                            <input type="hidden" name="quantita" value="1">
-                                            <button type="submit" class="btn-cart">
-                                                <i class="ti ti-shopping-cart"></i> Aggiungi
-                                            </button>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                        <@cardVector.card p=prodotto />
                     </#list>
 
                     <div class="card-vector-item card-vector-more">

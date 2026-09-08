@@ -1,5 +1,6 @@
 <#import "common/layout.ftl" as layout>
 <#import "common/prodottoCard.ftl" as pc>
+<#import "common/prodottoCardVector.ftl" as cardVector>
 
 
 <#assign cssProdotto>
@@ -116,7 +117,7 @@ extra_css=cssProdotto>
 
                         <#if prodotto.isAcquistabile()>
                             <form action="${base_url}/carrello/aggiungi" method="POST" class="mb-4">
-                                <input type="hidden" name="id_prodotto" value="${prodotto.idProdotto}">
+                                <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
 
                                 <div class="field mb-4">
                                     <label class="label has-text-light is-size-7">Quantità:</label>
@@ -174,53 +175,14 @@ extra_css=cssProdotto>
                 </div>
             </div>
 
+            <#-- ── SEZIONE PRODOTTI CORRELATI ── -->
             <#if correlati?? && (correlati?size > 0)>
                 <hr class="prodotto-divider">
-                <h2 class="title is-4 has-text-light mb-5 titolo-sezione-custom ">Forse ti può interessare...</h2>
+                <h2 class="title is-4 has-text-light mb-5 titolo-sezione-custom">Forse ti può interessare...</h2>
 
-                <div class="columns is-multiline">
+                <div class="card-row-vector">
                     <#list correlati as c>
-                        <div class="column is-12-mobile is-4-tablet is-3-desktop">
-
-                            <a href="${base_url}/prodotto?id=${c.idProdotto}" class="card-link-wrapper">
-                                <#-- Ripristinata la classe base senza forzare il bianco (torna viola) -->
-                                <div class="card home-card-fixed" style="border-radius: 12px !important;">
-
-                                    <#-- Immagine -->
-                                    <div class="card-image image-container-fixed" style="border-radius: 12px 12px 0 0 !important; overflow: hidden;">
-                                        <img src="${base_url}/public/img/prodotti/${(c.imgProdotto)!''}" alt="${(c.nomeProdotto)?html}">
-                                    </div>
-
-                                    <#-- Contenuto testuale -->
-                                    <div class="card-content">
-                                        <div class="media">
-                                            <div class="media-content">
-                                                <p class="card-title-custom">${(c.nomeProdotto)?html}</p>
-                                            </div>
-                                        </div>
-
-                                        <#-- Prezzo -->
-                                        <div class="price-container mb-4">
-                                            <#if (c.prezzoScontato < c.prezzo)>
-                                                <span class="price">€${c.prezzoScontato?string("0.00")}</span>
-                                                <span class="price-old">€${c.prezzo?string("0.00")}</span>
-                                            <#else>
-                                                <span class="price">€${c.prezzo?string("0.00")}</span>
-                                            </#if>
-                                        </div>
-
-                                        <#-- Finto bottone giallo "Aggiungi al carrello" -->
-                                        <div class="mt-auto">
-                                            <div class="button is-fullwidth" style="background-color: var(--color-primary) !important; color: #000000 !important; font-weight: 700; border: none; pointer-events: none;">
-                                                <i class="ti ti-shopping-cart mr-2"></i> Aggiungi al Carrello
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </a>
-
-                        </div>
+                        <@cardVector.card p=c />
                     </#list>
                 </div>
             </#if>

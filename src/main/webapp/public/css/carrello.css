@@ -1,7 +1,10 @@
 /* ============================================================
-   TableCrown — carrello.css (Ottimizzato e Armonizzato)
-   Pagina carrello: riepilogo articoli, stepper quantità,
-   carosello correlati e box riepilogo ordine fissato
+   TableCrown — carrello.css
+   Pagina carrello: layout pagina, riepilogo ordine fissato,
+   carosello correlati. Lo stile della singola riga prodotto
+   (immagine, nome, prezzo, stepper quantità, subtotale, rimuovi)
+   è tutto in prodottoRiga.css — il carrello lo riusa via
+   <@righe.riga ... quantitaEditabile=true ... />.
    ============================================================ */
 
 
@@ -33,7 +36,7 @@
 .carrello-titolo {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--color-bg-dark); /* Modificato: usa il colore scuro principale del brand */
+    color: var(--color-bg-dark);
     margin: 0 0 2rem 0;
     display: flex;
     align-items: center;
@@ -41,7 +44,7 @@
 }
 
 .carrello-titolo i {
-    color: var(--color-primary); /* Colore d'accento (Arancione/Oro) */
+    color: var(--color-primary);
 }
 
 
@@ -62,168 +65,14 @@
 
 
 /* ── LISTA ARTICOLI IN CARRELLO ───────────────────────────── */
+/* ogni articolo è una .prodotto-riga (vedi prodottoRiga.css);
+   qui li impiliamo semplicemente con uno spazio tra le card,
+   stesso pattern della wishlist-grid */
 
 .carrello-items {
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg-dark-2);
-    border: 1px solid var(--color-border-dark);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-}
-
-.carrello-item {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--color-border-dark);
-    min-width: 0;
-}
-
-.carrello-item:last-child {
-    border-bottom: none;
-}
-
-/* Immagine Prodotto */
-.carrello-item-img-link {
-    width: 90px;
-    height: 90px;
-    background-color: var(--color-bg-dark); /* Modificato: rimpiazzato valore fisso #111827 */
-    border-radius: var(--radius-sm);
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    border: 1px solid var(--color-border-dark);
-}
-
-.carrello-item-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-/* Info del Prodotto (Nome + Prezzo unitario) */
-.carrello-item-info {
-    flex: 1;
-    min-width: 0; /* <- questa è la riga che manca */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.carrello-item-nome {
-    /* evita che un nome prodotto lungo forzi la larghezza della riga */
-    overflow-wrap: anywhere;
-}
-
-.carrello-item-nome:hover {
-    color: var(--color-primary);
-}
-
-.carrello-item-prezzo-wrapper {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-}
-
-.carrello-item-prezzo {
-    font-size: var(--font-size-md);
-    font-weight: 700;
-    color: var(--color-primary);
-}
-
-.carrello-item-prezzo-old {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    text-decoration: line-through;
-}
-
-.carrello-item-prezzo-nd {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    font-style: italic;
-}
-
-/* Pannello Controlli (Stepper Qty + Subtotale + Trash) */
-.carrello-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap; /* fallback extra: va a capo invece di allargare */
-}
-
-/* Struttura Stepper Quantità riutilizzata */
-.carrello-item-qty {
-    display: flex;
-    align-items: stretch;
-}
-
-.carrello-qty-input {
-    width: 50px;
-    height: 38px;
-    text-align: center;
-    border: 1px solid var(--color-border-dark) !important;
-    border-left: none !important;
-    border-right: none !important;
-    background-color: var(--color-bg-dark) !important; /* Modificato: rimpiazzato valore fisso #111827 */
-    color: var(--color-text-light) !important;
-    font-size: var(--font-size-md) !important;
-    font-weight: 600;
-    border-radius: 0 !important;
-    -moz-appearance: textfield;
-}
-
-.carrello-qty-input::-webkit-inner-spin-button,
-.carrello-qty-input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-
-/* Subtotale della riga */
-.carrello-item-subtotale {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    min-width: 90px;
-}
-
-.carrello-item-subtotale-label {
-    font-size: 11px;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.carrello-item-subtotale-value {
-    font-size: var(--font-size-md);
-    font-weight: 700;
-    color: var(--color-text-light);
-}
-
-/* Bottone di Rimozione */
-.carrello-item-rimuovi {
-    background: none;
-    border: none;
-    color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.5rem;
-    transition: color var(--transition);
-    font-family: inherit;
-}
-
-.carrello-item-rimuovi:hover {
-    color: #f87171; /* Colore distruttivo soft per preservare l'estetica scura */
-}
-
-.carrello-item-rimuovi i {
-    font-size: 15px;
+    gap: 1rem;
 }
 
 
@@ -244,7 +93,7 @@
 .carrello-summary-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-primary); /* Modificato: da var(--color-blue) a var(--color-primary) per contrasto su sfondo scuro */
+    color: var(--color-primary);
     margin: 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--color-border-dark);
@@ -337,10 +186,10 @@
 .carrello-section-title {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--color-primary); /* Modificato: allineato col colore scuro di base */
+    color: var(--color-primary);
     margin: 0 0 1.5rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--color-primary); /* Modificato: usa la linea primaria oro/arancio */
+    border-bottom: 2px solid var(--color-primary);
     display: inline-block;
 }
 
@@ -391,7 +240,7 @@
 }
 
 .correlato-image-wrapper {
-    background-color: var(--color-bg-dark); /* Modificato: rimpiazzato valore fisso #111827 */
+    background-color: var(--color-bg-dark);
     border-radius: var(--radius-sm);
     aspect-ratio: 4 / 3;
     display: flex;
@@ -457,21 +306,6 @@
     color: var(--color-text-muted);
     text-decoration: line-through;
     font-weight: 400;
-}
-
-
-.carrello-item-sconto-badge {
-    align-self: flex-start;
-    font-size: 11px;
-    font-weight: 700;
-    color: #4ade80;
-    background-color: rgba(74, 222, 128, 0.12);
-    padding: 2px 8px;
-    border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    margin-top: 2px;
-    width: fit-content;
 }
 
 /* Bottone Aggiungi Rapido per Correlato */
@@ -582,54 +416,7 @@
 }
 
 @media (max-width: 768px) {
-    .carrello-item {
-        flex-wrap: wrap;
-        gap: 1rem;
-        position: relative;
-    }
-
-    .carrello-item-info {
-        flex: 1 1 calc(100% - 110px);
-    }
-
-    .carrello-item-controls {
-        flex: 1 1 100%;
-        justify-content: space-between;
-        padding-top: 0.75rem;
-        border-top: 1px dashed var(--color-border-dark);
-        margin-top: 0.25rem;
-    }
-
     .correlati-nav {
         right: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .carrello-item-img-link {
-        width: 70px;
-        height: 70px;
-    }
-
-    .carrello-item-info {
-        flex: 1 1 calc(100% - 90px);
-    }
-
-    .carrello-item-controls {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .carrello-item-subtotale {
-        align-items: flex-start;
-        min-width: auto;
-    }
-
-    .carrello-item-rimuovi {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0;
     }
 }

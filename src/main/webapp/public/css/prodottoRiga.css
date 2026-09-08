@@ -92,6 +92,7 @@
 
 .prodotto-riga-prezzo-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 0.55rem;
 }
@@ -108,7 +109,21 @@
     text-decoration: line-through;
 }
 
-/* ── QUANTITÀ (usata dal carrello) ─────────────────────────── */
+/* Badge sconto (carrello: % calcolata sul prodotto, prezzo bloccato sull'item) */
+.prodotto-riga-sconto-badge {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4ade80;
+    background-color: rgba(74, 222, 128, 0.12);
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    width: fit-content;
+}
+
+/* ── QUANTITÀ statica (usata da eventuali riepiloghi/ordini) ─ */
 
 .prodotto-riga-quantita {
     display: flex;
@@ -130,13 +145,95 @@
     color: var(--color-text-light);
 }
 
+/* ── QUANTITÀ EDITABILE (stepper +/-, usata dal carrello) ──── */
+
+.prodotto-riga-quantita-editabile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.quantita-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.quantita-btn:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+}
+
+.quantita-btn:disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* dentro lo stepper il valore ha una larghezza fissa e sfondo diverso dai bottoni,
+   sovrascrive lo stile "statico" di .prodotto-riga-quantita-val qui sopra */
+.prodotto-riga-quantita-editabile .prodotto-riga-quantita-val {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 34px;
+    font-size: var(--font-size-md);
+    background-color: var(--color-bg-dark-2);
+    border-left: 1px solid var(--color-border-dark);
+    border-right: 1px solid var(--color-border-dark);
+}
+
+/* ── SUBTOTALE (usato dal carrello) ──────────────────────────── */
+
+.prodotto-riga-subtotale {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100px;
+    flex-shrink: 0;
+}
+
+.prodotto-riga-subtotale-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.prodotto-riga-subtotale-value {
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    color: var(--color-text-light);
+}
+
 /* ── AZIONI ────────────────────────────────────────────────── */
+/* riusata anche come contenitore del <form> quantità del carrello, per
+   ereditare lo stesso comportamento responsive (vedi media query sotto) */
 
 .prodotto-riga-azioni {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.6rem;
+    row-gap: 0.75rem;
     flex-shrink: 0;
+}
+
+.prodotto-riga-quantita-form {
+    gap: 1.5rem;
 }
 
 .prodotto-riga-form {
@@ -173,6 +270,7 @@
     cursor: not-allowed;
 }
 
+/* rimuovi "a icona", tondo (wishlist) */
 .prodotto-riga-btn-rimuovi {
     display: flex;
     align-items: center;
@@ -192,6 +290,32 @@
     background-color: var(--color-primary);
     color: var(--color-bg-dark);
     transform: scale(1.08);
+}
+
+/* rimuovi "a testo", icona + label (carrello) — sovrascrive il tondo qui sopra,
+   stessa combinazione di classi usata nel macro (btn-rimuovi + btn-rimuovi-testo) */
+.prodotto-riga-btn-rimuovi-testo {
+    width: auto;
+    height: auto;
+    padding: 0.5rem;
+    gap: 6px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    font-family: inherit;
+}
+
+.prodotto-riga-btn-rimuovi-testo:hover {
+    background: none;
+    color: #f87171;
+    transform: none;
+}
+
+.prodotto-riga-btn-rimuovi-testo i {
+    font-size: 15px;
 }
 
 /* ── RESPONSIVE ────────────────────────────────────────────── */
@@ -218,5 +342,19 @@
         grid-area: azioni;
         justify-content: flex-end;
         margin-top: 0.75rem;
+    }
+}
+
+@media (max-width: 420px) {
+    /* sotto i 420px lo stepper, il subtotale e il rimuovi vanno a capo:
+       distribuiscili sull'intera larghezza invece di accalcarli a destra */
+    .prodotto-riga-quantita-form {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .prodotto-riga-subtotale {
+        align-items: flex-start;
+        min-width: auto;
     }
 }
