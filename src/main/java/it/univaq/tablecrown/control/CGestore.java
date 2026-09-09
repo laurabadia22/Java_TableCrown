@@ -618,7 +618,7 @@ public class CGestore extends BaseController {
     }
 
     @Override
-    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         List<Map<String, String>> breadcrumbs = new ArrayList<>();
 
         Map<String, String> home = new HashMap<>();

@@ -51,7 +51,7 @@ public abstract class BaseController {
         //Dati globali necessari per ogni pagina
         request.setAttribute("base_url", request.getContextPath());
         request.setAttribute("currentPage", currentPage);
-        request.setAttribute("breadcrumbs", getBreadcrumbs(currentPage));
+        request.setAttribute("breadcrumbs", getBreadcrumbs(request, currentPage));
 
         //Recupero utente e stato sessione
         HttpSession session = request.getSession(false);
@@ -100,7 +100,7 @@ public abstract class BaseController {
     /**
      * Metodo di default per i breadcrumbs (override nelle sottoclassi se necessario).
      */
-    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         return new ArrayList<>();
     }
 

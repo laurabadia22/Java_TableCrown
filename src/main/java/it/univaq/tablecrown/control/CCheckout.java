@@ -263,4 +263,26 @@ public class CCheckout extends BaseController{
 
         throw new IllegalArgumentException("Metodo di pagamento non valido.");
     }
+
+    @Override
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+
+        Map<String, String> home = new HashMap<>();
+        home.put("label", "Home");
+        home.put("url", "/");
+        breadcrumbs.add(home);
+
+        Map<String, String> carrello = new HashMap<>();
+        carrello.put("label", "Carrello");
+        carrello.put("url", "/carrello");
+        breadcrumbs.add(carrello);
+
+        Map<String, String> checkout = new HashMap<>();
+        checkout.put("label", "Checkout");
+        checkout.put("url", "#");
+        breadcrumbs.add(checkout);
+
+        return breadcrumbs;
+    }
 }

@@ -271,4 +271,21 @@ public class CCarrello extends BaseController {
 
         response.sendRedirect(request.getContextPath() + "/carrello");
     }
+
+    @Override
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+
+        Map<String, String> home = new HashMap<>();
+        home.put("label", "Home");
+        home.put("url", request.getContextPath() + "/");
+        breadcrumbs.add(home);
+
+        Map<String, String> carrello = new HashMap<>();
+        carrello.put("label", "Carrello");
+        carrello.put("url", "#");
+        breadcrumbs.add(carrello);
+
+        return breadcrumbs;
+    }
 }

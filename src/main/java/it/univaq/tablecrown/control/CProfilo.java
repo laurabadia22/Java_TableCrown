@@ -62,7 +62,8 @@ public class CProfilo extends BaseController {
         datiPagina.put("datiHub", datiHub);
         preparaDatiLayout(request, "profilo", datiPagina);
 
-        renderizza("areaPersonale.ftl", request, response);    }
+        renderizza("areaPersonale.ftl", request, response);
+    }
 
     //==========================================================================
     // MODIFICA ACCOUNT (GET & POST)
@@ -269,7 +270,8 @@ public class CProfilo extends BaseController {
         datiPagina.put("ordiniVista", ordiniVista);
         preparaDatiLayout(request, "profilo-ordini", datiPagina);
 
-        renderizza("profiloOrdini.ftl", request, response);    }
+        renderizza("profiloOrdini.ftl", request, response);
+    }
 
     //==========================================================================
     // WISHLIST (GET)
@@ -313,7 +315,8 @@ public class CProfilo extends BaseController {
 
         preparaDatiLayout(request, "wishlist", datiPagina);
 
-        renderizza("profiloWishlist.ftl", request, response);    }
+        renderizza("profiloWishlist.ftl", request, response);
+    }
 
     //==========================================================================
     // INDIRIZZI (GET)
@@ -341,7 +344,8 @@ public class CProfilo extends BaseController {
         datiPagina.put("indirizzi", indirizzi);
         preparaDatiLayout(request, "profilo-indirizzi", datiPagina);
 
-        renderizza("profiloIndirizzi.ftl", request, response);    }
+        renderizza("profiloIndirizzi.ftl", request, response);
+    }
 
     //==========================================================================
     // METODI DI PAGAMENTO (GET)
@@ -373,33 +377,91 @@ public class CProfilo extends BaseController {
     }
 
     @Override
-    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         List<Map<String, String>> breadcrumbs = new ArrayList<>();
+        HttpSession session = request.getSession(false);
 
+        // Verifichiamo il flag di provenienza dal checkout
+        boolean fromCheckout = session != null && Boolean.TRUE.equals(session.getAttribute("provenienza_checkout"));
+
+        // Step 1: Home
         Map<String, String> home = new HashMap<>();
         home.put("label", "Home");
         home.put("url", "/");
         breadcrumbs.add(home);
 
-        Map<String, String> areaPersonale = new HashMap<>();
-        areaPersonale.put("label", "Area Personale");
-        areaPersonale.put("url", "profilo".equals(currentPage) ? "#" : "/profilo");
-        breadcrumbs.add(areaPersonale);
+        // Se proviene dal checkout ed è in una pagina di gestione Indirizzi o Pagamenti
+        boolean isPaginaIndirizziOPagamenti = currentPage.startsWith("profilo-indirizzi") || currentPage.startsWith("profilo-pagamenti");
 
-        String labelUltimoStep = switch (currentPage) {
-            case "profilo-account" -> "Modifica Account";
-            case "profilo-ordini" -> "I Miei Ordini";
-            case "profilo-wishlist" -> "Wishlist";
-            case "profilo-indirizzi" -> "I Miei Indirizzi";
-            case "profilo-pagamenti" -> "Metodi di Pagamento";
-            default -> null; // "profilo" (l'hub stesso): niente terzo step
-        };
+        if (fromCheckout && isPaginaIndirizziOPagamenti) {
 
-        if (labelUltimoStep != null) {
+            // RAMO CHECKOUT: Home -> Carrello -> Checkout -> Pagina Profilo
+            Map<String, String> carrello = new HashMap<>();
+            carrello.put("label", "Carrello");
+            carrello.put("url", "/carrello");
+            breadcrumbs.add(carrello);
+
+            Map<String, String> checkout = new HashMap<>();
+            checkout.put("label", "Checkout");
+            checkout.put("url", "/checkout");
+            breadcrumbs.add(checkout);
+
+            String labelUltimoStep = switch (currentPage) {
+                case "profilo-indirizzi" -> "I Miei Indirizzi";
+                case "profilo-indirizzi-aggiungi" -> "Nuovo Indirizzo";
+                case "profilo-pagamenti" -> "Metodi di Pagamento";
+                case "profilo-pagamenti-aggiungi" -> "Nuova Carta";
+                default -> "Gestione";
+            };
+
             Map<String, String> ultimoStep = new HashMap<>();
             ultimoStep.put("label", labelUltimoStep);
             ultimoStep.put("url", "#");
             breadcrumbs.add(ultimoStep);
+
+        } else {
+
+            // RAMO NORMALE PROFILO: Home -> Area Personale -> Step Specifico
+            Map<String, String> areaPersonale = new HashMap<>();
+            areaPersonale.put("label", "Area Personale");
+            areaPersonale.put("url", "profilo".equals(currentPage) ? "#" : "/profilo");
+            breadcrumbs.add(areaPersonale);
+
+            String labelMiddleStep = null;
+            String urlMiddleStep = null;
+            String labelUltimoStep = null;
+
+            switch (currentPage) { //TODO: da allineare i nomi
+                case "profilo-account" -> labelUltimoStep = "Modifica Account";
+                case "profilo-ordini" -> labelUltimoStep = "I Miei Ordini";
+                case "profilo-wishlist" -> labelUltimoStep = "Wishlist";
+                case "profilo-indirizzi" -> labelUltimoStep = "I Miei Indirizzi";
+                case "profilo-pagamenti" -> labelUltimoStep = "Metodi di Pagamento";
+                case "profilo-indirizzi-aggiungi" -> {
+                    labelMiddleStep = "I Miei Indirizzi";
+                    urlMiddleStep = "/profilo/indirizzi";
+                    labelUltimoStep = "Nuovo Indirizzo";
+                }
+                case "profilo-pagamenti-aggiungi" -> {
+                    labelMiddleStep = "Metodi di Pagamento";
+                    urlMiddleStep = "/profilo/pagamenti";
+                    labelUltimoStep = "Nuova Carta";
+                }
+            }
+
+            if (labelMiddleStep != null) {
+                Map<String, String> middleStep = new HashMap<>();
+                middleStep.put("label", labelMiddleStep);
+                middleStep.put("url", urlMiddleStep);
+                breadcrumbs.add(middleStep);
+            }
+
+            if (labelUltimoStep != null) {
+                Map<String, String> ultimoStep = new HashMap<>();
+                ultimoStep.put("label", labelUltimoStep);
+                ultimoStep.put("url", "#");
+                breadcrumbs.add(ultimoStep);
+            }
         }
 
         return breadcrumbs;

@@ -6,12 +6,7 @@
 
 <#assign extra_js></#assign>
 
-<@layout.page page_title="Checkout | TableCrown" extra_css=extra_css extra_js=extra_js
-breadcrumbs=[
-{"label": "Home", "url": "${base_url}/"},
-{"label": "Carrello", "url": "${base_url}/carrello"},
-{"label": "Checkout", "url": "#"}
-]>
+<@layout.page page_title="Checkout | TableCrown" extra_css=extra_css extra_js=extra_js>
 
     <div class="checkout-container">
         <div class="container">

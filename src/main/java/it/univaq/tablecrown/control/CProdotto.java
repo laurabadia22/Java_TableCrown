@@ -158,7 +158,7 @@ public class CProdotto extends BaseController{
      * Gestisce dinamicamente i Breadcrumbs per la pagina di dettaglio prodotto.
      */
     @Override
-    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         List<Map<String, String>> breadcrumbs = new ArrayList<>();
 
         Map<String, String> homeStep = new HashMap<>();

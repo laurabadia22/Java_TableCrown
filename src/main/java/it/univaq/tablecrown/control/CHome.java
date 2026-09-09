@@ -62,7 +62,7 @@ public class CHome extends BaseController {
      * Override per gestire il percorso Breadcrumb della HomePage
      */
     @Override
-    protected List<Map<String, String>> getBreadcrumbs(String currentPage) {
+    protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         List<Map<String, String>> breadcrumbs = new ArrayList<>();
         Map<String, String> homeStep = new HashMap<>();
         homeStep.put("label", "Home");
