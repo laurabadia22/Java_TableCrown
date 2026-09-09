@@ -41,6 +41,18 @@ public class CMetodiPagamento extends BaseController{
 
         HttpSession session = request.getSession(true);
 
+        // Se l'utente arriva dal checkout, dopo il salvataggio deve tornarci
+        Boolean daCheckoutObj = (Boolean) session.getAttribute("provenienza_checkout");
+        boolean daCheckout = daCheckoutObj != null && daCheckoutObj;
+
+        String redirectUrl;
+        if (daCheckout) {
+            session.removeAttribute("provenienza_checkout");
+            redirectUrl = request.getContextPath() + "/checkout";
+        } else {
+            redirectUrl = request.getContextPath() + "/profilo/pagamenti";
+        }
+
         try {
             // Recupero dei parametri inviati da form tramite POST
             String numeroCarta = UHTTPMethods.postString(request, "numero_carta", null);
@@ -55,7 +67,7 @@ public class CMetodiPagamento extends BaseController{
                     scadenza == null || scadenza.isBlank()) {
 
                 UFlashMessage.addMessage(session, "danger", "Tutti i campi sono obbligatori.");
-                response.sendRedirect(request.getContextPath() + "/profilo/pagamenti");
+                response.sendRedirect(redirectUrl);
                 return;
             }
 
@@ -108,8 +120,8 @@ public class CMetodiPagamento extends BaseController{
             UFlashMessage.addMessage(session, "danger", e.getMessage());
         }
 
-        // Pattern PRG: reindirizzamento
-        response.sendRedirect(request.getContextPath() + "/profilo/pagamenti");
+        // Pattern PRG: reindirizzamento (torna al checkout se è da lì che si arrivava)
+        response.sendRedirect(redirectUrl);
     }
 
     /**

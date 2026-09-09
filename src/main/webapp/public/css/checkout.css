@@ -19,7 +19,7 @@
 .checkout-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--color-blue);
+    color: var(--color-primary);
     margin-bottom: 2rem;
 }
 
@@ -27,7 +27,7 @@
 
 .checkout-grid {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 390px;
     gap: 2.5rem;
     align-items: start;
 }
@@ -50,10 +50,10 @@
 .checkout-section-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-blue);
+    color: var(--color-primary);
     margin: 0 0 1.25rem 0;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--color-blue);
+    border-bottom: 2px solid var(--color-primary);
     display: inline-block;
 }
 
@@ -68,13 +68,13 @@
 .checkout-prodotti-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .checkout-prodotto-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--color-border-dark);
 }
@@ -85,12 +85,12 @@
 }
 
 .checkout-prodotto-img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
     background-color: #111827;
     border-radius: var(--radius-sm);
-    padding: 4px;
+    padding: 0px;
     flex-shrink: 0;
 }
 
@@ -99,20 +99,20 @@
 }
 
 .checkout-prodotto-nome {
-    font-size: var(--font-size-md);
+    font-size: 16px;
     font-weight: 600;
     color: var(--color-text-light);
     margin: 0 0 0.25rem 0;
 }
 
 .checkout-prodotto-qta {
-    font-size: var(--font-size-sm);
+    font-size: 15px;
     color: var(--color-text-subtle);
     margin: 0;
 }
 
 .checkout-prodotto-prezzo {
-    font-size: var(--font-size-md);
+    font-size: 17px;
     font-weight: 700;
     color: var(--color-primary);
     flex-shrink: 0;
@@ -178,7 +178,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    background-color: #111827;
+    background-color: var(--color-bg-dark);
     border: 1px solid var(--color-border-dark);
     border-radius: var(--radius-sm);
     padding: 1rem;
@@ -191,6 +191,11 @@
 }
 
 .checkout-radio-card.is-selected {
+    border-color: var(--color-primary);
+    background-color: rgba(232, 160, 32, 0.08);
+}
+
+.checkout-radio-card:has(input:checked) {
     border-color: var(--color-primary);
     background-color: rgba(232, 160, 32, 0.08);
 }
@@ -252,7 +257,7 @@
     padding: 0.6rem 1.25rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-dark);
-    background-color: #111827;
+    background-color: var(--color-bg-dark);
     color: var(--color-text-subtle);
     font-size: var(--font-size-md);
     font-weight: 600;
@@ -301,7 +306,7 @@
 }
 
 .checkout-nuova-carta .input {
-    background-color: #111827 !important;
+    background-color: var(--color-bg-dark) !important;
     border: 1px solid var(--color-border-dark) !important;
     color: var(--color-text-light) !important;
     border-radius: var(--radius-sm) !important;
@@ -349,18 +354,18 @@
     background-color: var(--color-bg-dark-2);
     border: 1px solid var(--color-border-dark);
     border-radius: var(--radius-md);
-    padding: 1.75rem;
+    padding: 2.25rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
     position: sticky;
     top: 100px;
 }
 
 .checkout-summary-title {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: var(--color-blue);
+    color: var(--color-primary);
     margin: 0 0 0.5rem 0;
 }
 
@@ -379,23 +384,23 @@
     padding: 1rem 0;
     border-top: 1px solid var(--color-border-dark);
     border-bottom: 1px solid var(--color-border-dark);
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--color-text-light);
 }
 
 .checkout-summary-total span:last-child {
     color: var(--color-primary);
-    font-size: 1.4rem;
+    font-size: 1.6rem;
 }
 
 .btn-checkout-conferma {
     width: 100%;
     background-color: var(--color-primary) !important;
     color: #000 !important;
-    font-size: var(--font-size-md) !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
-    padding: 0.85rem 1.5rem !important;
+    padding: 1rem 1.75rem !important;
     border: none !important;
     border-radius: var(--radius-sm) !important;
     cursor: pointer;
@@ -423,6 +428,17 @@
 
 .checkout-back-link:hover {
     color: var(--color-primary);
+}
+
+.checkout-secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    text-align: center;
+    margin: 0.75rem 0 0;
 }
 
 /* ── RESPONSIVE ── */
