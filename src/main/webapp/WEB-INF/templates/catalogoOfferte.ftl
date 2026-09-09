@@ -15,5 +15,6 @@ prodotti=prodotti
 filtri=filtri
 paginaCorrente=paginaCorrente
 totalePagine=totalePagine
+totaleRisultati=totaleRisultati!0
 query=query!""
 breadcrumbs=breadcrumbs />

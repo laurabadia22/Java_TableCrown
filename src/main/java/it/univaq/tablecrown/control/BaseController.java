@@ -379,12 +379,20 @@ public abstract class BaseController {
      */
     protected Map<String, Object> completaFiltriPrezzo(Map<String, Object> filtri, Map<String, Object> risultatoGrezzo) {
         Double rangeMax = 0.0;
-        if (risultatoGrezzo != null && risultatoGrezzo.get("rangemax") != null) {
+        Double rangeMin = 0.0;
+        if (risultatoGrezzo != null) {
             rangeMax = ((Number) risultatoGrezzo.get("rangemax")).doubleValue();
+        }
+        if (risultatoGrezzo.get("rangemin") != null) {
+            rangeMin = ((Number) risultatoGrezzo.get("rangemin")).doubleValue();
         }
 
         filtri.put("prezzoRangeMax", rangeMax);
-        if (filtri.get("prezzoMax") == null) {
+        filtri.put("prezzoRangeMin", rangeMin);
+
+        Double utenteMax = (Double) filtri.get("prezzoMax");
+        // Se l'utente non ha impostato il prezzoMax o se ha impostato un prezzo superiore al nuovo prezzo massimo dei prodotti filtrati
+        if (utenteMax == null || utenteMax > rangeMax) {
             filtri.put("prezzoMax", rangeMax);
         }
 

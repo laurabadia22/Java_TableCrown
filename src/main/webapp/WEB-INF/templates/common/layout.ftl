@@ -356,6 +356,35 @@
         });
     </script>
 
+    <!-- BOTTONE TORNA SU -->
+    <button id="back-to-top" class="back-to-top-btn" aria-label="Torna in alto">
+        <i class="ti ti-arrow-up"></i>
+    </button>
+
+    <!-- SCRIPT GLOBALE TORNA IN ALTO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const backToTopBtn = document.getElementById('back-to-top');
+
+            if (backToTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.add('is-visible');
+                    } else {
+                        backToTopBtn.classList.remove('is-visible');
+                    }
+                });
+
+                backToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
+
     </body>
     </html>
 </#macro>

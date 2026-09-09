@@ -3,13 +3,13 @@
 <#import "paginazione.ftl" as pag>
 <#import "ricerca.ftl" as r>
 
-<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs>
+<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs totaleRisultati=0>
     <#assign cssCatalogo>
         <link rel="stylesheet" href="${base_url}/public/css/catalogo.css">
         <link rel="stylesheet" href="${base_url}/public/css/home.css">
     </#assign>
 
-    <#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
+<#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
     <#assign qParams = "">
     <#if query?? && query?has_content>
         <#assign qParams = qParams + "&q=" + query?url('UTF-8')>
@@ -27,6 +27,11 @@
         <#if filtri.etaMinima?? && filtri.etaMinima?has_content>
             <#assign qParams = qParams + "&etaMinima=" + filtri.etaMinima>
         </#if>
+        <#if filtri.ordinamento?? && filtri.ordinamento?has_content>
+            <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url('UTF-8')>
+        </#if>
+
+    <#-- Filtri a lista/sequenza -->
         <#if filtri.difficolta??>
             <#if filtri.difficolta?is_sequence>
                 <#list filtri.difficolta as d>
@@ -36,6 +41,18 @@
                 </#list>
             <#elseif filtri.difficolta?has_content>
                 <#assign qParams = qParams + "&difficolta=" + filtri.difficolta?url('UTF-8')>
+            </#if>
+        </#if>
+
+        <#if filtri.categoria??>
+            <#if filtri.categoria?is_sequence>
+                <#list filtri.categoria as c>
+                    <#if c?has_content>
+                        <#assign qParams = qParams + "&categoria=" + c?url('UTF-8')>
+                    </#if>
+                </#list>
+            <#elseif filtri.categoria?has_content>
+                <#assign qParams = qParams + "&categoria=" + filtri.categoria?url('UTF-8')>
             </#if>
         </#if>
     </#if>
@@ -50,50 +67,125 @@
         <div class="container section px-4">
             <h1 class="title section-title mb-5">${titolo}</h1>
 
-            <#-- BARRA DI RICERCA -->
-            <div class="mb-4">
-                <@r.barraRicerca actionUrl=urlBase query=query!"" />
+            <#-- BARRA DI RICERCA E TENDINA ORDINAMENTO SULLA STESSA RIGA -->
+            <div class="columns is-vcentered mb-4">
+
+                <#-- Colonna Sinistra: Ricerca -->
+                <div class="column is-12-mobile is-7-tablet is-8-desktop">
+                    <@r.barraRicerca actionUrl=urlBase query=query!"" />
+                </div>
+
+                <#-- Colonna Destra: Ordinamento -->
+                <div class="column is-12-mobile is-5-tablet is-4-desktop is-flex justify-content-flex-end">
+                    <form method="get" action="${urlBase}" id="form-ordinamento">
+                        <#-- Mantiene i filtri correnti quando si cambia l'ordinamento -->
+                        <#if query?? && query?has_content>
+                            <input type="hidden" name="q" value="${query?html}">
+                        </#if>
+                        <#if filtri??>
+                            <#if filtri.prezzoMin??><input type="hidden" name="prezzoMin" value="${filtri.prezzoMin?c}"></#if>
+                            <#if filtri.prezzoMax??><input type="hidden" name="prezzoMax" value="${filtri.prezzoMax?c}"></#if>
+                            <#if filtri.giocatoriMin??><input type="hidden" name="giocatoriMin" value="${filtri.giocatoriMin}"></#if>
+                            <#if filtri.etaMinima??><input type="hidden" name="etaMinima" value="${filtri.etaMinima}"></#if>
+
+                            <#if filtri.difficolta??>
+                                <#if filtri.difficolta?is_sequence>
+                                    <#list filtri.difficolta as d><input type="hidden" name="difficolta" value="${d}"></#list>
+                                <#else>
+                                    <input type="hidden" name="difficolta" value="${filtri.difficolta}">
+                                </#if>
+                            </#if>
+                            <#if filtri.categoria??>
+                                <#if filtri.categoria?is_sequence>
+                                    <#list filtri.categoria as c><input type="hidden" name="categoria" value="${c}"></#list>
+                                <#else>
+                                    <input type="hidden" name="categoria" value="${filtri.categoria}">
+                                </#if>
+                            </#if>
+                        </#if>
+
+                        <div class="field is-horizontal align-items-center mb-0">
+                            <label class="sort-label-custom">
+                                <i class="ti ti-arrows-sort"></i> Ordina:
+                            </label>
+                            <div class="control">
+                                <div class="select sort-select-white">
+                                    <select name="ordinamento" onchange="this.form.submit()">
+                                        <option value="" <#if !filtri?? || !filtri.ordinamento?? || filtri.ordinamento == "">selected</#if>>Predefinito</option>
+                                        <option value="novita" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "novita">selected</#if>>Novità</option>
+                                        <option value="prezzo-asc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo-asc">selected</#if>>Prezzo: crescente</option>
+                                        <option value="prezzo-desc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo-desc">selected</#if>>Prezzo: decrescente</option>
+                                        <option value="rating" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "rating">selected</#if>>Valutazione</option>
+                                        <option value="popolarita" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "popolarita">selected</#if>>Più venduti</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
             </div>
 
             <#-- BOX FILTRI -->
-            <div class="box catalog-filters-box mb-6" style="background-color: var(--color-bg-dark-2); border: 1px solid var(--color-border-dark);">
+            <div class="box catalog-filters-box mb-4" style="background-color: var(--color-bg-dark-2); border: 1px solid var(--color-border-dark);">
                 <form method="get" action="${urlBase}">
                     <#-- Mantiene la query di ricerca se presente -->
                     <#if query?? && query?has_content>
                         <input type="hidden" name="q" value="${query?html}">
                     </#if>
+                    <#-- Mantiene l'ordinamento selezionato quando si applicano i filtri dal box -->
+                    <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento?has_content>
+                        <input type="hidden" name="ordinamento" value="${filtri.ordinamento}">
+                    </#if>
 
-                    <div class="columns is-multiline align-items-flex-end">
+                    <div class="columns is-multiline" style="display: flex; align-items: flex-end;">
 
                         <#-- Prezzo Minimo -->
                         <div class="column is-6-mobile is-3-tablet is-2-desktop">
-                            <div class="field">
-                                <label class="label has-text-light is-size-7">Prezzo Min</label>
-                                <div class="control">
-                                    <input class="input" type="number" step="0.01" name="prezzoMin" value="<#if filtri?? && filtri.prezzoMin??>${filtri.prezzoMin?c}</#if>" placeholder="€ Min">
-                                </div>
+                            <label class="label has-text-light font-weight-medium mb-1">Prezzo Min</label>
+                            <div class="control has-icons-left">
+                                <input class="input filter-input-dark"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="prezzoMin"
+                                       placeholder="0"
+                                       value="<#if filtri?? && filtri.prezzoMin??>${filtri.prezzoMin?c}</#if>">
+                                <span class="icon is-small is-left filter-currency-icon">€</span>
                             </div>
                         </div>
 
                         <#-- Prezzo Massimo -->
                         <div class="column is-6-mobile is-3-tablet is-2-desktop">
-                            <div class="field">
-                                <label class="label has-text-light is-size-7">Prezzo Max</label>
-                                <div class="control">
-                                    <input class="input" type="number" step="0.01" name="prezzoMax" value="<#if filtri?? && filtri.prezzoMax??>${filtri.prezzoMax?c}</#if>" placeholder="€ Max">
-                                </div>
+                            <label class="label has-text-light font-weight-medium mb-1">Prezzo Max</label>
+                            <div class="control has-icons-left">
+                                <input class="input filter-input-dark"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="prezzoMax"
+                                       placeholder="Max"
+                                       value="<#if filtri?? && filtri.prezzoMax??>${filtri.prezzoMax?c}</#if>">
+                                <span class="icon is-small is-left filter-currency-icon">€</span>
                             </div>
                         </div>
 
-                        <#-- Iniezione dei filtri specifici inviati dal chiamante tramite <#nested> -->
+                        <#-- Iniezione dei filtri specifici (es. Giochi da tavolo) -->
                         <#nested>
 
-                        <#-- Bottone Submit -->
-                        <div class="column is-12-mobile is-3-tablet is-2-desktop" style="margin-top: auto;">
-                            <div class="field">
-                                <button class="button is-primary is-fullwidth font-weight-bold" type="submit">
-                                    <i class="ti ti-filter mr-1"></i> Filtra
-                                </button>
+                        <#-- GRUPPO PULSANTI FILTRA E RESETTA (Inglobato dentro .column per rispettare la griglia) -->
+                        <div class="column is-12-mobile is-auto">
+                            <div class="field is-grouped mb-0">
+                                <div class="control">
+                                    <button type="submit" class="button is-warning font-weight-bold px-4">
+                                        <i class="ti ti-filter mr-1"></i> Filtra
+                                    </button>
+                                </div>
+                                <div class="control">
+                                    <a href="${urlBase}" class="button btn-reset-filters">
+                                        <i class="ti ti-rotate-clockwise mr-1"></i> Resetta filtri
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
@@ -101,7 +193,15 @@
                 </form>
             </div>
 
-            <#-- GRIGLIA PRODOTTI (3 colonne per riga su Desktop) -->
+            <#-- CONTEGGIO RISULTATI TOTALI -->
+            <div class="results-count-container px-1">
+                <span class="results-count-text">
+                    <i class="ti ti-box-seam"></i>
+                    Trovati <strong>${totaleRisultati}</strong> <#if totaleRisultati == 1>prodotto<#else>prodotti</#if>
+                </span>
+            </div>
+
+            <#-- GRIGLIA PRODOTTI -->
             <#if prodotti?? && (prodotti?size > 0)>
                 <div class="columns is-multiline">
                     <#list prodotti as p>
@@ -123,4 +223,3 @@
         </div>
     </@layout.page>
 </#macro>
-

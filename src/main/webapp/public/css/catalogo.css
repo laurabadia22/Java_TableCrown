@@ -148,6 +148,117 @@
     border-color: var(--color-primary) !important;
 }
 
+/* ── ORDINAMENTO IN BARRA SUPERIORE ────────────────────────── */
+
+.sort-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Scritta Ordina e Icona in grigio (stesso grigio del placeholder di ricerca) */
+.sort-label-custom {
+    color: #6b7280 !important;
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-right: 0.75rem;
+    margin-bottom: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sort-label-custom i {
+    font-size: 1.25rem;
+    color: #6b7280;
+}
+
+/* Stile della Select bianca identica alla barra di ricerca */
+.sort-select-white select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border: 2px solid var(--color-border-light) !important;
+    height: 48px !important; /* Stessa altezza della barra di ricerca */
+    border-radius: var(--radius-sm) !important;
+    font-size: 0.95rem !important;
+    font-weight: 500;
+    padding-left: 1rem !important;
+    padding-right: 2.5rem !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: border-color var(--transition);
+}
+
+.sort-select-white select:hover,
+.sort-select-white select:focus {
+    border-color: var(--color-primary) !important;
+    outline: none;
+}
+
+/* Opzioni del menu a tendina su sfondo bianco */
+.sort-select-white select option {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+}
+
+/* Freccetta Bulma personalizzata dentro il select bianco */
+.sort-select-white::after {
+    border-color: #6b7280 !important;
+}
+
+/* ── CONTEGGIO RISULTATI (SFONDO CHIARO) ────────────────────── */
+
+.results-count-container {
+    display: flex;
+    align-items: center;
+    /* Margini simmetrici sopra e sotto per centrarlo perfettamente tra box e card */
+    margin-top: 1.25rem !important;
+    margin-bottom: 1.25rem !important;
+}
+
+.results-count-text {
+    color: #374151 !important; /* Grigio scuro ben visibile */
+    font-size: 1.25rem !important; /* Dimensione aumentata */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Icona colorata */
+.results-count-text i {
+    font-size: 1.5rem;
+    color: #d97706; /* O var(--color-primary) per l'oro/viola del sito */
+}
+
+/* Numero evidenziato in grigio quasi nero/grassetto */
+.results-count-text strong {
+    color: #111827 !important;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* ── SIMBOLO EURO NEGLI INPUT PREZZO ───────────────────────── */
+
+/* Colore e posizionamento del simbolo € */
+.filter-currency-icon {
+    color: #9ca3af !important; /* Grigio chiaro leggibile */
+    font-weight: 700;
+    font-size: 1.05rem;
+    height: 100% !important;
+    pointer-events: none;
+}
+
+/* Spazio interno all'input per non sovrapporre il testo al simbolo € */
+.control.has-icons-left .input.filter-input-dark {
+    padding-left: 2.25rem !important;
+}
+
+/* Quando l'input è a fuoco, il simbolo si illumina del colore primario */
+.control.has-icons-left .input.filter-input-dark:focus + .filter-currency-icon {
+    color: var(--color-primary, #f59e0b) !important;
+}
 
 /* ── LAYOUT PRINCIPALE: SIDEBAR + GRID ────────────────────── */
 
@@ -291,6 +402,23 @@
     background-color: var(--color-primary) !important;
 }
 
+/* ── BOTTONE RESETTA FILTRI ────────────────────────── */
+
+.btn-reset-filters {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #d1d5db !important; /* Grigio chiaro */
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-reset-filters:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
 /* ── GRUPPI FILTRI ────────────────────────────────────────── */
 
 .filter-group {
@@ -320,6 +448,29 @@
     font-size: 16px;
 }
 
+/* ── ALLINEAMENTO FILTRI PER CATALOGHI SEMPLICI ───────────── */
+
+.filter-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end; /* Allinea la parte inferiore dei pulsanti alle caselle di testo */
+    gap: 1.25rem;
+}
+
+.filter-field-item {
+    min-width: 160px;
+}
+
+.filter-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Assicura che i pulsanti abbiano l'altezza identica agli input */
+.filter-buttons-group .button {
+    height: 40px !important;
+}
 
 /* ── HELP TOOLTIP (CATEGORIA) ─────────────────────────────── */
 
