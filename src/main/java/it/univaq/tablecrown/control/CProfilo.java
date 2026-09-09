@@ -89,7 +89,7 @@ public class CProfilo extends BaseController {
         datiPagina.put("emailUtente", utente.getEmailPersona());
         datiPagina.put("immagineUtente", utente.getImgPersona());
         datiPagina.put("dataNascitaUtente", utente.getDataNascita() != null ? utente.getDataNascita().toString() : "");
-        preparaDatiLayout(request, "profilo", datiPagina);
+        preparaDatiLayout(request, "profilo-modifica", datiPagina);
 
         renderizza("profiloModificaAccount.ftl", request, response);
     }
@@ -431,10 +431,10 @@ public class CProfilo extends BaseController {
             String urlMiddleStep = null;
             String labelUltimoStep = null;
 
-            switch (currentPage) { //TODO: da allineare i nomi
-                case "profilo-account" -> labelUltimoStep = "Modifica Account";
+            switch (currentPage) {
+                case "profilo-modifica" -> labelUltimoStep = "Modifica Profilo";
                 case "profilo-ordini" -> labelUltimoStep = "I Miei Ordini";
-                case "profilo-wishlist" -> labelUltimoStep = "Wishlist";
+                case "wishlist" -> labelUltimoStep = "Wishlist";
                 case "profilo-indirizzi" -> labelUltimoStep = "I Miei Indirizzi";
                 case "profilo-pagamenti" -> labelUltimoStep = "Metodi di Pagamento";
                 case "profilo-indirizzi-aggiungi" -> {
