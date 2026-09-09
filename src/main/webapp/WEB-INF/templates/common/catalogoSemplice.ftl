@@ -36,11 +36,11 @@
             <#if filtri.difficolta?is_sequence>
                 <#list filtri.difficolta as d>
                     <#if d?has_content>
-                        <#assign qParams = qParams + "&difficolta=" + d?url('UTF-8')>
+                        <#assign qParams = qParams + "&difficolta=" + d?url>
                     </#if>
                 </#list>
             <#elseif filtri.difficolta?has_content>
-                <#assign qParams = qParams + "&difficolta=" + filtri.difficolta?url('UTF-8')>
+                <#assign qParams = qParams + "&difficolta=" + filtri.difficolta?url>
             </#if>
         </#if>
 
@@ -48,11 +48,11 @@
             <#if filtri.categoria?is_sequence>
                 <#list filtri.categoria as c>
                     <#if c?has_content>
-                        <#assign qParams = qParams + "&categoria=" + c?url('UTF-8')>
+                        <#assign qParams = qParams + "&categoria=" + c?url>
                     </#if>
                 </#list>
             <#elseif filtri.categoria?has_content>
-                <#assign qParams = qParams + "&categoria=" + filtri.categoria?url('UTF-8')>
+                <#assign qParams = qParams + "&categoria=" + filtri.categoria?url>
             </#if>
         </#if>
     </#if>
