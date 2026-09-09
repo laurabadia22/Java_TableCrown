@@ -569,6 +569,13 @@ public class CGestore extends BaseController {
                 gioco.aggiungiDanno(livello, descrizioneDanno);
             }
 
+            // AGGIUNTA FONDAMENTALE PER SALVARE LA DISPONIBILITA'
+            String disponibilitaRaw = UHTTPMethods.get(request, "disponibilita", null);
+            if (disponibilitaRaw != null && !disponibilitaRaw.isEmpty()) {
+                DisponibilitaProdotto nuovoStato = Enum.valueOf(DisponibilitaProdotto.class, disponibilitaRaw);
+                prodotto.impostaDisponibilita(nuovoStato);
+            }
+
             boolean salvato = pm.PMsaveObj(prodotto);
             if (!salvato) {
                 throw new RuntimeException("Si è verificato un errore durante il salvataggio delle modifiche.");
@@ -582,6 +589,54 @@ public class CGestore extends BaseController {
 
         response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
     }
+
+    /**
+     * Mostra il form per modificare sconti, danni e disponibilità di un prodotto.
+     * URL: GET /gestore/prodotti/modifica?id_prodotto=X
+     */
+    public void mostraFormModificaProdotto(HttpServletRequest request, HttpServletResponse response, EntityManager em)
+            throws ServletException, IOException {
+
+        if (!requireRole(request, response, EGestore.class)) {
+            return;
+        }
+
+        PersistentManager pm = new PersistentManager(em);
+        HttpSession session = request.getSession(false);
+
+        try {
+            // Estraiamo l'ID usando il metodo classico invece di UHTTPMethods
+            String idRaw = request.getParameter("id_prodotto");
+            if (idRaw == null || idRaw.trim().isEmpty()) {
+                throw new IllegalArgumentException("ID Prodotto mancante nell'URL.");
+            }
+
+            Long idProdotto = Long.parseLong(idRaw.trim());
+
+            EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
+
+            if (prodotto == null) {
+                throw new IllegalArgumentException("Il prodotto selezionato non esiste nel database.");
+            }
+
+            Map<String, Object> datiPagina = new HashMap<>();
+            datiPagina.put("vista", "gestore_modifica_prodotto");
+            datiPagina.put("prodotto", prodotto);
+
+            preparaDatiLayout(request, "gestore_modifica_prodotto", datiPagina);
+            renderizza("gestore_modifica_prodotto.ftl", request, response);
+
+        } catch (NumberFormatException e) {
+            UFlashMessage.addMessage(session, "danger", "ID Prodotto non valido.");
+            response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+        } catch (Exception e) {
+            UFlashMessage.addMessage(session, "danger", e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+        }
+
+    }
+
+
 
     //==========================================================================
     // HELPER PRIVATI CONDIVISI
@@ -661,6 +716,12 @@ public class CGestore extends BaseController {
                 Map<String, String> b = new HashMap<>();
                 b.put("label", "Nuovo Porta Dadi");
                 b.put("url", "/gestore/crea/porta-dadi");
+                breadcrumbs.add(b);
+            }
+            case "gestore_modifica_prodotto" -> {
+                Map<String, String> b = new HashMap<>();
+                b.put("label", "Modifica Prodotto");
+                b.put("url", "");
                 breadcrumbs.add(b);
             }
         }

@@ -160,6 +160,13 @@ public abstract class EProdotto {
         this.disponibilitaProdotto = DisponibilitaProdotto.DISPONIBILE;
     }
 
+    public void impostaDisponibilita(DisponibilitaProdotto nuovaDisponibilita) {
+        if (nuovaDisponibilita == DisponibilitaProdotto.DISPONIBILE && this.quantita <= 0) {
+            throw new IllegalArgumentException("Impossibile rendere pubblico e acquistabile un prodotto con quantità zero.");
+        }
+        this.disponibilitaProdotto = nuovaDisponibilita;
+    }
+
     public void rimuoviProdotto() {
         this.disponibilitaProdotto = DisponibilitaProdotto.NON_DISPONIBILE;
     }

@@ -35,9 +35,43 @@ extra_css=cssProdotto>
 
                 <div class="column is-5">
                     <div class="box prodotto-gallery-box">
-                        <img src="${base_url}/public/img/prodotti/${(prodotto.imgProdotto)!''}"
+
+                        <#-- 1. Leggiamo cosa c'è nel database -->
+                        <#assign imgDalDb = prodotto.imgProdotto!"">
+
+                        <#-- 2. Logica del vigile urbano -->
+                        <#if imgDalDb == "">
+
+                        <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base alla classe Java -->
+                            <#assign nomePlaceholder = "placeholder.png">
+                            <#assign tipoClass = prodotto.class.simpleName!"">
+
+                            <#if tipoClass == "EGiocoDaTavolo">
+                                <#assign nomePlaceholder = "gioco_da_tavolo_img.jpg">
+                            <#elseif tipoClass == "EBustine">
+                                <#assign nomePlaceholder = "bustine_img.jpg">
+                            <#elseif tipoClass == "EPortaDadi">
+                                <#assign nomePlaceholder = "porta_dadi_img.jpg">
+                            </#if>
+                            <#assign pathFinale = "${base_url}/public/img/prodotti/${nomePlaceholder}">
+
+                        <#elseif imgDalDb?contains("/")>
+
+                        <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+                            <#assign pathFinale = "${base_url}/${imgDalDb}">
+
+                        <#else>
+
+                        <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+                            <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
+
+                        </#if>
+
+                        <#-- 3. Stampiamo il tag IMG finale -->
+                        <img src="${pathFinale}"
                              alt="${(prodotto.nomeProdotto)?html}"
                              class="prodotto-gallery-img">
+
                     </div>
                 </div>
 

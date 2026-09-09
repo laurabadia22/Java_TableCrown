@@ -98,9 +98,10 @@
             <#-- AZIONI MODIFICA / ELIMINA -->
             <div class="columns is-mobile is-gapless m-0">
                 <div class="column pr-1">
-                    <button type="button" class="button is-info is-light is-fullwidth is-small btn-modifica" data-id="${p.idProdotto}">
+                    <#-- Passiamo l'id del prodotto nell'URL tramite querystring -->
+                    <a href="${base_url}/gestore/prodotti/modifica?id_prodotto=${p.idProdotto?c}" class="button is-info is-light is-fullwidth is-small">
                         <i class="ti ti-pencil mr-1"></i> Modifica
-                    </button>
+                    </a>
                 </div>
                 <div class="column pl-1">
                     <form action="${base_url}/gestore/catalogo/prodotto/elimina" method="POST" onsubmit="return confirm('Vuoi davvero nascondere questo prodotto dal catalogo?');">

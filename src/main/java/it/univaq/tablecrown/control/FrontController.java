@@ -474,13 +474,19 @@ public class FrontController extends HttpServlet {
                         case "prodotti":
                             if (parti.length > 2) {
                                 String azioneProdotti = parti[2].toLowerCase();
-                                if ("POST".equals(metodoHTTP)) {
+                                if ("GET".equals(metodoHTTP) && "modifica".equals(azioneProdotti)) {
+                                    // Questa è l'aggiunta per FAR APRIRE la pagina HTML
+                                    gestoreController.mostraFormModificaProdotto(request, response, em);
+                                }
+                                else if ("POST".equals(metodoHTTP)) {
+                                    // Queste gestiscono il SALVATAGGIO dei dati
                                     switch (azioneProdotti) {
                                         case "quantita" -> gestoreController.aggiornaQuantitaProdottoGestore(request, response, em);
                                         case "modifica" -> gestoreController.modificaProdottoGestore(request, response, em);
                                         default -> mostra404(response);
                                     }
-                                } else {
+                                }
+                                else {
                                     mostra404(response);
                                 }
                             } else {
