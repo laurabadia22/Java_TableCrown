@@ -21,9 +21,42 @@
                     </#if>
                 </div>
 
-                <img src="${base_url}/public/img/prodotti/${p.imgProdotto!'placeholder.png'}"
-                     alt="${p.nomeProdotto?html}"
-                     class="product-image">
+<#--                <img src="${base_url}/public/img/prodotti/${p.imgProdotto!'placeholder.png'}"-->
+<#--                     alt="${p.nomeProdotto?html}"-->
+<#--                     class="product-image">-->
+                <#-- 1. Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
+                <#assign imgDalDb = p.imgProdotto!"">
+
+                <#-- 2. Logica del vigile urbano -->
+                <#if imgDalDb == "">
+
+                <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
+                    <#assign nomePlaceholder = "placeholder.png">
+                    <#if p.tipo??>
+                        <#if p.tipo == "gioco">-->
+                            <#assign imgPlaceholder = "gioco_da_tavolo_img.jpg">
+                        <#elseif p.tipo == "bustine" || p.tipo == "Bustine">
+                            <#assign imgPlaceholder = "bustine_img.jpg">
+                        <#elseif p.tipo == "portaDadi" || p.tipo == "Portadadi">
+                            <#assign imgPlaceholder = "porta_dadi_img.jpg.png">
+                        </#if>
+                    </#if>
+                    <#assign pathFinale = "${base_url}/public/img/prodotti/${nomePlaceholder}">
+
+                <#elseif imgDalDb?contains("/")>
+
+                <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+                    <#assign pathFinale = "${base_url}/${imgDalDb}">
+
+                <#else>
+
+                <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+                    <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
+
+                </#if>
+
+                <#-- 3. Stampiamo il tag IMG pulitissimo -->
+                <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="product-image">
             </div>
 
             <#-- CONTENUTO SCHEDA -->

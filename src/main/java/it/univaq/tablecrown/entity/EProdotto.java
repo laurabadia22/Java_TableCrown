@@ -35,7 +35,7 @@ public abstract class EProdotto {
     @Column(name = "dataPubblicazione", nullable = false)
     private LocalDateTime dataPubblicazione;
 
-    @Column(name = "prezzo", nullable = false)
+    @Column(name = "prezzo",columnDefinition = "DECIMAL(10,2)", nullable = false)
     private float prezzo;
 
     @Embedded

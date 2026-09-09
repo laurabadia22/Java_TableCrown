@@ -16,10 +16,10 @@
     </#if>
     <#if filtri??>
         <#if filtri.prezzoMin?? && filtri.prezzoMin?has_content>
-            <#assign qParams = qParams + "&prezzoMin=" + filtri.prezzoMin>
+            <#assign qParams = qParams + "&prezzoMin=" + filtri.prezzoMin?c>
         </#if>
         <#if filtri.prezzoMax?? && filtri.prezzoMax?has_content>
-            <#assign qParams = qParams + "&prezzoMax=" + filtri.prezzoMax>
+            <#assign qParams = qParams + "&prezzoMax=" + filtri.prezzoMax?c>
         </#if>
         <#if filtri.giocatoriMin?? && filtri.giocatoriMin?has_content>
             <#assign qParams = qParams + "&giocatoriMin=" + filtri.giocatoriMin>
