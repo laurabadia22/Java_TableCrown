@@ -37,10 +37,9 @@ public class ESconto {
         if (sconto < 0 || sconto > 100) {
             throw new IllegalArgumentException("Lo sconto deve essere compreso tra 0 e 100.");
         }
-        this.sconto += sconto;
-        if (this.sconto > 100) {
-            this.sconto = 100;
-        }
+        // SOSTITUZIONE: Uso "=" invece di "+=" per evitare bug nei salvataggi multipli
+        this.sconto = sconto;
+
         if (scadenzaOfferta != null) {
             this.scadenzaOfferta = scadenzaOfferta;
         }

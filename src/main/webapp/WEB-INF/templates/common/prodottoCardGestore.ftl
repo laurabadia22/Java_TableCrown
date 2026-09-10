@@ -44,7 +44,7 @@
                     <#elseif p.tipo == "bustine" || p.tipo == "Bustine">
                         <#assign imgPlaceholder = "bustine_img.jpg">
                     <#elseif p.tipo == "portaDadi" || p.tipo == "Portadadi">
-                        <#assign imgPlaceholder = "porta_dadi_img.jpg.png">
+                        <#assign imgPlaceholder = "porta_dadi_img.jpg">
                     </#if>
                 </#if>
                 <#assign pathFinale = "${base_url}/public/img/prodotti/${nomePlaceholder}">

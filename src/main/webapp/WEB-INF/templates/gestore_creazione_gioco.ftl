@@ -42,18 +42,21 @@ sottotitoloForm="Inserisci le regole e le specifiche del nuovo gioco da tavolo."
             </div>
         </div>
 
-        <div class="column is-6">
+        <div class="column is-12">
             <div class="field">
-                <label class="label">Categoria (Selezione multipla) *</label>
+                <label class="label">Categorie *</label>
                 <div class="control">
-                    <div class="select is-multiple is-fullwidth">
-                        <select name="categoria" multiple size="3" required>
-                            <#list categoria_enum as c>
-                                <option value="${c.name()}">${c.name()?replace("_", " ")}</option>
-                            </#list>
-                        </select>
+                    <div class="columns is-multiline is-mobile">
+                        <#-- Sostituito categorieDisponibili con categorie_enum -->
+                        <#list categoria_enum as cat>
+                            <div class="column is-3-desktop is-half-mobile">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="categoria" value="${cat.name()}">
+                                    ${cat.name()?replace("_", " ")}
+                                </label>
+                            </div>
+                        </#list>
                     </div>
-                    <p class="help">Tieni premuto CTRL (o CMD su Mac) per selezionare più categorie.</p>
                 </div>
             </div>
         </div>
@@ -89,7 +92,7 @@ sottotitoloForm="Inserisci le regole e le specifiche del nuovo gioco da tavolo."
             <div class="field">
                 <label class="label">Durata Media (min) *</label>
                 <div class="control">
-                    <input class="input" type="number" name="durataMedia" required min="1" step="5">
+                    <input class="input" type="number" name="durataMedia" required min="5" step="5">
                 </div>
             </div>
         </div>

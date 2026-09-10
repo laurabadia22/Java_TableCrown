@@ -130,6 +130,20 @@ public class EGiocoDaTavolo extends EProdotto{
         return descrizioneDanno;
     }
 
+    @Override
+    public float getPrezzoScontato() {
+        float prezzoIntermedio = this.getPrezzo();
+
+        // 1. Applica prima lo sconto per il danno fisico (se presente)
+        if (this.livelloDanno != null) {
+            float percentualeDanno = this.livelloDanno.getScontoPercentuale();
+            prezzoIntermedio = prezzoIntermedio * (1 - (percentualeDanno / 100f));
+        }
+
+        // 2. Applica a cascata l'eventuale sconto promozionale sul prezzo decurtato
+        return this.getSconto().applicaA(prezzoIntermedio);
+    }
+
     // --- METODI DI DOMINIO ---
 
     public void impostaLingua(LinguaGioco lingua) {
@@ -172,7 +186,6 @@ public class EGiocoDaTavolo extends EProdotto{
         }
         this.livelloDanno = livelloDanno;
         this.descrizioneDanno = descrizioneDanno.trim();
-        this.getSconto().aggiornaSconto(livelloDanno.getScontoPercentuale(), null);
     }
 
     private void verificaVincoliEspansione() {

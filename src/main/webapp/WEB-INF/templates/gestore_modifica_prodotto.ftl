@@ -1,6 +1,5 @@
 <#import "common/layout.ftl" as layout>
 
-<#-- Dichiariamo eventuale CSS custom se ti serve isolare gli stili -->
 <#assign extraCss>
     <style>
         .form-section-title {
@@ -25,7 +24,6 @@ extra_css=extraCss>
 
     <div class="container section px-4">
 
-        <#-- Intestazione e Bottone Indietro -->
         <div class="is-flex is-align-items-center mb-5">
             <a href="${base_url}/gestore/dashboard" class="button is-small is-light mr-4">
                 <i class="ti ti-arrow-left mr-1"></i> Indietro
@@ -43,42 +41,29 @@ extra_css=extraCss>
 
                 <form action="${base_url}/gestore/prodotti/modifica" method="POST" class="box box-modifica p-5">
 
-                    <#-- ID nascosto fondamentale per il backend -->
                     <input type="hidden" name="id_prodotto" value="${prodotto.idProdotto?c}">
 
-                    <#-- ==========================================
-                         SEZIONE 1: DISPONIBILITA'
-                         ========================================== -->
                     <h2 class="title is-5 form-section-title mt-2">Visibilità Catalogo</h2>
                     <div class="field mb-5">
                         <label class="label has-text-light font-weight-medium">Stato di disponibilità</label>
                         <div class="control">
                             <div class="select is-fullwidth">
                                 <select name="disponibilita">
-                                    <option value="DISPONIBILE" <#if prodotto.disponibilitaProdotto.name() == 'DISPONIBILE'>selected</#if>>
-                                        Disponibile (Pubblico)
-                                    </option>
-                                    <option value="ESAURITO" <#if prodotto.disponibilitaProdotto.name() == 'ESAURITO'>selected</#if>>
-                                        Esaurito (Visibile ma non acquistabile)
-                                    </option>
-                                    <option value="NON_DISPONIBILE" <#if prodotto.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>selected</#if>>
-                                        Nascosto (Solo visibile al Gestore)
-                                    </option>
+                                    <option value="DISPONIBILE" <#if prodotto.disponibilitaProdotto.name() == 'DISPONIBILE'>selected</#if>>Disponibile (Pubblico)</option>
+                                    <option value="ESAURITO" <#if prodotto.disponibilitaProdotto.name() == 'ESAURITO'>selected</#if>>Esaurito (Visibile ma non acquistabile)</option>
+                                    <option value="NON_DISPONIBILE" <#if prodotto.disponibilitaProdotto.name() == 'NON_DISPONIBILE'>selected</#if>>Nascosto (Solo visibile al Gestore)</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <#-- ==========================================
-                         SEZIONE 2: SCONTI
-                         ========================================== -->
                     <h2 class="title is-5 form-section-title mt-6">Gestione Promozioni</h2>
 
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <label class="checkbox mb-3 has-text-light">
                                 <input type="checkbox" name="modificaSconto" value="true">
-                                <strong class="has-text-info">Applica / Modifica sconto</strong> (spunta per confermare le modifiche ai campi sottostanti)
+                                <strong class="has-text-info">Applica / Modifica sconto</strong> (spunta per confermare)
                             </label>
                         </div>
 
@@ -86,10 +71,8 @@ extra_css=extraCss>
                             <div class="field">
                                 <label class="label has-text-light">Valore Sconto (%)</label>
                                 <div class="control has-icons-left">
-                                    <#assign valSconto = 0>
-
                                     <input class="input" type="number" name="valoreSconto" min="0" max="100" step="0.1"
-                                           value="${valSconto?c}" placeholder="Es. 15.5">
+                                           value="${(prodotto.sconto.sconto!0)?c}" placeholder="Es. 15.5">
                                     <span class="icon is-small is-left"><i class="ti ti-percentage"></i></span>
                                 </div>
                             </div>
@@ -109,26 +92,22 @@ extra_css=extraCss>
                             </div>
                         </div>
 
-                        <#-- Opzione per rimuovere brutalmente lo sconto (usando i checkbox eviti il JS) -->
                         <div class="column is-12 mt-2">
                             <label class="checkbox has-text-danger">
                                 <input type="checkbox" name="rimuoviSconto" value="true">
-                                <strong>Rimuovi promozione attuale</strong> (sovrascrive eventuali modifiche)
+                                <strong>Rimuovi promozione attuale</strong> (sovrascrive modifiche)
                             </label>
                         </div>
                     </div>
 
-                    <#-- ==========================================
-                         SEZIONE 3: DANNI (Solo per Giochi da Tavolo)
-                         ========================================== -->
                     <#if prodotto.class.simpleName == "EGiocoDaTavolo">
                         <h2 class="title is-5 form-section-title mt-6 has-text-warning">Segnalazione Danni</h2>
 
                         <div class="notification is-warning is-light mb-4 p-4">
                             <label class="checkbox mb-3 font-weight-bold">
-                                <#assign isDanneggiato = (prodotto.danneggiato?? && prodotto.danneggiato)>
+                                <#assign isDanneggiato = (prodotto.livelloDanno??)>
                                 <input type="checkbox" name="danneggiato" value="true" <#if isDanneggiato>checked</#if>>
-                                Segnala questo gioco come danneggiato (spunta per salvare le info sottostanti)
+                                Segnala questo gioco come danneggiato
                             </label>
 
                             <div class="columns is-multiline">
@@ -138,9 +117,9 @@ extra_css=extraCss>
                                         <div class="control">
                                             <div class="select is-fullwidth is-small">
                                                 <select name="livelloDanno">
-                                                    <option value="LIEVE" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'LIEVE')>selected</#if>>Lieve</option>
-                                                    <option value="MEDIO" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'MEDIO')>selected</#if>>Medio</option>
-                                                    <option value="GRAVE" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'GRAVE')>selected</#if>>Grave</option>
+                                                    <option value="DANNO_LEGGERO" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'DANNO_LEGGERO')>selected</#if>>Danno Leggero (5%)</option>
+                                                    <option value="DANNO_MODERATO" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'DANNO_MODERATO')>selected</#if>>Danno Moderato (10%)</option>
+                                                    <option value="DANNO_GRAVE" <#if (prodotto.livelloDanno?? && prodotto.livelloDanno.name() == 'DANNO_GRAVE')>selected</#if>>Danno Grave (15%)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -159,9 +138,6 @@ extra_css=extraCss>
                         </div>
                     </#if>
 
-                    <#-- ==========================================
-                         BOTTONI DI SALVATAGGIO
-                         ========================================== -->
                     <div class="field is-grouped is-grouped-right mt-6 border-top-dark pt-5">
                         <div class="control">
                             <a href="${base_url}/gestore/dashboard" class="button is-ghost has-text-grey-light">Annulla</a>
