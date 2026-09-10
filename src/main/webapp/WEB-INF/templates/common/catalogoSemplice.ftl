@@ -4,6 +4,9 @@
 <#import "ricerca.ftl" as r>
 
 <#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs totaleRisultati=0>
+
+    <#setting url_escaping_charset="UTF-8">
+
     <#assign cssCatalogo>
         <link rel="stylesheet" href="${base_url}/public/css/catalogo.css">
         <link rel="stylesheet" href="${base_url}/public/css/home.css">
@@ -12,7 +15,7 @@
 <#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
     <#assign qParams = "">
     <#if query?? && query?has_content>
-        <#assign qParams = qParams + "&q=" + query?url('UTF-8')>
+        <#assign qParams = qParams + "&q=" + query?url>
     </#if>
     <#if filtri??>
         <#if filtri.prezzoMin?? && filtri.prezzoMin?has_content>
@@ -28,7 +31,7 @@
             <#assign qParams = qParams + "&etaMinima=" + filtri.etaMinima>
         </#if>
         <#if filtri.ordinamento?? && filtri.ordinamento?has_content>
-            <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url('UTF-8')>
+            <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url>
         </#if>
 
     <#-- Filtri a lista/sequenza -->
