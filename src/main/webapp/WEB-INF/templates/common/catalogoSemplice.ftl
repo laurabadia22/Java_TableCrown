@@ -115,10 +115,9 @@
                                 <div class="select sort-select-white">
                                     <select name="ordinamento" onchange="this.form.submit()">
                                         <option value="" <#if !filtri?? || !filtri.ordinamento?? || filtri.ordinamento == "">selected</#if>>Predefinito</option>
-                                        <option value="novita" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "novita">selected</#if>>Novità</option>
-                                        <option value="prezzo-asc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo-asc">selected</#if>>Prezzo: crescente</option>
-                                        <option value="prezzo-desc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo-desc">selected</#if>>Prezzo: decrescente</option>
-                                        <option value="rating" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "rating">selected</#if>>Valutazione</option>
+                                        <option value="prezzo_asc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo_asc">selected</#if>>Prezzo: crescente</option>
+                                        <option value="prezzo_desc" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "prezzo_desc">selected</#if>>Prezzo: decrescente</option>
+                                        <option value="valutazione" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "valutazione">selected</#if>>Valutazione</option>
                                         <option value="popolarita" <#if filtri?? && filtri.ordinamento?? && filtri.ordinamento == "popolarita">selected</#if>>Più venduti</option>
                                     </select>
                                 </div>

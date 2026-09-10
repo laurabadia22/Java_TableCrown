@@ -36,8 +36,8 @@ public abstract class BaseController {
     );
 
     protected static final int RISULTATI_PER_PAGINA = 15;
-    protected static final List<String> ORDINAMENTO_VALIDI = List.of("prezzo_asc", "prezzo_desc", "novita", "valutazione");
-    protected static final List<String> IN_EVIDENZA_VALIDI = List.of("offerte", "novita", "piu_venduti");
+    protected static final List<String> ORDINAMENTO_VALIDI = List.of("prezzo_asc", "prezzo_desc", "valutazione", "popolarita");
+    //protected static final List<String> IN_EVIDENZA_VALIDI = List.of("offerte", "novita", "piu_venduti");
 
     //Costruttore base.
     public BaseController() {
@@ -329,17 +329,17 @@ public abstract class BaseController {
 
         filtri.put("disponibilita", estraiListaDaRequest(request, "disponibilita"));
 
-        List<String> valoriEvidenza = estraiListaDaRequest(request, "inEvidenzaFiltro");
-        List<String> inEvidenza = new ArrayList<>();
-        if (valoriEvidenza != null && IN_EVIDENZA_VALIDI != null) {
-            for (String s : valoriEvidenza) {
-                if (s != null && IN_EVIDENZA_VALIDI.contains(s)) {
-                    inEvidenza.add(s);
-                }
-            }
-        }
+//        List<String> valoriEvidenza = estraiListaDaRequest(request, "inEvidenzaFiltro");
+//        List<String> inEvidenza = new ArrayList<>();
+//        if (valoriEvidenza != null && IN_EVIDENZA_VALIDI != null) {
+//            for (String s : valoriEvidenza) {
+//                if (s != null && IN_EVIDENZA_VALIDI.contains(s)) {
+//                    inEvidenza.add(s);
+//                }
+//            }
+//        }
 
-        filtri.put("inEvidenzaFiltro", inEvidenza);
+//        filtri.put("inEvidenzaFiltro", inEvidenza);
 
         filtri.put("ratingMin", isNumeric(ratingMinRaw) ? Double.parseDouble(ratingMinRaw) : 0.0);
 

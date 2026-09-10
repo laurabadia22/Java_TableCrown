@@ -151,7 +151,8 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                     case "prezzo_asc":  jpqlMain.append("ORDER BY g.prezzo ASC"); break;
                     case "prezzo_desc": jpqlMain.append("ORDER BY g.prezzo DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY g.numeroVendite DESC"); break;
-                    case "rating":      jpqlMain.append("ORDER BY g.valutazioneMedia DESC"); break;
+                    case "valutazione":      jpqlMain.append("ORDER BY g.valutazione.media DESC"); break;
+                    case "novita":      jpqlMain.append(" ORDER BY g.dataPubblicazione DESC"); break;
                     default:            jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                 }
             } else {
