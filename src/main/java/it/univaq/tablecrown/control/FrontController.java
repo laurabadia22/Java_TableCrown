@@ -74,7 +74,7 @@ public class FrontController extends HttpServlet {
 
         //Esclusione dei file statici (CSS, JS, Immagini)
         String path = request.getRequestURI().substring(request.getContextPath().length());
-        if (path.startsWith("/static/") || path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")) {
+        if (path.startsWith("/static/") || path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")||path.endsWith(".jpeg")) {
             getServletContext().getNamedDispatcher("default").forward(request, response);
             return;
         }
