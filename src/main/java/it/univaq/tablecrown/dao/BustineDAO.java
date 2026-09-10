@@ -116,10 +116,10 @@ public class BustineDAO extends GenericDAO {
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo-asc":  jpqlMain.append("ORDER BY b.prezzo ASC"); break; // MODIFICATO
-                    case "prezzo-desc": jpqlMain.append("ORDER BY b.prezzo DESC"); break; // MODIFICATO
+                    case "prezzo_asc":  jpqlMain.append("ORDER BY b.prezzo ASC"); break; // MODIFICATO
+                    case "prezzo_desc": jpqlMain.append("ORDER BY b.prezzo DESC"); break; // MODIFICATO
                     case "popolarita":  jpqlMain.append("ORDER BY b.numeroVendite DESC"); break;
-                    case "rating":      jpqlMain.append("ORDER BY b.valutazioneMedia DESC"); break;
+                    case "valutazione":      jpqlMain.append("ORDER BY b.valutazione.media DESC"); break;
                     default:            jpqlMain.append("ORDER BY b.dataPubblicazione DESC"); break;
                 }
             } else {
