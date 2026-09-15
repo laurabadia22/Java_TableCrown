@@ -1,0 +1,218 @@
+/* ============================================================
+   TableCrown — dashboard_gestore.css
+   Stili specifici dell'area Gestore:
+   header sezione, card statistiche, box azioni rapide.
+
+   Riusa le stesse custom properties (--color-primary,
+   --radius-md, --transition, ecc.) e la stessa logica di
+   home.css: card scure, accento oro, hover con leggero
+   sollevamento. Tutto è annidato sotto .gestore-dashboard
+   per non toccare .card/.button/.box altrove nel sito.
+   ============================================================ */
+
+
+/* ── HEADER SEZIONE ───────────────────────────────────────── */
+
+.gestore-dashboard .gestore-header {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 16px;
+}
+
+.gestore-dashboard .gestore-header .title {
+    color: var(--color-text-light, #f5f5f5) !important;
+}
+
+.gestore-dashboard .gestore-header .subtitle {
+    color: var(--color-text-subtle) !important;
+    opacity: 0.85;
+}
+
+
+/* ============================================================
+   CARD STATISTICHE
+   ============================================================ */
+
+.gestore-dashboard .gestore-stat-card {
+    background-color: var(--color-bg-dark-2) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.gestore-dashboard .gestore-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* Cerchio icona, invece dell'icona "nuda" a piena dimensione */
+.gestore-dashboard .gestore-stat-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.gestore-dashboard .gestore-stat-icon i {
+    font-size: 1.9rem !important;
+    margin-bottom: 0 !important;
+}
+
+.gestore-dashboard .gestore-stat-icon-orders {
+    box-shadow: inset 0 0 0 2px rgba(50, 115, 220, 0.35);
+}
+
+.gestore-dashboard .gestore-stat-icon-revenue {
+    box-shadow: inset 0 0 0 2px rgba(72, 199, 142, 0.35);
+}
+
+.gestore-dashboard .gestore-stat-card .heading {
+    color: var(--color-text-subtle) !important;
+    letter-spacing: 0.2px;
+}
+
+.gestore-dashboard .gestore-stat-card .title.is-2 {
+    color: var(--color-text-light, #f5f5f5) !important;
+    font-weight: 700 !important;
+}
+
+.gestore-dashboard .gestore-stat-link {
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+}
+
+.gestore-dashboard .gestore-stat-tag {
+    background-color: rgba(72, 199, 142, 0.12) !important;
+    color: #48c78e !important;
+    border: 1px solid rgba(72, 199, 142, 0.35) !important;
+}
+
+
+/* ============================================================
+   AZIONI RAPIDE AL CATALOGO
+   ============================================================ */
+
+.gestore-dashboard .gestore-actions-title {
+    color: var(--color-text-light, #f5f5f5) !important;
+}
+
+.gestore-dashboard .gestore-actions-box {
+    background-color: var(--color-bg-dark-2) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.gestore-dashboard .gestore-actions-box .subtitle {
+    color: var(--color-text-subtle) !important;
+}
+
+/* Il gruppo di bottoni riempie tutta la larghezza del box, i tre bottoni
+   si dividono lo spazio in parti uguali invece di restare ammassati a
+   sinistra con un vuoto a destra */
+.gestore-dashboard .gestore-actions-box .buttons {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    width: 100%;
+    gap: 1rem !important;
+}
+
+/* Bottoni azione come tile, non come i bottoni Bulma is-primary/is-info di default */
+.gestore-dashboard .gestore-action-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    height: auto !important;
+    padding: 0.85rem 1.4rem !important;
+    background-color: var(--color-primary) !important;
+    color: var(--color-bg-dark, #1a1a1a) !important;
+    border: 1px solid var(--color-primary) !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 700 !important;
+    transition: border-color var(--transition), transform var(--transition), color var(--transition);
+}
+
+.gestore-dashboard .gestore-action-btn .icon i {
+    color: var(--color-bg-dark, #1a1a1a) !important;
+    font-size: 1.25rem !important;
+    transition: color var(--transition);
+}
+
+.gestore-dashboard .gestore-action-btn:hover {
+    background-color: var(--color-primary-dark, #c8933a) !important;
+    border-color: var(--color-primary-dark, #c8933a) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Divider più leggibile sul fondo scuro/viola della card, invece del grigio chiaro invisibile */
+.gestore-card-divider {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    height: 1px;
+    border: none;
+}
+
+.gestore-stock-label {
+    color: var(--color-text-subtle) !important;
+    opacity: 0.85;
+}
+
+.gestore-stock-qty {
+    color: var(--color-text-light, #f5f5f5) !important;
+}
+
+/* Stepper +/- come tile scure coerenti col tema, non più bottoncini bianchi Bulma */
+.gestore-stock-btn {
+    background-color: var(--color-bg-dark) !important;
+    color: var(--color-text-light, #f5f5f5) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    transition: border-color var(--transition), color var(--transition);
+}
+.gestore-stock-btn:hover {
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+/* Modifica/Elimina: da pastello pieno a outline, più leggibili sullo sfondo scuro */
+.gestore-btn-modifica,
+.gestore-btn-elimina {
+    background-color: var(--color-bg-dark) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    font-weight: 600 !important;
+    transition: border-color var(--transition), background-color var(--transition), transform var(--transition);
+}
+
+.gestore-btn-modifica {
+    color: #6ba3f0 !important;
+}
+.gestore-btn-modifica:hover {
+    border-color: #6ba3f0 !important;
+    background-color: rgba(50, 115, 220, 0.12) !important;
+    transform: translateY(-1px);
+}
+
+.gestore-btn-elimina {
+    color: #e07a7a !important;
+}
+.gestore-btn-elimina:hover {
+    border-color: #d64545 !important;
+    background-color: rgba(214, 69, 69, 0.12) !important;
+    transform: translateY(-1px);
+}
+
+@media screen and (max-width: 768px) {
+    .gestore-dashboard .gestore-actions-box .buttons {
+        flex-direction: column !important;
+    }
+
+    .gestore-dashboard .gestore-action-btn {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+}

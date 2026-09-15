@@ -33,7 +33,7 @@
                 <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
                     <#assign nomePlaceholder = "placeholder.png">
                     <#if p.tipo??>
-                        <#if p.tipo == "gioco">-->
+                        <#if p.tipo == "gioco">
                             <#assign imgPlaceholder = "gioco_da_tavolo_img.jpg">
                         <#elseif p.tipo == "bustine" || p.tipo == "Bustine">
                             <#assign imgPlaceholder = "bustine_img.jpg">

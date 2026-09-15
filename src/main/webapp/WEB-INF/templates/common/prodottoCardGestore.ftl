@@ -77,11 +77,11 @@
                 </#if>
             </div>
 
-            <hr class="my-3" style="background-color: #eee; height: 1px; border: none;">
+            <hr class="my-3 gestore-card-divider">
 
             <#-- GESTIONE SCORTE (Punta a /gestore/prodotti/quantita) -->
             <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
-                <span class="is-size-7 has-text-grey font-weight-bold">
+                <span class="is-size-7 font-weight-bold gestore-stock-label">
                     <i class="ti ti-package"></i> In magazzino:
                 </span>
 
@@ -89,24 +89,24 @@
                     <input type="hidden" name="id_prodotto" value="${p.idProdotto}">
                     <input type="hidden" name="delta_quantita" id="delta-${p.idProdotto}" value="0">
 
-                    <button type="submit" class="button is-small is-light" onclick="document.getElementById('delta-${p.idProdotto}').value='-1'"><i class="ti ti-minus"></i></button>
-                    <span class="px-3 font-weight-bold">${p.quantita}</span>
-                    <button type="submit" class="button is-small is-light" onclick="document.getElementById('delta-${p.idProdotto}').value='1'"><i class="ti ti-plus"></i></button>
+                    <button type="submit" class="button is-small gestore-stock-btn" onclick="document.getElementById('delta-${p.idProdotto}').value='-1'"><i class="ti ti-minus"></i></button>
+                    <span class="px-3 font-weight-bold gestore-stock-qty">${p.quantita}</span>
+                    <button type="submit" class="button is-small gestore-stock-btn" onclick="document.getElementById('delta-${p.idProdotto}').value='1'"><i class="ti ti-plus"></i></button>
                 </form>
             </div>
 
             <#-- AZIONI MODIFICA / ELIMINA -->
-            <div class="columns is-mobile is-gapless m-0">
-                <div class="column pr-1">
+            <div class="columns is-mobile m-0">
+                <div class="column pr-2">
                     <#-- Passiamo l'id del prodotto nell'URL tramite querystring -->
-                    <a href="${base_url}/gestore/prodotti/modifica?id_prodotto=${p.idProdotto?c}" class="button is-info is-light is-fullwidth is-small">
+                    <a href="${base_url}/gestore/prodotti/modifica?id_prodotto=${p.idProdotto?c}" class="button is-fullwidth is-small gestore-btn-modifica">
                         <i class="ti ti-pencil mr-1"></i> Modifica
                     </a>
                 </div>
-                <div class="column pl-1">
+                <div class="column pl-2">
                     <form action="${base_url}/gestore/catalogo/prodotto/elimina" method="POST" onsubmit="return confirm('Vuoi davvero nascondere questo prodotto dal catalogo?');">
                         <input type="hidden" name="id_prodotto" value="${p.idProdotto}">
-                        <button type="submit" class="button is-danger is-light is-fullwidth is-small">
+                        <button type="submit" class="button is-fullwidth is-small gestore-btn-elimina">
                             <i class="ti ti-trash mr-1"></i> Elimina
                         </button>
                     </form>

@@ -7,6 +7,7 @@
     <#assign cssCatalogo>
         <link rel="stylesheet" href="${base_url}/public/css/catalogo.css">
         <link rel="stylesheet" href="${base_url}/public/css/home.css">
+        <link rel="stylesheet" href="${base_url}/public/css/gestoreDashboard.css">
     </#assign>
 
     <#assign qParams = "">
