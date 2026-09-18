@@ -206,6 +206,164 @@
     transform: translateY(-1px);
 }
 
+/* ============================================================
+   FORM CREAZIONE (E MODIFICA)  PRODOTTO (comune a gioco / bustine / portadadi)
+   ============================================================ */
+
+.gestore-form .gestore-form-section-title {
+    color: var(--color-primary) !important;
+}
+
+/* Contenitore principale del Form (.box) con il colore scuro/viola del tema */
+.gestore-form .box,
+.box-modifica {
+    background-color: var(--color-bg-dark-2) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Label e Testi del Form */
+.gestore-form .label,
+.gestore-form .checkbox,
+.box-modifica .label,
+.box-modifica .checkbox {
+    color: var(--color-text-light, #f5f5f5) !important;
+}
+
+/* Campi di Input, Textarea e Select coerenti con il tema scuro */
+.gestore-form .input,
+.gestore-form .textarea,
+.gestore-form .select select,
+.box-modifica .input,
+.box-modifica .select select {
+    background-color: var(--color-bg-dark) !important;
+    color: var(--color-text-light, #f5f5f5) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+.gestore-form .input::placeholder,
+.gestore-form .textarea::placeholder,
+.box-modifica .input::placeholder {
+    color: var(--color-text-subtle) !important;
+    opacity: 0.6;
+}
+
+/* Focus sui campi con bordo oro/primary */
+.gestore-form .input:focus,
+.gestore-form .textarea:focus,
+.gestore-form .select select:focus,
+.box-modifica .input:focus,
+.box-modifica .select select:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 0.125em rgba(200, 147, 58, 0.25) !important;
+}
+
+/* Icone interne ai campi (es. euro, pacco) */
+.gestore-form .icon {
+    color: var(--color-primary) !important;
+}
+
+/* Bottone nativo "Scegli file": di default resta bianco pieno sul tema scuro */
+.gestore-form input[type="file"] {
+    color: var(--color-text-subtle) !important;
+}
+.gestore-form input[type="file"]::file-selector-button {
+    background-color: var(--color-bg-dark) !important;
+    color: var(--color-text-light, #f5f5f5) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.45rem 0.9rem !important;
+    margin-right: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--transition), color var(--transition);
+}
+.gestore-form input[type="file"]::file-selector-button:hover {
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+/* Checkbox native con accento coerente invece del blu di sistema */
+.gestore-form input[type="checkbox"] {
+    accent-color: var(--color-primary);
+}
+
+/* Box "danno": da riquadro chiaro pieno (causa delle label quasi invisibili)
+   a box scuro con bordo oro, coerente col resto */
+.gestore-form .gestore-danger-box {
+    background-color: var(--color-bg-dark) !important;
+    border: 1px solid var(--color-primary) !important;
+}
+.gestore-form .gestore-danger-box-title {
+    color: var(--color-primary) !important;
+}
+.gestore-form .gestore-danger-box-label {
+    color: var(--color-text-subtle) !important;
+}
+
+/* Bottoni azione fondo form */
+.gestore-form .gestore-btn-annulla {
+    background-color: var(--color-bg-dark) !important;
+    color: var(--color-text-light, #f5f5f5) !important;
+    border: 1px solid var(--color-border-dark) !important;
+    transition: border-color var(--transition), color var(--transition);
+}
+.gestore-form .gestore-btn-annulla:hover {
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+.gestore-form .gestore-btn-salva {
+    background-color: var(--color-primary) !important;
+    color: var(--color-bg-dark, #1a1a1a) !important;
+    border: 1px solid var(--color-primary) !important;
+    font-weight: 700 !important;
+    transition: background-color var(--transition), transform var(--transition);
+}
+.gestore-form .gestore-btn-salva:hover {
+    background-color: var(--color-primary-dark, #c8933a) !important;
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   INTEGRAZIONI SPECIFICHE PER MODIFICA PRODOTTO
+   ============================================================ */
+
+/* Titoli pagina visibili sullo sfondo chiaro esteriore */
+.gestore-form > .mb-5 .title,
+.container .title.has-text-light {
+    color: var(--color-bg-dark, #2d1354) !important;
+}
+
+.container .subtitle.has-text-grey-light {
+    color: var(--color-text-subtle, #555555) !important;
+}
+
+/* Titoli di sezione interni al form */
+.form-section-title {
+    border-bottom: 1px solid var(--color-border-dark) !important;
+    color: var(--color-primary) !important;
+}
+
+/* Rende bianca l'icona del calendario negli input date su sfondo scuro */
+.gestore-form input[type="date"]::-webkit-calendar-picker-indicator,
+.box-modifica input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.9);
+} /* TODO: DA FARE OVUNQUE */
+
+/* Box segnalazione danni nella modifica */
+.box-modifica .notification.is-warning {
+    background-color: var(--color-bg-dark) !important;
+    border: 1px solid var(--color-primary) !important;
+    color: var(--color-text-light) !important;
+}
+
+.box-modifica .notification.is-warning .label {
+    color: var(--color-primary) !important;
+}
+
 @media screen and (max-width: 768px) {
     .gestore-dashboard .gestore-actions-box .buttons {
         flex-direction: column !important;

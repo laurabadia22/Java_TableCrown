@@ -9,7 +9,7 @@ titoloForm="Aggiungi Gioco da Tavolo"
 sottotitoloForm="Inserisci le regole e le specifiche del nuovo gioco da tavolo.">
 
     <hr>
-    <h2 class="title is-5 mb-4 has-text-primary">Specifiche di Gioco</h2>
+    <h2 class="title is-5 mb-4 gestore-form-section-title">Specifiche di Gioco</h2>
     <div class="columns is-multiline">
 
         <div class="column is-3">
@@ -126,15 +126,15 @@ sottotitoloForm="Inserisci le regole e le specifiche del nuovo gioco da tavolo."
         </div>
 
         <div class="column is-12 mt-4">
-            <div class="box has-background-warning-light border-warning">
-                <label class="checkbox mb-3 font-weight-bold has-text-warning-dark">
+            <div class="box gestore-danger-box">
+                <label class="checkbox mb-3 font-weight-bold gestore-danger-box-title">
                     <input type="checkbox" name="danneggiato" value="true">
                     Il gioco presenta un danno?
                 </label>
                 <div class="columns">
                     <div class="column is-4">
                         <div class="field">
-                            <label class="label is-small">Entità del Danno</label>
+                            <label class="label is-small gestore-danger-box-label">Entità del Danno</label>
                             <div class="control">
                                 <div class="select is-fullwidth is-small">
                                     <select name="livelloDanno">

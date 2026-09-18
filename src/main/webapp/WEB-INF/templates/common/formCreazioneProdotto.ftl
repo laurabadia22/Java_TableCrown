@@ -1,8 +1,11 @@
 <#import "layout.ftl" as layout>
 
 <#macro formCreazione actionUrl urlAnnulla titoloPagina currentSubpage titoloForm sottotitoloForm>
-    <@layout.page page_title="${titoloPagina} - Gestore" current_page="gestore_${currentSubpage}">
-        <div class="container px-4 mt-6 mb-6">
+    <#assign cssForm>
+        <link rel="stylesheet" href="${base_url}/public/css/gestoreDashboard.css">
+    </#assign>
+    <@layout.page page_title="${titoloPagina} - Gestore" current_page="gestore_${currentSubpage}" extra_css=cssForm>
+        <div class="container px-4 mt-6 mb-6 gestore-form">
 
             <div class="mb-5">
                 <h1 class="title is-3">${titoloForm}</h1>
@@ -11,7 +14,7 @@
 
             <form action="${base_url}${actionUrl}" method="POST" enctype="multipart/form-data" class="box p-5">
 
-                <h2 class="title is-5 mb-4 has-text-info">Informazioni Principali</h2>
+                <h2 class="title is-5 mb-4 gestore-form-section-title">Informazioni Principali</h2>
                 <div class="columns is-multiline">
                     <div class="column is-8">
                         <div class="field">
@@ -80,7 +83,7 @@
                 <#nested>
 
                 <hr>
-                <h2 class="title is-5 mb-4 has-text-warning">Promozione (Opzionale)</h2>
+                <h2 class="title is-5 mb-4 gestore-form-section-title">Promozione (Opzionale)</h2>
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <label class="checkbox mb-2">
@@ -108,10 +111,10 @@
 
                 <div class="field is-grouped is-grouped-right mt-5">
                     <div class="control">
-                        <a href="${base_url}${urlAnnulla}" class="button is-light">Annulla</a>
+                        <a href="${base_url}${urlAnnulla}" class="button gestore-btn-annulla">Annulla</a>
                     </div>
                     <div class="control">
-                        <button type="submit" class="button is-primary font-weight-bold">
+                        <button type="submit" class="button gestore-btn-salva">
                             <i class="ti ti-device-floppy mr-2"></i> Salva Prodotto
                         </button>
                     </div>

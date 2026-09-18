@@ -1,26 +1,30 @@
 <#import "common/layout.ftl" as layout>
 
-<#assign extraCss>
-    <style>
-        .form-section-title {
-            border-bottom: 2px solid var(--color-border-dark);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--color-text-light);
-            font-weight: 600;
-        }
-        .box-modifica {
-            background-color: var(--color-bg-dark-2);
-            border: 1px solid var(--color-border-dark);
-            border-radius: 8px;
-        }
-    </style>
+<#--<#assign extraCss>-->
+<#--    <style>-->
+<#--        .form-section-title {-->
+<#--            border-bottom: 2px solid var(--color-border-dark);-->
+<#--            padding-bottom: 0.5rem;-->
+<#--            margin-bottom: 1.5rem;-->
+<#--            color: var(--color-text-light);-->
+<#--            font-weight: 600;-->
+<#--        }-->
+<#--        .box-modifica {-->
+<#--            background-color: var(--color-bg-dark-2);-->
+<#--            border: 1px solid var(--color-border-dark);-->
+<#--            border-radius: 8px;-->
+<#--        }-->
+<#--    </style>-->
+<#--</#assign>-->
+
+<#assign cssModifica>
+    <link rel="stylesheet" href="${base_url}/public/css/gestoreDashboard.css">
 </#assign>
 
 <@layout.page
 page_title="Modifica Prodotto - TableCrown"
 current_page="gestore_dashboard"
-extra_css=extraCss>
+extra_css=cssModifica>
 
     <div class="container section px-4">
 
@@ -63,7 +67,7 @@ extra_css=extraCss>
                         <div class="column is-12">
                             <label class="checkbox mb-3 has-text-light">
                                 <input type="checkbox" name="modificaSconto" value="true">
-                                <strong class="has-text-info">Applica / Modifica sconto</strong> (spunta per confermare)
+                                <strong class="has-text-warning">Applica / Modifica sconto</strong> (spunta per confermare)
                             </label>
                         </div>
 
@@ -84,7 +88,7 @@ extra_css=extraCss>
                                 <div class="control">
                                     <#assign valScadenza = "">
                                     <#if prodotto.sconto?? && prodotto.sconto.scadenzaOfferta??>
-                                        <#assign valScadenza = prodotto.sconto.scadenzaOfferta?string('yyyy-MM-dd')>
+                                        <#assign valScadenza = prodotto.sconto.scadenzaOfferta>
                                     </#if>
                                     <input class="input" type="date" name="scadenzaOfferta" value="${valScadenza}">
                                 </div>
