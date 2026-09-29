@@ -8,7 +8,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +42,7 @@ public class CProfilo extends BaseController {
     public void mostraHub(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -75,7 +74,7 @@ public class CProfilo extends BaseController {
     public void mostraAccount(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -101,7 +100,7 @@ public class CProfilo extends BaseController {
     public void aggiornaAccount(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -152,7 +151,7 @@ public class CProfilo extends BaseController {
     public void cambiaPassword(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -200,7 +199,7 @@ public class CProfilo extends BaseController {
     public void eliminaAccount(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -245,7 +244,7 @@ public class CProfilo extends BaseController {
     public void mostraOrdini(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -283,7 +282,7 @@ public class CProfilo extends BaseController {
     public void mostraWishlist(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
         //TODO: forse non serve questo controllo?
@@ -328,7 +327,7 @@ public class CProfilo extends BaseController {
     public void mostraIndirizzi(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -357,7 +356,7 @@ public class CProfilo extends BaseController {
     public void mostraMetodiPagamento(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

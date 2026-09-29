@@ -335,7 +335,7 @@
 .gestore-form > .mb-5 .title,
 .container .title.has-text-light {
     color: var(--color-bg-dark, #2d1354) !important;
-}
+} 
 
 .container .subtitle.has-text-grey-light {
     color: var(--color-text-subtle, #555555) !important;

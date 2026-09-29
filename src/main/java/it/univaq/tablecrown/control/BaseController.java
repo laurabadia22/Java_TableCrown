@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,15 +151,21 @@ public abstract class BaseController {
      * sua dashboard.
      * Restituisce true se è stato eseguito il redirect, altrimenti false.
      */
-    protected boolean reindirizzaGestore(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected boolean reindirizza(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isLoggedIn(request)) {
             Object utenteLoggato = request.getSession().getAttribute("utenteLoggato");
 
-            // Se l'utente in sessione è un'istanza di Gestore (senza Admin)
+            // Se l'utente in sessione è un'istanza di Gestore
             if (utenteLoggato instanceof EGestore) {
                 response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
                 return true;
             }
+
+            if (utenteLoggato instanceof EUtente) {
+                response.sendRedirect(request.getContextPath() + "/");
+                return true;
+            }
+
         }
         return false;
     }

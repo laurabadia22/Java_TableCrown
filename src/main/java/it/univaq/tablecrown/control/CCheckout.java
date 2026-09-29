@@ -35,7 +35,7 @@ public class CCheckout extends BaseController{
     public void mostraCheckout(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -105,7 +105,7 @@ public class CCheckout extends BaseController{
     public void elaboraAcquisto(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

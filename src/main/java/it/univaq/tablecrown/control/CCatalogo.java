@@ -1,10 +1,6 @@
 package it.univaq.tablecrown.control;
 
 import it.univaq.tablecrown.dao.PersistentManager;
-import it.univaq.tablecrown.entity.EBustine;
-import it.univaq.tablecrown.entity.EGiocoDaTavolo;
-import it.univaq.tablecrown.entity.EPortaDadi;
-import it.univaq.tablecrown.entity.EProdotto;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +27,7 @@ public class CCatalogo extends BaseController{
      */
     public void mostraCatalogoGiochi(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) return;
+        if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
         String query = request.getParameter("q");
@@ -61,7 +57,7 @@ public class CCatalogo extends BaseController{
     public void mostraCatalogoBustine(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) return;
+        if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
         String query = request.getParameter("q");
@@ -91,7 +87,7 @@ public class CCatalogo extends BaseController{
     public void mostraCatalogoPortaDadi(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) return;
+        if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
         String query = request.getParameter("q");
@@ -121,7 +117,7 @@ public class CCatalogo extends BaseController{
     public void mostraOfferte(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) return;
+        if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
 

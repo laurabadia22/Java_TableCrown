@@ -36,7 +36,7 @@ public class CProdotto extends BaseController{
             throws ServletException, IOException {
 
         // Se un gestore tenta di accedere, viene reindirizzato alla sua dashboard
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

@@ -54,7 +54,7 @@ public class CWishlist extends BaseController{
     public void aggiungiAllaWishlist(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -102,7 +102,7 @@ public class CWishlist extends BaseController{
     public void rimuoviDallaWishlist(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

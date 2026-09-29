@@ -13,10 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controller deputato alla gestione degli indirizzi di spedizione dell'utente.
@@ -56,7 +53,7 @@ public class CIndirizzo extends BaseController{
      */
     public void aggiungiIndirizzo(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -124,7 +121,7 @@ public class CIndirizzo extends BaseController{
     public void impostaPredefinito(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -179,7 +176,7 @@ public class CIndirizzo extends BaseController{
     public void eliminaIndirizzo(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

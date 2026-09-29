@@ -59,7 +59,7 @@ public class CCarrello extends BaseController {
     public void mostraCarrello(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -139,7 +139,7 @@ public class CCarrello extends BaseController {
     public void aggiungiAlCarrello(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -197,7 +197,7 @@ public class CCarrello extends BaseController {
     public void aggiornaQuantita(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -244,7 +244,7 @@ public class CCarrello extends BaseController {
     public void rimuoviDalCarrello(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

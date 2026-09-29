@@ -29,7 +29,7 @@ public class CHome extends BaseController {
      */
     public void mostraHome(HttpServletRequest request, HttpServletResponse response, EntityManager em) throws ServletException, IOException {
         //Se un gestore tenta di accedere alla Home, viene reindirizzato alla sua deshboard
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 

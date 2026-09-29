@@ -29,7 +29,7 @@ public class CMetodiPagamento extends BaseController{
             throws ServletException, IOException {
 
         // Se un gestore/admin tenta di accedere, viene reindirizzato alla sua dashboard
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -131,7 +131,7 @@ public class CMetodiPagamento extends BaseController{
     public void eliminaCarta(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
@@ -203,7 +203,7 @@ public class CMetodiPagamento extends BaseController{
     public void impostaPredefinita(HttpServletRequest request, HttpServletResponse response, EntityManager em)
             throws ServletException, IOException {
 
-        if (reindirizzaGestore(request, response)) {
+        if (reindirizza(request, response)) {
             return;
         }
 
