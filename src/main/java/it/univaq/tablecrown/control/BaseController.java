@@ -155,18 +155,29 @@ public abstract class BaseController {
         if (isLoggedIn(request)) {
             Object utenteLoggato = request.getSession().getAttribute("utenteLoggato");
 
-            // Se l'utente in sessione è un'istanza di Gestore
+            // Estraiamo la rotta in cui l'utente sta cercando di entrare
+            String pathRichiesto = request.getRequestURI().substring(request.getContextPath().length());
+
+            // GESTORE: Se è loggato come Gestore e cerca di uscire dalla sua area
             if (utenteLoggato instanceof EGestore) {
-                response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
-                return true;
+                // Se sta provando ad andare in pagine fuori da /gestore (es. home, carrello, catalogo)
+                if (!pathRichiesto.startsWith("/gestore")) {
+                    response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+                    return true;
+                }
             }
 
+            // UTENTE NORMALE: Se è loggato come Cliente e cerca di entrare nell'area Gestore o nella pagina di login/registrazione
             if (utenteLoggato instanceof EUtente) {
-                response.sendRedirect(request.getContextPath() + "/");
-                return true;
+                // Non può entrare nell'area gestore, né rifare il login se è già loggato
+                if (pathRichiesto.startsWith("/gestore") || pathRichiesto.equals("/accedi") || pathRichiesto.equals("/registrati")) {
+                    response.sendRedirect(request.getContextPath() + "/");
+                    return true;
+                }
             }
-
         }
+
+        // Se nessuno dei due è "fuori posto", lasciamo proseguire la richiesta normalmente
         return false;
     }
 

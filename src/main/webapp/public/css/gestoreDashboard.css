@@ -87,9 +87,9 @@
 }
 
 .gestore-dashboard .gestore-stat-tag {
-    background-color: rgba(72, 199, 142, 0.12) !important;
-    color: #48c78e !important;
-    border: 1px solid rgba(72, 199, 142, 0.35) !important;
+    background-color:   #F2DCF1 !important;
+    color:    #A61E9A !important;
+    border: 1px solid var(--color-bg-dark) !important;
 }
 
 

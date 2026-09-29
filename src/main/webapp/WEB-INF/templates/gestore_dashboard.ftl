@@ -25,22 +25,19 @@
         <div class="columns is-multiline">
 
             <div class="column is-6-tablet is-6-desktop">
-                <div class="card gestore-stat-card">
+                <div class="card gestore-stat-card" style="height: 100%;">
                     <div class="card-content has-text-centered py-6">
                         <div class="gestore-stat-icon gestore-stat-icon-orders">
                             <i class="ti ti-shopping-cart has-text-link"></i>
                         </div>
                         <p class="heading is-size-6">Ordini Totali Ricevuti</p>
                         <p class="title is-2">${ordiniTotali!'0'}</p>
-                        <div class="mt-4">
-                            <a href="${base_url}/gestore/ordini" class="button is-small is-link is-light is-rounded">Gestisci ordini</a>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="column is-6-tablet is-6-desktop">
-                <div class="card gestore-stat-card">
+                <div class="card gestore-stat-card" style="height: 100%;">
                     <div class="card-content has-text-centered py-6">
                         <div class="gestore-stat-icon gestore-stat-icon-revenue">
                             <i class="ti ti-currency-euro has-text-success"></i>
@@ -53,17 +50,21 @@
                                 € 0.00
                             </#if>
                         </p>
-                        <div class="mt-4">
-                            <span class="tag is-light is-medium gestore-stat-tag">Aggiornato a oggi</span>
-                        </div>
                     </div>
                 </div>
+            </div>
+            <#-- .now preleva la data e l'ora del momento in cui il server restituisce la pagina di risposta alla richiesta http
+                 string trasforma la data nel formato italiano girono/mese/anno-->
+            <div class="column is-12 mt-2 has-text-right">
+                <span class="tag is-light is-medium gestore-stat-tag">
+                    <i class="ti ti-clock mr-1"></i> Aggiornato al: ${.now?string('dd/MM/yyyy HH:mm')}
+                </span>
             </div>
 
         </div>
 
         <!-- AZIONI RAPIDE (Aggiunta Prodotti) -->
-        <div class="mt-6">
+        <div class="mt-1">
             <h2 class="title is-4 mb-4 gestore-actions-title">Azioni Rapide al Catalogo</h2>
 
             <div class="columns is-multiline">
