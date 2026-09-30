@@ -17,14 +17,27 @@ public class GenericDAO {
 
 
     public boolean saveObj(Object obj) {
+        boolean gestisceTransazione = false;
         try {
-            em.getTransaction().begin();
+            // Apriamo la transazione SOLO se non ce n'è già una attiva
+            if (!em.getTransaction().isActive()) {
+                em.getTransaction().begin();
+                gestisceTransazione = true;
+            }
+
             em.merge(obj);
-            em.getTransaction().commit();
+
+            // Chiudiamo la transazione SOLO se l'abbiamo aperta noi qui dentro
+            if (gestisceTransazione) {
+                em.getTransaction().commit();
+            }
             return true;
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            if (gestisceTransazione && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.err.println("Errore salvataggio: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

@@ -40,7 +40,7 @@ public class EOrdine {
     @Column(name = "nomeTitolareCarta", nullable = false, length = 100)
     private String nomeTitolareCarta;
 
-    @OneToMany(mappedBy = "ordine", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EOrdineItem> ordineItems = new ArrayList<>();
 
     //Costruttore vuote per Hibernate
