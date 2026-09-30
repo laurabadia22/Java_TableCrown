@@ -396,8 +396,9 @@ public abstract class BaseController {
      * Completa l'array dei filtri con il valore del prezzo massimo reale restituito dal db.
      */
     protected Map<String, Object> completaFiltriPrezzo(Map<String, Object> filtri, Map<String, Object> risultatoGrezzo) {
-        Double rangeMax = 0.0;
-        Double rangeMin = 0.0;
+        double rangeMax = 0.0;
+        double rangeMin = 0.0;
+
         if (risultatoGrezzo != null) {
             rangeMax = ((Number) risultatoGrezzo.get("rangemax")).doubleValue();
         }

@@ -62,7 +62,7 @@ subtotale=0>
             </#if>
 
             <#-- 3. Stampiamo il tag IMG pulitissimo -->
-            <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="product-image">
+            <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="prodotto-riga-img">
 
             <#if p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'ESAURITO'>
                 <span class="prodotto-riga-badge prodotto-riga-badge-esaurito">Esaurito</span>
@@ -148,30 +148,34 @@ subtotale=0>
         </#if>
 
         <div class="prodotto-riga-azioni">
-            <#if mostraAggiungiCarrello>
-                <form action="${base_url}/carrello/aggiungi" method="POST" class="prodotto-riga-form">
-                    <input type="hidden" name="idProdotto" value="${p.idProdotto}">
-                    <input type="hidden" name="quantita" value="1">
-                    <#if p.isAcquistabile()>
-                        <button type="submit" class="prodotto-riga-btn-carrello">
-                            <i class="ti ti-shopping-cart-plus"></i> Aggiungi al carrello
-                        </button>
-                    <#else>
-                        <button type="button" class="prodotto-riga-btn-carrello" disabled>
-                            <i class="ti ti-ban"></i> Non disponibile
-                        </button>
+            <#if mostraAggiungiCarrello || (mostraRimuovi && !quantitaEditabile)>
+                <div class="prodotto-riga-azioni">
+                    <#if mostraAggiungiCarrello>
+                        <form action="${base_url}/carrello/aggiungi" method="POST" class="prodotto-riga-form">
+                            <input type="hidden" name="idProdotto" value="${p.idProdotto}">
+                            <input type="hidden" name="quantita" value="1">
+                            <#if p.isAcquistabile()>
+                                <button type="submit" class="prodotto-riga-btn-carrello">
+                                    <i class="ti ti-shopping-cart-plus"></i> Aggiungi al carrello
+                                </button>
+                            <#else>
+                                <button type="button" class="prodotto-riga-btn-carrello" disabled>
+                                    <i class="ti ti-ban"></i> Non disponibile
+                                </button>
+                            </#if>
+                        </form>
                     </#if>
-                </form>
-            </#if>
 
-            <#-- in modalità carrello il rimuovi è già dentro il form quantità sopra -->
-            <#if mostraRimuovi && !quantitaEditabile>
-                <form action="${azioneRimuovi}" method="POST" class="prodotto-riga-form">
-                    <input type="hidden" name="idProdotto" value="${p.idProdotto}">
-                    <button type="submit" class="prodotto-riga-btn-rimuovi" aria-label="Rimuovi" title="Rimuovi">
-                        <i class="ti ${iconaRimuovi}"></i>
-                    </button>
-                </form>
+                    <#-- in modalità carrello il rimuovi è già dentro il form quantità sopra -->
+                    <#if mostraRimuovi && !quantitaEditabile>
+                        <form action="${azioneRimuovi}" method="POST" class="prodotto-riga-form">
+                            <input type="hidden" name="idProdotto" value="${p.idProdotto}">
+                            <button type="submit" class="prodotto-riga-btn-rimuovi" aria-label="Rimuovi" title="Rimuovi">
+                                <i class="ti ${iconaRimuovi}"></i>
+                            </button>
+                        </form>
+                    </#if>
+                </div>
             </#if>
         </div>
 
