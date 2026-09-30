@@ -140,7 +140,9 @@ public abstract class BaseController {
 
         // Verifichiamo l'istanza dell'oggetto in sessione (es. utenteLoggato instanceof Gestore)
         if (!targetRole.isInstance(utenteLoggato)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accesso Negato: Non hai i permessi necessari.");
+            HttpSession session = request.getSession(false);
+            UFlashMessage.addMessage(session, "warning", "Accesso negato. Non hai i permessi necessari.");
+            response.sendRedirect(request.getContextPath() + "/");
             return false;
         }
         return true;
