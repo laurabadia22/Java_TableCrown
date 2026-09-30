@@ -87,8 +87,38 @@
                         <#if prodotti_carrello?? && (prodotti_carrello?size > 0)>
                             <div class="checkout-prodotti-list">
                                 <#list prodotti_carrello as item>
+
+                                <#-- 1. LOGICA IMMAGINE DINAMICA -->
+                                    <#assign imgDalDb = item.prodotto.imgProdotto!"">
+
+                                    <#if imgDalDb == "">
+                                    <#-- CASO A: Placeholder dinamico -->
+                                        <#assign nomePlaceholder = "placeholder.png">
+                                        <#if item.prodotto.tipo??>
+                                            <#if item.prodotto.tipo == "gioco">
+                                                <#assign nomePlaceholder = "gioco_da_tavolo_img.jpg">
+                                            <#elseif item.prodotto.tipo == "bustine" || item.prodotto.tipo == "Bustine">
+                                                <#assign nomePlaceholder = "bustine_img.jpg">
+                                            <#elseif item.prodotto.tipo == "portaDadi" || item.prodotto.tipo == "Portadadi">
+                                                <#assign nomePlaceholder = "porta_dadi_img.jpg.png">
+                                            </#if>
+                                        </#if>
+                                        <#assign pathFinale = "${base_url}/public/img/prodotti/${nomePlaceholder}">
+
+                                    <#elseif imgDalDb?contains("/")>
+                                    <#-- CASO B: Prodotto NUOVO Java (es: uploads/prodotti/...) -->
+                                        <#assign pathFinale = "${base_url}/${imgDalDb}">
+
+                                    <#else>
+                                    <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) -->
+                                        <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
+                                    </#if>
+                                <#-- FINE LOGICA IMMAGINE -->
+
                                     <div class="checkout-prodotto-row">
-                                        <img class="checkout-prodotto-img" src="${base_url}/public/img/prodotti/${(item.prodotto.imgProdotto)!''}" alt="${(item.prodotto.nomeProdotto)?html}">
+                                        <#-- 2. STAMPA IMMAGINE CON PATH CALCOLATO -->
+                                        <img class="checkout-prodotto-img" src="${pathFinale}" alt="${(item.prodotto.nomeProdotto)?html}">
+
                                         <div class="checkout-prodotto-info">
                                             <p class="checkout-prodotto-nome">${item.prodotto.nomeProdotto}</p>
                                             <p class="checkout-prodotto-qta">Quantità: ${item.quantita}</p>
