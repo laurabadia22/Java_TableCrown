@@ -3,7 +3,7 @@
 <#import "paginazione.ftl" as pag>
 <#import "ricerca.ftl" as r>
 
-<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs totaleRisultati=0>
+<#macro renderCatalogoBase titolo subpage urlBase prodotti filtri paginaCorrente totalePagine query breadcrumbs totaleRisultati=0 paginaAttiva="catalogo">
 
     <#setting url_escaping_charset="UTF-8">
 
@@ -62,7 +62,7 @@
 
     <@layout.page
     page_title="${titolo} - TableCrown"
-    current_page="catalogo"
+    current_page=paginaAttiva
     current_subpage=subpage
     breadcrumbs=breadcrumbs
     extra_css=cssCatalogo>

@@ -30,7 +30,7 @@ public class ProdottoDAO extends GenericDAO {
             List<String> condizioni = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
-            // 1. Condizioni Fisse (Offerte attive e prodotti disponibili)
+            // 1. Condizioni Fisse (Offerte attive e prodotti disponibili/in stock)
             condizioni.add("p.sconto.sconto > 0");
             condizioni.add("(p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggi)");
             parametri.put("oggi", LocalDateTime.now());
@@ -51,12 +51,18 @@ public class ProdottoDAO extends GenericDAO {
                 parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
+            // AGGIUNTA: Filtro dinamico Rating
+            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
+                condizioni.add("p.valutazioneMedia >= :ratingMin");
+                parametri.put("ratingMin", filtri.get("ratingMin"));
+            }
+
             // Assemblaggio blocco WHERE
             if (!condizioni.isEmpty()) {
                 jpqlBase.append("WHERE ").append(String.join(" AND ", condizioni)).append(" ");
             }
 
-            // 3. Query: MIN / MAX Prezzo per gestire eventuali slider (calcolato sul prezzo scontato)
+            // 3. Query: MIN / MAX Prezzo per gestire eventuali slider
             TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(p.prezzo * (1.0 - p.sconto.sconto / 100.0)), MAX(p.prezzo * (1.0 - p.sconto.sconto / 100.0)) " + jpqlBase.toString(), Object[].class);
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = queryMinMax.getSingleResult();
@@ -64,7 +70,6 @@ public class ProdottoDAO extends GenericDAO {
             double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
             double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 200.0;
 
-            // Applichiamo la correzione degli arrotondamenti per i float (es. 14.0399)
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
@@ -73,12 +78,36 @@ public class ProdottoDAO extends GenericDAO {
             parametri.forEach(queryCount::setParameter);
             Long totale = queryCount.getSingleResult();
 
-            // 5. Query: Risultati e Ordinamento
-            String jpqlMain = "SELECT p " + jpqlBase.toString() +
-                    "ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, " +
-                    "p.sconto.scadenzaOfferta ASC";
+            // 5. Query: Risultati e Ordinamento Dinamico
+            StringBuilder jpqlMain = new StringBuilder("SELECT p ").append(jpqlBase.toString());
 
-            TypedQuery<EProdotto> query = em.createQuery(jpqlMain, EProdotto.class);
+            // AGGIUNTA: Gestione Ordinamento dinamico (selezionato dall'utente)
+            String ordinamento = (String) filtri.get("ordinamento");
+            if (ordinamento != null && !ordinamento.isEmpty()) {
+                switch (ordinamento) {
+                    case "prezzo_asc":
+                        jpqlMain.append("ORDER BY (p.prezzo * (1.0 - p.sconto.sconto / 100.0)) ASC");
+                        break;
+                    case "prezzo_desc":
+                        jpqlMain.append("ORDER BY (p.prezzo * (1.0 - p.sconto.sconto / 100.0)) DESC");
+                        break;
+                    case "popolarita":
+                        jpqlMain.append("ORDER BY p.numeroVendite DESC");
+                        break;
+                    case "valutazione":
+                        jpqlMain.append("ORDER BY p.valutazione.media DESC");
+                        break;
+                    default:
+                        // Ordinamento di default per le offerte: quelle in scadenza prima
+                        jpqlMain.append("ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, p.sconto.scadenzaOfferta ASC");
+                        break;
+                }
+            } else {
+                // Selezionato nessun filtro, applichiamo il default delle offerte
+                jpqlMain.append("ORDER BY CASE WHEN p.sconto.scadenzaOfferta IS NULL THEN 1 ELSE 0 END ASC, p.sconto.scadenzaOfferta ASC");
+            }
+
+            TypedQuery<EProdotto> query = em.createQuery(jpqlMain.toString(), EProdotto.class);
             parametri.forEach(query::setParameter);
 
             query.setFirstResult(offset);
