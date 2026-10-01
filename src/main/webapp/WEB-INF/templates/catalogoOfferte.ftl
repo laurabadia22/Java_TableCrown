@@ -10,6 +10,7 @@
 <@cs.renderCatalogoBase
 titolo="Offerte Speciali"
 subpage="offerte"
+paginaAttiva="offerte"
 urlBase="${base_url}/offerte"
 prodotti=prodotti
 filtri=filtri
