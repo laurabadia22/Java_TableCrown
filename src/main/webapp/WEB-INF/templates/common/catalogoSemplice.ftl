@@ -15,7 +15,7 @@
 <#-- Costruzione query string per la paginazione per non perdere i filtri quando si cambia pagina -->
     <#assign qParams = "">
     <#if query?? && query?has_content>
-        <#assign qParams = qParams + "&q=" + query?url>
+        <#assign qParams = qParams + "&query=" + query?url>
     </#if>
     <#if filtri??>
         <#if filtri.prezzoMin?? && filtri.prezzoMin?has_content>
@@ -32,6 +32,9 @@
         </#if>
         <#if filtri.ordinamento?? && filtri.ordinamento?has_content>
             <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url>
+        </#if>
+        <#if filtri.query?? && filtri.query?has_content>
+            <#assign qParams = qParams + "&query=" + filtri.query?url>
         </#if>
 
     <#-- Filtri a lista/sequenza -->

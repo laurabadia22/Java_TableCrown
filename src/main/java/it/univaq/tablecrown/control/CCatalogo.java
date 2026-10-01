@@ -30,24 +30,28 @@ public class CCatalogo extends BaseController{
         if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
-        String query = request.getParameter("q");
-        if (query != null) query = query.trim();
+//        String query = request.getParameter("query");
+//        if (query != null) query = query.trim();
 
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
         PersistentManager pm = new PersistentManager(em);
 
-        if (query != null && !query.isEmpty()) {
-            filtri = new HashMap<>();
-            risultatoGrezzo = pm.PMricercaGiochi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-        } else {
-            filtri = estraiFiltriGiochi(request);
-            risultatoGrezzo = pm.PMfindGiochi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
-        }
+        filtri = estraiFiltriGiochi(request);
+        risultatoGrezzo = pm.PMfindGiochi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+        filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
 
-        renderCatalogo(request, response, "catalogoGiochi", risultatoGrezzo, pagina, filtri, query);
+//        if (query != null && !query.isEmpty()) {
+//            filtri = new HashMap<>();
+//            risultatoGrezzo = pm.PMricercaGiochi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+//        } else {
+//
+//
+//        }
+
+        String queryCercata = (String) filtri.get("query");
+        renderCatalogo(request, response, "catalogoGiochi", risultatoGrezzo, pagina, filtri, queryCercata);
     }
 
     /**
@@ -60,24 +64,27 @@ public class CCatalogo extends BaseController{
         if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
-        String query = request.getParameter("q");
-        if (query != null) query = query.trim();
+//        String query = request.getParameter("query");
+//        if (query != null) query = query.trim();
 
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
         PersistentManager pm = new PersistentManager(em);
 
-        if (query != null && !query.isEmpty()) {
-            filtri = new HashMap<>();
-            risultatoGrezzo = pm.PMricercaBustine(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-        } else {
-            filtri = estraiFiltriPrezzo(request);
-            risultatoGrezzo = pm.PMfindBustine(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
-        }
+        filtri = estraiFiltriCommon(request);
+        risultatoGrezzo = pm.PMfindBustine(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+        filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
 
-        renderCatalogo(request, response, "catalogoBustine", risultatoGrezzo, pagina, filtri, query);
+//        if (query != null && !query.isEmpty()) {
+//            filtri = new HashMap<>();
+//            risultatoGrezzo = pm.PMricercaBustine(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+//        } else {
+//
+//        }
+
+        String queryCercata = (String) filtri.get("query");
+        renderCatalogo(request, response, "catalogoBustine", risultatoGrezzo, pagina, filtri, queryCercata);
     }
 
     /**
@@ -90,24 +97,27 @@ public class CCatalogo extends BaseController{
         if (reindirizza(request, response)) return;
 
         int pagina = estraiPaginaRichiesta(request);
-        String query = request.getParameter("q");
-        if (query != null) query = query.trim();
+//        String query = request.getParameter("query");
+//        if (query != null) query = query.trim();
 
         Map<String, Object> risultatoGrezzo;
         Map<String, Object> filtri;
 
         PersistentManager pm = new PersistentManager(em);
 
-        if (query != null && !query.isEmpty()) {
-            filtri = new HashMap<>();
-            risultatoGrezzo = pm.PMricercaPortaDadi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-        } else {
-            filtri = estraiFiltriPrezzo(request);
-            risultatoGrezzo = pm.PMfindPortaDadi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
-            filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
-        }
+        filtri = estraiFiltriCommon(request);
+        risultatoGrezzo = pm.PMfindPortaDadi(filtri, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+        filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
 
-        renderCatalogo(request, response, "catalogoPortaDadi", risultatoGrezzo, pagina, filtri, query);
+//        if (query != null && !query.isEmpty()) {
+//            filtri = new HashMap<>();
+//            risultatoGrezzo = pm.PMricercaPortaDadi(query, RISULTATI_PER_PAGINA, (pagina - 1) * RISULTATI_PER_PAGINA);
+//        } else {
+//
+//        }
+
+        String queryCercata = (String) filtri.get("query");
+        renderCatalogo(request, response, "catalogoPortaDadi", risultatoGrezzo, pagina, filtri, queryCercata);
     }
 
     /**
@@ -123,7 +133,7 @@ public class CCatalogo extends BaseController{
         PersistentManager pm = new PersistentManager(em);
 
         // Estrazione dei filtri dall'URL (request)
-        Map<String, Object> filtri = estraiFiltriPrezzo(request);
+        Map<String, Object> filtri = estraiFiltriCommon(request);
 
         // Passaggio della mappa filtri al metodo del PersistentManager
         Map<String, Object> risultatoGrezzo = pm.PMfindProdottiInOfferta(

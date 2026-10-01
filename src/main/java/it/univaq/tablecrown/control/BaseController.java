@@ -332,13 +332,14 @@ public abstract class BaseController {
     /**
      * Estrae i filtri in base al prezzo e ordinamento condivisi da tutti i prodotti.
      */
-    protected Map<String, Object> estraiFiltriPrezzo(HttpServletRequest request) {
+    protected Map<String, Object> estraiFiltriCommon(HttpServletRequest request) {
         Map<String, Object> filtri = new HashMap<>();
 
         String priceMinRaw = request.getParameter("prezzoMin");
         String priceMaxRaw = request.getParameter("prezzoMax");
         String ratingMinRaw = request.getParameter("ratingMin");
         String ordinamentoRaw = request.getParameter("ordinamento");
+        String query = request.getParameter("query");
 
         filtri.put("prezzoMin", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0); //TODO: ????
         filtri.put("prezzoMax", isNumeric(priceMaxRaw) ? Double.parseDouble(priceMaxRaw) : null);
@@ -346,6 +347,10 @@ public abstract class BaseController {
         filtri.put("prezzoRangeMax", null); // Verrà impostato dal PM
 
         filtri.put("disponibilita", estraiListaDaRequest(request, "disponibilita"));
+
+        if (query != null && !query.trim().isEmpty()) {
+            filtri.put("query", query.trim());
+        }
 
 //        List<String> valoriEvidenza = estraiListaDaRequest(request, "inEvidenzaFiltro");
 //        List<String> inEvidenza = new ArrayList<>();
@@ -375,7 +380,7 @@ public abstract class BaseController {
      * Estrai i filtri specifici per la categoria Giochi da Tavolo.
      */
     protected Map<String, Object> estraiFiltriGiochi(HttpServletRequest request) {
-        Map<String, Object> filtri = estraiFiltriPrezzo(request);
+        Map<String, Object> filtri = estraiFiltriCommon(request);
 
         String ageMinRaw = request.getParameter("etaMinima");
         String playersMinRaw = request.getParameter("giocatoriMin");

@@ -25,6 +25,11 @@ public class BustineDAO extends GenericDAO {
             List<String> condizioni = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
+            if (filtri.get("query") != null) {
+                condizioni.add("(LOWER(b.nomeProdotto) LIKE LOWER(:query) OR LOWER(b.descrizioneProdotto) LIKE LOWER(:query))");
+                parametri.put("query", "%" + filtri.get("query") + "%");
+            }
+
             // 1. Filtri Prezzo
             if (filtri.get("prezzoMin") != null) {
                 condizioni.add("b.prezzo >= :prezzoMin"); // MODIFICATO

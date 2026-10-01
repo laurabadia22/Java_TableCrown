@@ -65,6 +65,13 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             }
 
             // 2. ALTRI FILTRI (Senza i prezzi)
+            if (filtri.get("query") != null) {
+                String queryCercata = (String) filtri.get("query");
+                if (!queryCercata.trim().isEmpty()) {
+                    condizioniBase.add("(LOWER(g.nomeProdotto) LIKE LOWER(:query) OR LOWER(g.descrizioneProdotto) LIKE LOWER(:query))");
+                    parametri.put("query", "%" + queryCercata.trim() + "%");
+                }
+            }
             if (filtri.get("mostraEspansioni") != null && Boolean.FALSE.equals(filtri.get("mostraEspansioni"))) {
                 condizioniBase.add("g.giocoBase IS NULL");
             }

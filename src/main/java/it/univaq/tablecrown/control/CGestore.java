@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -114,7 +113,7 @@ public class CGestore extends BaseController {
             filtri = new HashMap<>();
             risultatoGrezzo = pm.PMricercaBustine(query, RISULTATI_PER_PAGINA, offset);
         } else {
-            filtri = estraiFiltriPrezzo(request);
+            filtri = estraiFiltriCommon(request);
             risultatoGrezzo = pm.PMfindBustine(filtri, RISULTATI_PER_PAGINA, offset);
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }
@@ -147,7 +146,7 @@ public class CGestore extends BaseController {
             filtri = new HashMap<>();
             risultatoGrezzo = pm.PMricercaPortaDadi(query, RISULTATI_PER_PAGINA, offset);
         } else {
-            filtri = estraiFiltriPrezzo(request);
+            filtri = estraiFiltriCommon(request);
             risultatoGrezzo = pm.PMfindPortaDadi(filtri, RISULTATI_PER_PAGINA, offset);
             filtri = completaFiltriPrezzo(filtri, risultatoGrezzo);
         }

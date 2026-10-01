@@ -25,6 +25,12 @@ public class PortaDadiDAO extends GenericDAO {
             Map<String, Object> parametri = new HashMap<>();
 
             // 2. Costruzione dinamica dei filtri
+
+            if (filtri.get("query") != null) {
+                condizioni.add("(LOWER(p.nomeProdotto) LIKE LOWER(:query) OR LOWER(p.descrizioneProdotto) LIKE LOWER(:query))");
+                parametri.put("query", "%" + filtri.get("query") + "%");
+            }
+
             if (filtri.get("prezzoMin") != null) {
                 condizioni.add("p.prezzo >= :prezzoMin"); // MODIFICATO
                 parametri.put("prezzoMin", filtri.get("prezzoMin"));
