@@ -339,7 +339,7 @@ public abstract class BaseController {
         String priceMaxRaw = request.getParameter("prezzoMax");
         String ratingMinRaw = request.getParameter("ratingMin");
         String ordinamentoRaw = request.getParameter("ordinamento");
-        String query = request.getParameter("query");
+        String query = request.getParameter("q");
 
         filtri.put("prezzoMin", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0); //TODO: ????
         filtri.put("prezzoMax", isNumeric(priceMaxRaw) ? Double.parseDouble(priceMaxRaw) : null);

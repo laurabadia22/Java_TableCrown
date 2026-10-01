@@ -33,11 +33,12 @@
         <#if filtri.ordinamento?? && filtri.ordinamento?has_content>
             <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url>
         </#if>
-        <#if filtri.query?? && filtri.query?has_content>
-            <#assign qParams = qParams + "&query=" + filtri.query?url>
-        </#if>
+    <#--<#if filtri.query?? && filtri.query?has_content>
+        <#assign qParams = qParams + "&query=" + filtri.query?url>
+    </#if>-->
 
-    <#-- Filtri a lista/sequenza -->
+
+<#-- Filtri a lista/sequenza -->
         <#if filtri.difficolta??>
             <#if filtri.difficolta?is_sequence>
                 <#list filtri.difficolta as d>
