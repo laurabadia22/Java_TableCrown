@@ -20,28 +20,25 @@ public class BustineDAO extends GenericDAO {
 
     public Map<String, Object> findBustine(Map<String, Object> filtri, int limit, int offset) {
         try {
-            // RIMOSSO: il JOIN su b.prezzo
-            StringBuilder jpqlBase = new StringBuilder("FROM EBustine b ");
-            List<String> condizioni = new ArrayList<>();
+            List<String> condizioniBase = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
+            // 1. LA FORMULA MAGICA: Usiamo CURRENT_TIMESTAMP così Hibernate non va più in crash per i parametri mancanti!
+            String prezzoReale = "(CASE " +
+                    "WHEN b.sconto IS NOT NULL AND b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP) " +
+                    "THEN (b.prezzo * (1.0 - b.sconto.sconto / 100.0)) " +
+                    "ELSE b.prezzo END)";
+
+            // 2. FILTRO RICERCA
             if (filtri.get("query") != null) {
-                condizioni.add("(LOWER(b.nomeProdotto) LIKE LOWER(:query) OR LOWER(b.descrizioneProdotto) LIKE LOWER(:query))");
-                parametri.put("query", "%" + filtri.get("query") + "%");
+                String queryCercata = (String) filtri.get("query");
+                if (!queryCercata.trim().isEmpty()){
+                    condizioniBase.add("(LOWER(b.nomeProdotto) LIKE LOWER(:query) OR LOWER(b.descrizioneProdotto) LIKE LOWER(:query))");
+                    parametri.put("query", "%" + queryCercata.trim() + "%");
+                }
             }
 
-            // 1. Filtri Prezzo
-            if (filtri.get("prezzoMin") != null) {
-                condizioni.add("b.prezzo >= :prezzoMin"); // MODIFICATO
-                parametri.put("prezzoMin", filtri.get("prezzoMin"));
-            }
-
-            if (filtri.get("prezzoMax") != null) {
-                condizioni.add("b.prezzo <= :prezzoMax"); // MODIFICATO
-                parametri.put("prezzoMax", filtri.get("prezzoMax"));
-            }
-
-            // 2. Filtro Disponibilità (con protezione sicura per parsing flessibile)
+            // 3. FILTRI ENUM E RATING (Senza i prezzi)
             if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
@@ -51,94 +48,102 @@ public class BustineDAO extends GenericDAO {
                         if (valoreScelto instanceof DisponibilitaProdotto) {
                             enumDisp.add((DisponibilitaProdotto) valoreScelto);
                         } else if (valoreScelto instanceof String) {
-                            try {
-                                enumDisp.add(DisponibilitaProdotto.valueOf(((String) valoreScelto).toUpperCase()));
-                            } catch (IllegalArgumentException ignored) {}
+                            try { enumDisp.add(DisponibilitaProdotto.valueOf(((String) valoreScelto).toUpperCase())); } catch (IllegalArgumentException ignored) {}
                         }
                     }
                 } else if (dispObj instanceof String[]) {
                     for (String valoreScelto : (String[]) dispObj) {
-                        try {
-                            enumDisp.add(DisponibilitaProdotto.valueOf(valoreScelto.toUpperCase()));
-                        } catch (IllegalArgumentException ignored) {}
+                        try { enumDisp.add(DisponibilitaProdotto.valueOf(valoreScelto.toUpperCase())); } catch (IllegalArgumentException ignored) {}
                     }
                 }
 
                 if (!enumDisp.isEmpty()) {
-                    condizioni.add("b.disponibilitaProdotto IN (:disponibilita)");
+                    condizioniBase.add("b.disponibilitaProdotto IN (:disponibilita)");
                     parametri.put("disponibilita", enumDisp);
                 }
             }
 
-            // 3. Filtro Novità e Sconti
             if (filtri.get("inEvidenzaFiltro") != null) {
                 @SuppressWarnings("unchecked")
                 List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
-                        condizioni.add("b.dataPubblicazione >= :datalimite");
-                        parametri.put("datalimite", LocalDate.now().minusMonths(1));
+                        condizioniBase.add("b.dataPubblicazione >= :datalimite");
+                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
-                        condizioni.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > :oggiSconti)");
-                        parametri.put("oggiSconti", LocalDateTime.now());
+                        condizioniBase.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
                     }
                 }
             }
 
-            // 4. Filtro Rating
             if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioni.add("b.valutazioneMedia >= :ratingMin");
+                condizioniBase.add("b.valutazioneMedia >= :ratingMin");
                 parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
-            // Assemblaggio del blocco WHERE
-            if (!condizioni.isEmpty()) {
-                jpqlBase.append("WHERE ").append(String.join(" AND ", condizioni)).append(" ");
+            // 4. CALCOLO MIN E MAX ASSOLUTI (Applicato al prezzo REALE scontato)
+            StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EBustine b ");
+            if (!condizioniBase.isEmpty()) {
+                jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
-            // Query 1: Totale dei record
-            Query queryCount = em.createQuery("SELECT COUNT(b) " + jpqlBase.toString());
-            parametri.forEach(queryCount::setParameter);
-            Long totale = (Long) queryCount.getSingleResult();
-
-            // Query 2: Prezzi minimi e massimi
-            Query queryMinMax = em.createQuery("SELECT MIN(b.prezzo), MAX(b.prezzo) " + jpqlBase.toString()); // MODIFICATO
+            jakarta.persistence.TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString(), Object[].class);
             parametri.forEach(queryMinMax::setParameter);
-            Object[] estremi = (Object[]) queryMinMax.getSingleResult();
+            Object[] estremi = queryMinMax.getSingleResult();
 
             double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
             double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
 
-            // Arrotonda a due cifre decimali (es. 14.039949 -> 14.04)
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // Query 3: Dati effettivi e Ordinamento
-            StringBuilder jpqlMain = new StringBuilder("SELECT b ").append(jpqlBase.toString());
+            // 5. AGGIUNTA DEI FILTRI DI PREZZO ALLA QUERY FINALE
+            List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
+
+            if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
+                condizioniPrezzo.add(prezzoReale + " >= :prezzoMin");
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
+            }
+
+            if (filtri.get("prezzoMax") != null && ((Number) filtri.get("prezzoMax")).doubleValue() > 0) {
+                condizioniPrezzo.add(prezzoReale + " <= :prezzoMax");
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
+            }
+
+            // Assemblaggio della stringa finale
+            StringBuilder jpqlFinale = new StringBuilder("FROM EBustine b ");
+            if (!condizioniPrezzo.isEmpty()) {
+                jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
+            }
+
+            // 6. ESECUZIONE QUERY (COUNT E LISTA)
+            jakarta.persistence.TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(b) " + jpqlFinale.toString(), Long.class);
+            parametri.forEach(queryCount::setParameter);
+            Long totale = queryCount.getSingleResult();
+
+            StringBuilder jpqlMain = new StringBuilder("SELECT b ").append(jpqlFinale.toString());
 
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo_asc":  jpqlMain.append("ORDER BY b.prezzo ASC"); break; // MODIFICATO
-                    case "prezzo_desc": jpqlMain.append("ORDER BY b.prezzo DESC"); break; // MODIFICATO
+                    case "prezzo_asc":  jpqlMain.append("ORDER BY ").append(prezzoReale).append(" ASC"); break;
+                    case "prezzo_desc": jpqlMain.append("ORDER BY ").append(prezzoReale).append(" DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY b.numeroVendite DESC"); break;
-                    case "valutazione":      jpqlMain.append("ORDER BY b.valutazione.media DESC"); break;
+                    case "valutazione": jpqlMain.append("ORDER BY b.valutazione.media DESC"); break;
                     default:            jpqlMain.append("ORDER BY b.dataPubblicazione DESC"); break;
                 }
             } else {
                 jpqlMain.append("ORDER BY b.dataPubblicazione DESC");
             }
 
-            TypedQuery<EBustine> queryMain = em.createQuery(jpqlMain.toString(), EBustine.class);
+            jakarta.persistence.TypedQuery<EBustine> queryMain = em.createQuery(jpqlMain.toString(), EBustine.class);
             parametri.forEach(queryMain::setParameter);
 
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
             List<EBustine> risultati = queryMain.getResultList();
 
-            // Costruzione risposta
             Map<String, Object> response = new HashMap<>();
             response.put("risultati", risultati);
             response.put("totale", totale.intValue());
@@ -148,6 +153,7 @@ public class BustineDAO extends GenericDAO {
 
         } catch (Exception e) {
             System.err.println("Errore in findBustine: " + e.getMessage());
+            e.printStackTrace();
             Map<String, Object> fallback = new HashMap<>();
             fallback.put("risultati", new ArrayList<>());
             fallback.put("totale", 0);

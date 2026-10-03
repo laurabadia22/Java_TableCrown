@@ -27,7 +27,13 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             List<String> condizioniBase = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
-            // 1. FILTRI ENUM (Identici a prima)
+            // 1. FORMULA MAGICA CORRETTA: Usiamo g.sconto.sconto esattamente come per le altre entità
+            String prezzoReale = "(CASE " +
+                    "WHEN g.sconto IS NOT NULL AND g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > CURRENT_TIMESTAMP) " +
+                    "THEN (g.prezzo * (1.0 - g.sconto.sconto / 100.0)) " +
+                    "ELSE g.prezzo END)";
+
+            // 2. FILTRI ENUM
             if (filtri.get("difficolta") != null) {
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
                 if (!enumDiff.isEmpty()) {
@@ -64,7 +70,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 }
             }
 
-            // 2. ALTRI FILTRI (Senza i prezzi)
+            // 3. ALTRI FILTRI E RICERCA
             if (filtri.get("query") != null) {
                 String queryCercata = (String) filtri.get("query");
                 if (!queryCercata.trim().isEmpty()) {
@@ -98,24 +104,23 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
                         condizioniBase.add("g.dataPubblicazione >= :datalimite AND g.disponibilitaProdotto = :dispNovita");
-                        parametri.put("datalimite", LocalDate.now().minusMonths(1));
+                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
                         parametri.put("dispNovita", DisponibilitaProdotto.DISPONIBILE);
                     }
                     if (evidenza.contains("sconti")) {
-                        // CORRETTO: utilizzo dei campi diretti dell'entità per evitare crash JPQL
-                        condizioniBase.add("g.valoreSconto > 0 AND (g.scadenzaOfferta IS NULL OR g.scadenzaOfferta > :oggiSconti)");
-                        parametri.put("oggiSconti", LocalDateTime.now());
+                        // CORRETTO: Uso il campo sconto.sconto e il CURRENT_TIMESTAMP
+                        condizioniBase.add("g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
                     }
                 }
             }
 
-            // 3. CALCOLO MIN E MAX ASSOLUTI (Senza filtri di prezzo applicati)
+            // 4. CALCOLO MIN E MAX ASSOLUTI SUL PREZZO REALE
             StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EGiocoDaTavolo g ");
             if (!condizioniBase.isEmpty()) {
                 jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
-            Query queryMinMax = em.createQuery("SELECT MIN(g.prezzo), MAX(g.prezzo) " + jpqlSenzaPrezzi.toString());
+            jakarta.persistence.Query queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString());
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = (Object[]) queryMinMax.getSingleResult();
 
@@ -124,28 +129,27 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // 4. AGGIUNTA DEI FILTRI DI PREZZO ALLA QUERY FINALE
+            // 5. AGGIUNTA FILTRI PREZZO ALLA QUERY FINALE
             List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
 
             if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
-                condizioniPrezzo.add("g.prezzo >= :prezzoMin");
+                condizioniPrezzo.add(prezzoReale + " >= :prezzoMin");
                 parametri.put("prezzoMin", filtri.get("prezzoMin"));
             }
 
-            // Protezione aggiunta: controlla che prezzoMax sia maggiore di 0 per evitare bug del frontend
             if (filtri.get("prezzoMax") != null && ((Number) filtri.get("prezzoMax")).doubleValue() > 0) {
-                condizioniPrezzo.add("g.prezzo <= :prezzoMax");
+                condizioniPrezzo.add(prezzoReale + " <= :prezzoMax");
                 parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            // Assemblaggio della stringa query finale (Count e Main)
+            // Assemblaggio della stringa query finale
             StringBuilder jpqlFinale = new StringBuilder("FROM EGiocoDaTavolo g ");
             if (!condizioniPrezzo.isEmpty()) {
                 jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
             }
 
-            // 5. ESECUZIONE QUERY PRINCIPALI
-            Query queryCount = em.createQuery("SELECT COUNT(DISTINCT g) " + jpqlFinale.toString());
+            // 6. ESECUZIONE QUERY (DISTINCT per evitare duplicati causati dalla JOIN su categoria)
+            jakarta.persistence.Query queryCount = em.createQuery("SELECT COUNT(DISTINCT g) " + jpqlFinale.toString());
             parametri.forEach(queryCount::setParameter);
             Long totale = (Long) queryCount.getSingleResult();
 
@@ -154,19 +158,18 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    // CORRETTO: Uso dell'underscore per matchare i dati inviati dal BaseController
-                    case "prezzo_asc":  jpqlMain.append("ORDER BY g.prezzo ASC"); break;
-                    case "prezzo_desc": jpqlMain.append("ORDER BY g.prezzo DESC"); break;
+                    case "prezzo_asc":  jpqlMain.append("ORDER BY ").append(prezzoReale).append(" ASC"); break;
+                    case "prezzo_desc": jpqlMain.append("ORDER BY ").append(prezzoReale).append(" DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY g.numeroVendite DESC"); break;
-                    case "valutazione":      jpqlMain.append("ORDER BY g.valutazione.media DESC"); break;
-                    case "novita":      jpqlMain.append(" ORDER BY g.dataPubblicazione DESC"); break;
+                    case "valutazione": jpqlMain.append("ORDER BY g.valutazioneMedia DESC"); break;
+                    case "novita":      jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                     default:            jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                 }
             } else {
                 jpqlMain.append("ORDER BY g.dataPubblicazione DESC");
             }
 
-            TypedQuery<EGiocoDaTavolo> queryMain = em.createQuery(jpqlMain.toString(), EGiocoDaTavolo.class);
+            jakarta.persistence.TypedQuery<EGiocoDaTavolo> queryMain = em.createQuery(jpqlMain.toString(), EGiocoDaTavolo.class);
             parametri.forEach(queryMain::setParameter);
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
@@ -180,7 +183,6 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             return response;
 
         } catch (Exception e) {
-            // Stampiamo l'intero StackTrace invece del solo messaggio per individuare subito futuri bug JPQL
             System.err.println("Errore in findGiochi (Filtri applicati: " + filtri + "):");
             e.printStackTrace();
 

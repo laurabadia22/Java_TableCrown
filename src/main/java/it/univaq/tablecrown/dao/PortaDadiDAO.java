@@ -19,33 +19,29 @@ public class PortaDadiDAO extends GenericDAO {
 
     public Map<String, Object> findPortaDadi(Map<String, Object> filtri, int limit, int offset) {
         try {
-            // 1. Inizializziamo i costruttori per la query dinamica (RIMOSSA LA JOIN)
-            StringBuilder jpqlBase = new StringBuilder("FROM EPortaDadi p ");
-            List<String> condizioni = new ArrayList<>();
+            List<String> condizioniBase = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
-            // 2. Costruzione dinamica dei filtri
+            // 1. LA FORMULA MAGICA: Prezzo reale calcolato direttamente dal database con CURRENT_TIMESTAMP
+            String prezzoReale = "(CASE " +
+                    "WHEN p.sconto IS NOT NULL AND p.sconto.sconto > 0 AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > CURRENT_TIMESTAMP) " +
+                    "THEN (p.prezzo * (1.0 - p.sconto.sconto / 100.0)) " +
+                    "ELSE p.prezzo END)";
 
+            // 2. FILTRO RICERCA
             if (filtri.get("query") != null) {
-                condizioni.add("(LOWER(p.nomeProdotto) LIKE LOWER(:query) OR LOWER(p.descrizioneProdotto) LIKE LOWER(:query))");
-                parametri.put("query", "%" + filtri.get("query") + "%");
+                String queryCercata = (String) filtri.get("query");
+                if (!queryCercata.trim().isEmpty()) {
+                    condizioniBase.add("(LOWER(p.nomeProdotto) LIKE LOWER(:query) OR LOWER(p.descrizioneProdotto) LIKE LOWER(:query))");
+                    parametri.put("query", "%" + queryCercata.trim() + "%");
+                }
             }
 
-            if (filtri.get("prezzoMin") != null) {
-                condizioni.add("p.prezzo >= :prezzoMin"); // MODIFICATO
-                parametri.put("prezzoMin", filtri.get("prezzoMin"));
-            }
-
-            if (filtri.get("prezzoMax") != null) {
-                condizioni.add("p.prezzo <= :prezzoMax"); // MODIFICATO
-                parametri.put("prezzoMax", filtri.get("prezzoMax"));
-            }
-
+            // 3. FILTRI ENUM E RATING (Senza i prezzi)
             if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
 
-                // Controlliamo se la Servlet ci ha passato una Lista (es. List<String> o List<DisponibilitaProdotto>)
                 if (dispObj instanceof List<?>) {
                     List<?> listaValori = (List<?>) dispObj;
                     for (Object valoreScelto : listaValori) {
@@ -53,16 +49,11 @@ public class PortaDadiDAO extends GenericDAO {
                             enumDisp.add((DisponibilitaProdotto) valoreScelto);
                         } else if (valoreScelto instanceof String) {
                             try {
-                                // L'equivalente Java del tryFrom di PHP
                                 enumDisp.add(DisponibilitaProdotto.valueOf(((String) valoreScelto).toUpperCase()));
-                            } catch (IllegalArgumentException e) {
-                                // La stringa non corrisponde a nessun Enum, la ignoriamo
-                            }
+                            } catch (IllegalArgumentException e) { }
                         }
                     }
-                }
-                // Controlliamo se la Servlet ci ha passato direttamente l'array nativo della request HTML (String[])
-                else if (dispObj instanceof String[]) {
+                } else if (dispObj instanceof String[]) {
                     for (String valoreScelto : (String[]) dispObj) {
                         try {
                             enumDisp.add(DisponibilitaProdotto.valueOf(valoreScelto.toUpperCase()));
@@ -71,7 +62,7 @@ public class PortaDadiDAO extends GenericDAO {
                 }
 
                 if (!enumDisp.isEmpty()) {
-                    condizioni.add("p.disponibilitaProdotto IN (:disponibilita)");
+                    condizioniBase.add("p.disponibilitaProdotto IN (:disponibilita)");
                     parametri.put("disponibilita", enumDisp);
                 }
             }
@@ -81,62 +72,77 @@ public class PortaDadiDAO extends GenericDAO {
                 List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
                 if (evidenza != null) {
                     if (evidenza.contains("novita")) {
-                        condizioni.add("p.dataPubblicazione >= :datalimite");
-                        parametri.put("datalimite", LocalDateTime.now().minusMonths(1));
+                        condizioniBase.add("p.dataPubblicazione >= :datalimite");
+                        parametri.put("datalimite", java.time.LocalDateTime.now().minusMonths(1));
                     }
                     if (evidenza.contains("sconti")) {
-                        // Esige che lo sconto sia > 0 e che (la data sia nulla OPPURE nel futuro)
-                        condizioni.add("p.sconto.sconto > 0 AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > :oggiSconti)");
-                        parametri.put("oggiSconti", LocalDateTime.now());
+                        condizioniBase.add("p.sconto.sconto > 0 AND (p.sconto.scadenzaOfferta IS NULL OR p.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
                     }
                 }
             }
 
             if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioni.add("p.valutazioneMedia >= :ratingMin");
+                condizioniBase.add("p.valutazioneMedia >= :ratingMin");
                 parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
-            // 3. Unione delle condizioni
-            if (!condizioni.isEmpty()) {
-                jpqlBase.append("WHERE ").append(String.join(" AND ", condizioni)).append(" ");
+            // 4. CALCOLO MIN E MAX ASSOLUTI (Applicato al prezzo REALE)
+            StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EPortaDadi p ");
+            if (!condizioniBase.isEmpty()) {
+                jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
-            // 4. Query: COUNT
-            TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(p) " + jpqlBase.toString(), Long.class);
-            parametri.forEach(queryCount::setParameter);
-            Long totale = queryCount.getSingleResult();
-
-            // 5. Query: MIN / MAX Prezzo
-            TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(p.prezzo), MAX(p.prezzo) " + jpqlBase.toString(), Object[].class); // MODIFICATO
+            jakarta.persistence.TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString(), Object[].class);
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = queryMinMax.getSingleResult();
 
             double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
             double rawMax = (estremi[1] != null) ? ((Number) estremi[1]).doubleValue() : 50.0;
 
-            // Arrotonda a due cifre decimali (es. 14.039949 -> 14.04)
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // 6. Query: ORDINAMENTO E PAGINAZIONE (Risultati finali)
-            StringBuilder jpqlMain = new StringBuilder("SELECT p ").append(jpqlBase.toString());
+            // 5. AGGIUNTA DEI FILTRI DI PREZZO ALLA QUERY FINALE
+            List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
+
+            if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
+                condizioniPrezzo.add(prezzoReale + " >= :prezzoMin");
+                parametri.put("prezzoMin", filtri.get("prezzoMin"));
+            }
+
+            if (filtri.get("prezzoMax") != null && ((Number) filtri.get("prezzoMax")).doubleValue() > 0) {
+                condizioniPrezzo.add(prezzoReale + " <= :prezzoMax");
+                parametri.put("prezzoMax", filtri.get("prezzoMax"));
+            }
+
+            // Assemblaggio della query per COUNT e SELECT
+            StringBuilder jpqlFinale = new StringBuilder("FROM EPortaDadi p ");
+            if (!condizioniPrezzo.isEmpty()) {
+                jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
+            }
+
+            // 6. ESECUZIONE QUERY (COUNT E LISTA)
+            jakarta.persistence.TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(p) " + jpqlFinale.toString(), Long.class);
+            parametri.forEach(queryCount::setParameter);
+            Long totale = queryCount.getSingleResult();
+
+            StringBuilder jpqlMain = new StringBuilder("SELECT p ").append(jpqlFinale.toString());
 
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
-                    case "prezzo_asc":  jpqlMain.append("ORDER BY p.prezzo ASC"); break; // MODIFICATO
-                    case "prezzo_desc": jpqlMain.append("ORDER BY p.prezzo DESC"); break; // MODIFICATO
+                    case "prezzo_asc":  jpqlMain.append("ORDER BY ").append(prezzoReale).append(" ASC"); break;
+                    case "prezzo_desc": jpqlMain.append("ORDER BY ").append(prezzoReale).append(" DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY p.numeroVendite DESC"); break;
-                    case "valutazione":      jpqlMain.append("ORDER BY p.valutazione.media DESC"); break;
+                    case "valutazione": jpqlMain.append("ORDER BY p.valutazione.media DESC"); break;
                     default:            jpqlMain.append("ORDER BY p.dataPubblicazione DESC"); break;
                 }
             } else {
                 jpqlMain.append("ORDER BY p.dataPubblicazione DESC");
             }
 
-            TypedQuery<EPortaDadi> queryMain = em.createQuery(jpqlMain.toString(), EPortaDadi.class);
-            parametri.forEach(queryMain::setParameter); // Inietta tutti i parametri mappati
+            jakarta.persistence.TypedQuery<EPortaDadi> queryMain = em.createQuery(jpqlMain.toString(), EPortaDadi.class);
+            parametri.forEach(queryMain::setParameter);
 
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
@@ -152,6 +158,8 @@ public class PortaDadiDAO extends GenericDAO {
 
         } catch (Exception e) {
             System.err.println("Errore in findPortaDadi: " + e.getMessage());
+            e.printStackTrace();
+
             Map<String, Object> fallback = new HashMap<>();
             fallback.put("risultati", new ArrayList<>());
             fallback.put("totale", 0);
