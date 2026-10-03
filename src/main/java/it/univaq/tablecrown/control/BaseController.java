@@ -184,6 +184,46 @@ public abstract class BaseController {
     }
 
     /**
+     * Ricava l'URL a cui tornare: prima il parametro "return_url" (form POST),
+     * poi l'header Referer. Accetta solo URL interni all'applicazione
+     * (protezione da open redirect). Restituisce il path comprensivo di
+     * contextPath e query string, oppure null.
+     */
+    protected String estraiUrlRitorno(HttpServletRequest request) {
+        String raw = request.getParameter("return_url");
+        if (raw == null || raw.isBlank()) {
+            raw = request.getHeader("Referer");
+        }
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            java.net.URI uri = new java.net.URI(raw.trim());
+            if (uri.getHost() != null && !uri.getHost().equalsIgnoreCase(request.getServerName())) {
+                return null; // host esterno
+            }
+            String ctx = request.getContextPath();
+            String path = uri.getPath();
+            if (path == null || !path.startsWith(ctx + "/")) {
+                return null;
+            }
+            // evita di tornare al form di modifica stesso (loop)
+            if (path.startsWith(ctx + "/gestore/prodotti/modifica")) {
+                return null;
+            }
+            return uri.getRawQuery() != null ? path + "?" + uri.getRawQuery() : path;
+        } catch (java.net.URISyntaxException e) {
+            return null;
+        }
+    }
+
+    protected void redirectIndietro(HttpServletRequest request, HttpServletResponse response, String fallback)
+            throws IOException {
+        String url = estraiUrlRitorno(request);
+        response.sendRedirect(url != null ? url : request.getContextPath() + fallback);
+    }
+
+    /**
      * TODO: da controllare
      */
     protected void renderizza(String nomeTemplate, HttpServletRequest request, HttpServletResponse response)

@@ -86,12 +86,14 @@
                 </span>
 
                 <form action="${base_url}/gestore/prodotti/quantita" method="POST" class="is-flex is-align-items-center">
-                    <input type="hidden" name="id_prodotto" value="${p.idProdotto}">
-                    <input type="hidden" name="delta_quantita" id="delta-${p.idProdotto}" value="0">
+                    <input type="hidden" name="id_prodotto" value="${p.idProdotto?c}">
+                    <input type="hidden" name="return_url" value="${(current_url!'')?html}">
 
-                    <button type="submit" class="button is-small gestore-stock-btn" onclick="document.getElementById('delta-${p.idProdotto}').value='-1'"><i class="ti ti-minus"></i></button>
-                    <span class="px-3 font-weight-bold gestore-stock-qty">${p.quantita}</span>
-                    <button type="submit" class="button is-small gestore-stock-btn" onclick="document.getElementById('delta-${p.idProdotto}').value='1'"><i class="ti ti-plus"></i></button>
+                    <input class="input is-small gestore-stock-input" type="number" name="quantita"
+                           value="${p.quantita?c}" min="0" step="1" required style="width: 5rem;">
+                    <button type="submit" class="button is-small gestore-stock-btn ml-2" title="Conferma quantità">
+                        <i class="ti ti-check"></i>
+                    </button>
                 </form>
             </div>
 

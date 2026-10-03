@@ -29,7 +29,7 @@ extra_css=cssModifica>
     <div class="container section px-4">
 
         <div class="is-flex is-align-items-center mb-5">
-            <a href="${base_url}/gestore/dashboard" class="button is-small is-light mr-4">
+            <a href="${back_url}" class="button is-small is-light mr-4">
                 <i class="ti ti-arrow-left mr-1"></i> Indietro
             </a>
             <div>
@@ -46,6 +46,7 @@ extra_css=cssModifica>
                 <form action="${base_url}/gestore/prodotti/modifica" method="POST" class="box box-modifica p-5">
 
                     <input type="hidden" name="id_prodotto" value="${prodotto.idProdotto?c}">
+                    <input type="hidden" name="return_url" value="${back_url}">
 
                     <h2 class="title is-5 form-section-title mt-2">Visibilità Catalogo</h2>
                     <div class="field mb-5">
@@ -144,7 +145,7 @@ extra_css=cssModifica>
 
                     <div class="field is-grouped is-grouped-right mt-6 border-top-dark pt-5">
                         <div class="control">
-                            <a href="${base_url}/gestore/dashboard" class="button is-ghost has-text-grey-light">Annulla</a>
+                            <a href="${back_url}" class="button is-ghost has-text-grey-light">Annulla</a>
                         </div>
                         <div class="control">
                             <button type="submit" class="button is-warning font-weight-bold">

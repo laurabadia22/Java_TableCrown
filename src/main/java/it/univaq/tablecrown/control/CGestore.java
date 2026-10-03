@@ -468,11 +468,11 @@ public class CGestore extends BaseController {
             UFlashMessage.addMessage(session, "danger", e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+        redirectIndietro(request, response, "/gestore/dashboard");
     }
 
     /**
-     * Aggiorna la quantità in magazzino sommando il delta inviato dal form.
+     * Imposta la quantità in magazzino al valore inviato dal form.
      * URL: POST /gestore/prodotti/quantita
      */
     public void aggiornaQuantitaProdottoGestore(HttpServletRequest request, HttpServletResponse response, EntityManager em)
@@ -488,16 +488,11 @@ public class CGestore extends BaseController {
         try {
             int idInt = UHTTPMethods.postInt(request, "id_prodotto", 1, Integer.MAX_VALUE);
             Long idProdotto = (long) idInt;
-            int deltaQuantita = UHTTPMethods.postInt(request, "delta_quantita", Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int nuovaQuantita = UHTTPMethods.postInt(request, "quantita", 0, Integer.MAX_VALUE);
 
             EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
             if (prodotto == null) {
                 throw new IllegalArgumentException("Il prodotto selezionato non esiste.");
-            }
-
-            int nuovaQuantita = prodotto.getQuantita() + deltaQuantita;
-            if (nuovaQuantita < 0) {
-                throw new IllegalArgumentException("La quantità totale non può essere negativa.");
             }
 
             prodotto.aggiornaQuantita(nuovaQuantita);
@@ -513,7 +508,7 @@ public class CGestore extends BaseController {
             UFlashMessage.addMessage(session, "danger", e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+        redirectIndietro(request, response, "/gestore/dashboard");
     }
 
     /**
@@ -530,6 +525,8 @@ public class CGestore extends BaseController {
         HttpSession session = request.getSession(true);
         PersistentManager pm = new PersistentManager(em);
 
+        String fallback = "/gestore/dashboard";
+
         try {
             int idInt = UHTTPMethods.postInt(request, "id_prodotto", 1, Integer.MAX_VALUE);
             Long idProdotto = (long) idInt;
@@ -538,6 +535,8 @@ public class CGestore extends BaseController {
             if (prodotto == null) {
                 throw new IllegalArgumentException("Il prodotto selezionato non esiste.");
             }
+
+            fallback = catalogoDi(prodotto);
 
             boolean modificaSconto = UHTTPMethods.postBool(request, "modificaSconto", false);
             boolean rimuoviSconto = UHTTPMethods.postBool(request, "rimuoviSconto", false);
@@ -586,7 +585,7 @@ public class CGestore extends BaseController {
             UFlashMessage.addMessage(session, "danger", e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
+        redirectIndietro(request, response, fallback);
     }
 
     /**
@@ -618,9 +617,15 @@ public class CGestore extends BaseController {
                 throw new IllegalArgumentException("Il prodotto selezionato non esiste nel database.");
             }
 
+            String back = estraiUrlRitorno(request);
+            if (back == null) {
+                back = request.getContextPath() + catalogoDi(prodotto);
+            }
+
             Map<String, Object> datiPagina = new HashMap<>();
             datiPagina.put("vista", "gestore_modifica_prodotto");
             datiPagina.put("prodotto", prodotto);
+            datiPagina.put("back_url", back);   // <-- prima di preparaDatiLayout
 
             preparaDatiLayout(request, "gestore_modifica_prodotto", datiPagina);
             renderizza("gestore_modifica_prodotto.ftl", request, response);
@@ -669,6 +674,13 @@ public class CGestore extends BaseController {
             throw new IllegalArgumentException("Selezionare almeno un valore valido.");
         }
         return enums;
+    }
+
+    private String catalogoDi(EProdotto p) {
+        if (p instanceof EGiocoDaTavolo) return "/gestore/catalogo/giochi-da-tavolo";
+        if (p instanceof EBustine)       return "/gestore/catalogo/bustine";
+        if (p instanceof EPortaDadi)     return "/gestore/catalogo/porta-dadi";
+        return "/gestore/dashboard";
     }
 
     @Override
