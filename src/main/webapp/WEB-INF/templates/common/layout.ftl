@@ -242,18 +242,12 @@
                     <h2 class="footer-heading">TABLECROWN</h2>
                     <p class="footer-desc">Il tuo negozio di giochi da tavolo.</p>
                     <p class="footer-desc">Prodotti e accessori di qualità.</p>
-                    <div class="social-icons">
-                        <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
-                        <a href="#" aria-label="Twitch"><i class="ti ti-brand-twitch"></i></a>
-                    </div>
                 </div>
 
                 <div class="column is-3">
                     <h3 class="footer-heading">INFO</h3>
                     <ul class="footer-list">
                         <li><a href="${base_url}/chi-siamo">Chi siamo</a></li>
-                        <li><a href="${base_url}/contatti">Contattaci</a></li>
                         <li><a href="${base_url}/dove-siamo">Dove siamo</a></li>
                     </ul>
                 </div>

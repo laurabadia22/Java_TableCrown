@@ -1,17 +1,10 @@
 /* ============================================================
-   TableCrown — dashboard_gestore.css
-   Stili specifici dell'area Gestore:
-   header sezione, card statistiche, box azioni rapide.
-
-   Riusa le stesse custom properties (--color-primary,
-   --radius-md, --transition, ecc.) e la stessa logica di
-   home.css: card scure, accento oro, hover con leggero
-   sollevamento. Tutto è annidato sotto .gestore-dashboard
-   per non toccare .card/.button/.box altrove nel sito.
+   TableCrown — gestoreDashboard.css
+   Stili dell'area Gestore: Dashboard, Form Creazione e Modifica.
    ============================================================ */
 
 
-/* ── HEADER SEZIONE ───────────────────────────────────────── */
+/* ── HEADER SEZIONE DASHBOARD ─────────────────────────────── */
 
 .gestore-dashboard .gestore-header {
     border-left: 4px solid var(--color-primary);
@@ -46,7 +39,6 @@
     border-color: var(--color-primary) !important;
 }
 
-/* Cerchio icona, invece dell'icona "nuda" a piena dimensione */
 .gestore-dashboard .gestore-stat-icon {
     width: 64px;
     height: 64px;
@@ -87,8 +79,8 @@
 }
 
 .gestore-dashboard .gestore-stat-tag {
-    background-color:   #F2DCF1 !important;
-    color:    #A61E9A !important;
+    background-color: #F2DCF1 !important;
+    color: #A61E9A !important;
     border: 1px solid var(--color-bg-dark) !important;
 }
 
@@ -112,9 +104,6 @@
     color: var(--color-text-subtle) !important;
 }
 
-/* Il gruppo di bottoni riempie tutta la larghezza del box, i tre bottoni
-   si dividono lo spazio in parti uguali invece di restare ammassati a
-   sinistra con un vuoto a destra */
 .gestore-dashboard .gestore-actions-box .buttons {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -122,7 +111,6 @@
     gap: 1rem !important;
 }
 
-/* Bottoni azione come tile, non come i bottoni Bulma is-primary/is-info di default */
 .gestore-dashboard .gestore-action-btn {
     display: flex !important;
     align-items: center !important;
@@ -151,7 +139,6 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-/* Divider più leggibile sul fondo scuro/viola della card, invece del grigio chiaro invisibile */
 .gestore-card-divider {
     background-color: rgba(255, 255, 255, 0.15) !important;
     height: 1px;
@@ -167,19 +154,18 @@
     color: var(--color-text-light, #f5f5f5) !important;
 }
 
-/* Stepper +/- come tile scure coerenti col tema, non più bottoncini bianchi Bulma */
 .gestore-stock-btn {
     background-color: var(--color-bg-dark) !important;
     color: var(--color-text-light, #f5f5f5) !important;
     border: 1px solid var(--color-border-dark) !important;
     transition: border-color var(--transition), color var(--transition);
 }
+
 .gestore-stock-btn:hover {
     border-color: var(--color-primary) !important;
     color: var(--color-primary) !important;
 }
 
-/* Modifica/Elimina: da pastello pieno a outline, più leggibili sullo sfondo scuro */
 .gestore-btn-modifica,
 .gestore-btn-elimina {
     background-color: var(--color-bg-dark) !important;
@@ -191,6 +177,7 @@
 .gestore-btn-modifica {
     color: #6ba3f0 !important;
 }
+
 .gestore-btn-modifica:hover {
     border-color: #6ba3f0 !important;
     background-color: rgba(50, 115, 220, 0.12) !important;
@@ -200,21 +187,37 @@
 .gestore-btn-elimina {
     color: #e07a7a !important;
 }
+
 .gestore-btn-elimina:hover {
     border-color: #d64545 !important;
     background-color: rgba(214, 69, 69, 0.12) !important;
     transform: translateY(-1px);
 }
 
+
 /* ============================================================
-   FORM CREAZIONE (E MODIFICA)  PRODOTTO (comune a gioco / bustine / portadadi)
+   STILI PER FORM CREAZIONE E MODIFICA PRODOTTI
    ============================================================ */
 
-.gestore-form .gestore-form-section-title {
+/* Titoli pagina (esterni alla card scura) */
+.gestore-form > .mb-5 .title,
+.container .title:not(.form-section-title) {
+    color: var(--color-bg-dark, #3D1773) !important;
+}
+
+.gestore-form > .mb-5 .subtitle,
+.container .subtitle:not(.form-section-title) {
+    color: #555555 !important;
+}
+
+/* Titoli delle sezioni interne al form */
+.gestore-form .gestore-form-section-title,
+.form-section-title {
+    border-bottom: 1px solid var(--color-border-dark) !important;
     color: var(--color-primary) !important;
 }
 
-/* Contenitore principale del Form (.box) con il colore scuro/viola del tema */
+/* Box contenitore del form */
 .gestore-form .box,
 .box-modifica {
     background-color: var(--color-bg-dark-2) !important;
@@ -223,7 +226,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
-/* Label e Testi del Form */
+/* Label e Checkbox inside Box */
 .gestore-form .label,
 .gestore-form .checkbox,
 .box-modifica .label,
@@ -231,7 +234,7 @@
     color: var(--color-text-light, #f5f5f5) !important;
 }
 
-/* Campi di Input, Textarea e Select coerenti con il tema scuro */
+/* Campi Input, Textarea e Select */
 .gestore-form .input,
 .gestore-form .textarea,
 .gestore-form .select select,
@@ -250,7 +253,7 @@
     opacity: 0.6;
 }
 
-/* Focus sui campi con bordo oro/primary */
+/* Focus sui campi */
 .gestore-form .input:focus,
 .gestore-form .textarea:focus,
 .gestore-form .select select:focus,
@@ -260,16 +263,26 @@
     box-shadow: 0 0 0 0.125em rgba(200, 147, 58, 0.25) !important;
 }
 
-/* Icone interne ai campi (es. euro, pacco) */
-.gestore-form .icon {
+/* Icone interne ai campi */
+.gestore-form .icon,
+.box-modifica .icon {
     color: var(--color-primary) !important;
 }
 
-/* Bottone nativo "Scegli file": di default resta bianco pieno sul tema scuro */
-.gestore-form input[type="file"] {
+/* Picker Calendario nei campi date su sfondo scuro */
+.gestore-form input[type="date"]::-webkit-calendar-picker-indicator,
+.box-modifica input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.9);
+}
+
+/* Upload file button */
+.gestore-form input[type="file"],
+.box-modifica input[type="file"] {
     color: var(--color-text-subtle) !important;
 }
-.gestore-form input[type="file"]::file-selector-button {
+
+.gestore-form input[type="file"]::file-selector-button,
+.box-modifica input[type="file"]::file-selector-button {
     background-color: var(--color-bg-dark) !important;
     color: var(--color-text-light, #f5f5f5) !important;
     border: 1px solid var(--color-border-dark) !important;
@@ -280,36 +293,44 @@
     cursor: pointer;
     transition: border-color var(--transition), color var(--transition);
 }
-.gestore-form input[type="file"]::file-selector-button:hover {
+
+.gestore-form input[type="file"]::file-selector-button:hover,
+.box-modifica input[type="file"]::file-selector-button:hover {
     border-color: var(--color-primary) !important;
     color: var(--color-primary) !important;
 }
 
-/* Checkbox native con accento coerente invece del blu di sistema */
-.gestore-form input[type="checkbox"] {
+/* Accent color delle Checkbox */
+.gestore-form input[type="checkbox"],
+.box-modifica input[type="checkbox"] {
     accent-color: var(--color-primary);
 }
 
-/* Box "danno": da riquadro chiaro pieno (causa delle label quasi invisibili)
-   a box scuro con bordo oro, coerente col resto */
-.gestore-form .gestore-danger-box {
+/* Box segnalazione danni */
+.gestore-form .gestore-danger-box,
+.box-modifica .notification.is-warning {
     background-color: var(--color-bg-dark) !important;
     border: 1px solid var(--color-primary) !important;
+    color: var(--color-text-light) !important;
 }
-.gestore-form .gestore-danger-box-title {
+
+.gestore-form .gestore-danger-box-title,
+.box-modifica .notification.is-warning .label {
     color: var(--color-primary) !important;
 }
+
 .gestore-form .gestore-danger-box-label {
     color: var(--color-text-subtle) !important;
 }
 
-/* Bottoni azione fondo form */
+/* Bottoni di Azione (Annulla / Salva) */
 .gestore-form .gestore-btn-annulla {
     background-color: var(--color-bg-dark) !important;
     color: var(--color-text-light, #f5f5f5) !important;
     border: 1px solid var(--color-border-dark) !important;
     transition: border-color var(--transition), color var(--transition);
 }
+
 .gestore-form .gestore-btn-annulla:hover {
     border-color: var(--color-primary) !important;
     color: var(--color-primary) !important;
@@ -322,47 +343,16 @@
     font-weight: 700 !important;
     transition: background-color var(--transition), transform var(--transition);
 }
+
 .gestore-form .gestore-btn-salva:hover {
     background-color: var(--color-primary-dark, #c8933a) !important;
     transform: translateY(-1px);
 }
 
+
 /* ============================================================
-   INTEGRAZIONI SPECIFICHE PER MODIFICA PRODOTTO
+   RESPONSIVE
    ============================================================ */
-
-/* Titoli pagina visibili sullo sfondo chiaro esteriore */
-.gestore-form > .mb-5 .title,
-.container .title.has-text-light {
-    color: var(--color-bg-dark, #2d1354) !important;
-} 
-
-.container .subtitle.has-text-grey-light {
-    color: var(--color-text-subtle, #555555) !important;
-}
-
-/* Titoli di sezione interni al form */
-.form-section-title {
-    border-bottom: 1px solid var(--color-border-dark) !important;
-    color: var(--color-primary) !important;
-}
-
-/* Rende bianca l'icona del calendario negli input date su sfondo scuro */
-.gestore-form input[type="date"]::-webkit-calendar-picker-indicator,
-.box-modifica input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.9);
-} /* TODO: DA FARE OVUNQUE */
-
-/* Box segnalazione danni nella modifica */
-.box-modifica .notification.is-warning {
-    background-color: var(--color-bg-dark) !important;
-    border: 1px solid var(--color-primary) !important;
-    color: var(--color-text-light) !important;
-}
-
-.box-modifica .notification.is-warning .label {
-    color: var(--color-primary) !important;
-}
 
 @media screen and (max-width: 768px) {
     .gestore-dashboard .gestore-actions-box .buttons {

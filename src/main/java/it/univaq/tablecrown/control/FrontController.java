@@ -540,7 +540,13 @@ public class FrontController extends HttpServlet {
                     }
                     break;
 
-                //TODO: aggiungere altri case man mano che vengono creati i controller
+                case "chi-siamo":
+                    new CPagineStatiche().mostraChiSiamo(request, response);
+                    break;
+
+                case "dove-siamo":
+                    new CPagineStatiche().mostraDoveSiamo(request, response);
+                    break;
 
                 default:
                     mostra404(response);

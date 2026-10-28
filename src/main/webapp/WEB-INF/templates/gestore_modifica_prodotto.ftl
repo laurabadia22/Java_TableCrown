@@ -1,22 +1,5 @@
 <#import "common/layout.ftl" as layout>
 
-<#--<#assign extraCss>-->
-<#--    <style>-->
-<#--        .form-section-title {-->
-<#--            border-bottom: 2px solid var(--color-border-dark);-->
-<#--            padding-bottom: 0.5rem;-->
-<#--            margin-bottom: 1.5rem;-->
-<#--            color: var(--color-text-light);-->
-<#--            font-weight: 600;-->
-<#--        }-->
-<#--        .box-modifica {-->
-<#--            background-color: var(--color-bg-dark-2);-->
-<#--            border: 1px solid var(--color-border-dark);-->
-<#--            border-radius: 8px;-->
-<#--        }-->
-<#--    </style>-->
-<#--</#assign>-->
-
 <#assign cssModifica>
     <link rel="stylesheet" href="${base_url}/public/css/gestoreDashboard.css">
 </#assign>
@@ -33,8 +16,8 @@ extra_css=cssModifica>
                 <i class="ti ti-arrow-left mr-1"></i> Indietro
             </a>
             <div>
-                <h1 class="title is-3 mb-1 has-text-light">Modifica Prodotto</h1>
-                <p class="subtitle is-6 has-text-grey-light">
+                <h1 class="title is-3 mb-1">Modifica Prodotto</h1>
+                <p class="subtitle is-6">
                     Stai modificando: <strong class="has-text-warning">${prodotto.nomeProdotto}</strong>
                 </p>
             </div>
@@ -50,7 +33,7 @@ extra_css=cssModifica>
 
                     <h2 class="title is-5 form-section-title mt-2">Visibilità Catalogo</h2>
                     <div class="field mb-5">
-                        <label class="label has-text-light font-weight-medium">Stato di disponibilità</label>
+                        <label class="label font-weight-medium">Stato di disponibilità</label>
                         <div class="control">
                             <div class="select is-fullwidth">
                                 <select name="disponibilita">
@@ -66,7 +49,7 @@ extra_css=cssModifica>
 
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <label class="checkbox mb-3 has-text-light">
+                            <label class="checkbox mb-3">
                                 <input type="checkbox" name="modificaSconto" value="true">
                                 <strong class="has-text-warning">Applica / Modifica sconto</strong> (spunta per confermare)
                             </label>
@@ -74,7 +57,7 @@ extra_css=cssModifica>
 
                         <div class="column is-6">
                             <div class="field">
-                                <label class="label has-text-light">Valore Sconto (%)</label>
+                                <label class="label">Valore Sconto (%)</label>
                                 <div class="control has-icons-left">
                                     <input class="input" type="number" name="valoreSconto" min="0" max="100" step="0.1"
                                            value="${(prodotto.sconto.sconto!0)?c}" placeholder="Es. 15.5">
@@ -85,7 +68,7 @@ extra_css=cssModifica>
 
                         <div class="column is-6">
                             <div class="field">
-                                <label class="label has-text-light">Scadenza Offerta</label>
+                                <label class="label">Scadenza Offerta</label>
                                 <div class="control">
                                     <#assign valScadenza = "">
                                     <#if prodotto.sconto?? && prodotto.sconto.scadenzaOfferta??>
@@ -106,7 +89,7 @@ extra_css=cssModifica>
                     </div>
 
                     <#if prodotto.class.simpleName == "EGiocoDaTavolo">
-                        <h2 class="title is-5 form-section-title mt-6 has-text-warning">Segnalazione Danni</h2>
+                        <h2 class="title is-5 form-section-title mt-6">Segnalazione Danni</h2>
 
                         <div class="notification is-warning is-light mb-4 p-4">
                             <label class="checkbox mb-3 font-weight-bold">
