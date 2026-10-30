@@ -35,13 +35,6 @@
                     <p class="auth-subtitle">Accedi al tuo account TableCrown</p>
                 </div>
 
-<#--                <#if flash_message??>-->
-<#--                    <div class="alert alert-${flash_type!'danger'}">-->
-<#--                        ${flash_message}-->
-<#--                    </div>-->
-<#--                </#if>-->
-<#--                Non serve perché il flash message lo stampa già il layout.ftl-->
-
                 <form class="auth-form" action="${base_url!''}/login" method="post" id="login-form">
 
                     <#if redirect_to?? && redirect_to?has_content>
@@ -80,9 +73,6 @@
                         </div>
                     </div>
 
-                    <div class="auth-row-between">
-                        <a href="${base_url!''}/password-dimenticata" class="auth-link-inline">Password dimenticata?</a>
-                    </div>
 
                     <button class="button auth-submit-btn" type="submit">
                         <i class="ti ti-login"></i> Accedi
