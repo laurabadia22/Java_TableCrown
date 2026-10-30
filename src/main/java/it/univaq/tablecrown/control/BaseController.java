@@ -162,8 +162,9 @@ public abstract class BaseController {
 
             // GESTORE: Se è loggato come Gestore e cerca di uscire dalla sua area
             if (utenteLoggato instanceof EGestore) {
+                boolean isPaginaStatica = pathRichiesto.startsWith("/chi-siamo") || pathRichiesto.startsWith("/dove-siamo");
                 // Se sta provando ad andare in pagine fuori da /gestore (es. home, carrello, catalogo)
-                if (!pathRichiesto.startsWith("/gestore")) {
+                if (!pathRichiesto.startsWith("/gestore") && !isPaginaStatica) {
                     response.sendRedirect(request.getContextPath() + "/gestore/dashboard");
                     return true;
                 }
@@ -172,7 +173,7 @@ public abstract class BaseController {
             // UTENTE NORMALE: Se è loggato come Cliente e cerca di entrare nell'area Gestore o nella pagina di login/registrazione
             if (utenteLoggato instanceof EUtente) {
                 // Non può entrare nell'area gestore, né rifare il login se è già loggato
-                if (pathRichiesto.startsWith("/gestore") || pathRichiesto.equals("/accedi") || pathRichiesto.equals("/registrati")) {
+                if (pathRichiesto.startsWith("/gestore")) {
                     response.sendRedirect(request.getContextPath() + "/");
                     return true;
                 }

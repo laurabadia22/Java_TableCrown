@@ -253,14 +253,6 @@
                 </div>
 
                 <div class="column is-3">
-                    <h3 class="footer-heading">ACCOUNT</h3>
-                    <ul class="footer-list">
-                        <li><a href="${base_url}/accedi">Accedi</a></li>
-                        <li><a href="${base_url}/registrati">Registrati</a></li>
-                    </ul>
-                </div>
-
-                <div class="column is-3">
                     <h3 class="footer-heading">CONTATTI</h3>
                     <ul class="footer-list footer-contacts">
                         <li>

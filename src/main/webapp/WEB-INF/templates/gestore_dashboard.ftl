@@ -11,7 +11,7 @@
 <#--    <script src="${base_url}/public/js/dashboard_gestore.js" defer></script>-->
 <#--</#assign>-->
 
-<@layout.page page_title="Dashboard Gestore - TableCrown" extra_css=dashboard_css extra_js=dashboard_js current_page="gestore_dashboard">
+<@layout.page page_title="Dashboard Gestore - TableCrown" extra_css=dashboard_css current_page="gestore_dashboard">
 
     <div class="container px-4 mt-6 mb-6 gestore-dashboard">
 

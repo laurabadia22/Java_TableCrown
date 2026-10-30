@@ -72,7 +72,7 @@
             <#if metodi?has_content>
                 <div class="pagamenti-list">
                     <#list metodi as carta>
-                        <div class="pagamenti-card <#if carta.predefinita>pagamenti-card-predefinito</#if>">">
+                        <div class="pagamenti-card <#if carta.predefinita>pagamenti-card-predefinito</#if>">
 
                             <div class="pagamenti-card-top">
                                 <span class="pagamenti-card-icon"><i class="ti ti-credit-card"></i></span>

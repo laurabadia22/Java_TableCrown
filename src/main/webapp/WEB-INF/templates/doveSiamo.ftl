@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="${base_url}/public/css/pagineStatiche.css">
 </#assign>
 
-<@layout.page page_title="Dove Siamo - TableCrown" current_page="dove_siamo" extra_css=cssInfo>
+<@layout.page page_title="Dove Siamo - TableCrown" current_page=currentPage!'dove_siamo' extra_css=cssInfo>
     <div class="container section px-4">
 
         <h1 class="title section-title mb-6">Vieni a Trovarci</h1>
