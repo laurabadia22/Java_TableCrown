@@ -27,6 +27,10 @@ import java.util.stream.Collectors;
  */
 public abstract class BaseController {
 
+    // =========================================================================================
+    // COSTANTI GLOBALI
+    // =========================================================================================
+
     //Tipi di prodotto validi per il catalogo
     protected static final Map<String, String> TIPI_PRODOTTO = Map.of(
             "giochi-da-tavolo", "Giochi da Tavolo",
@@ -36,11 +40,14 @@ public abstract class BaseController {
 
     protected static final int RISULTATI_PER_PAGINA = 15;
     protected static final List<String> ORDINAMENTO_VALIDI = List.of("prezzo_asc", "prezzo_desc", "valutazione", "popolarita");
-    //protected static final List<String> IN_EVIDENZA_VALIDI = List.of("offerte", "novita", "piu_venduti");
 
-    //Costruttore base.
+    //Costruttore base
     public BaseController() {
     }
+
+    // =========================================================================================
+    // GESTIONE LAYOUT E RENDERING (FREEMARKER)
+    // =========================================================================================
 
     /**
      * Prepara le variabili globali richieste dalla grafica (navbar, utente loggato, breadcrumbs)
@@ -97,11 +104,40 @@ public abstract class BaseController {
     }
 
     /**
+     * Costruisce il model dalla request e renderizza il template .ftl
+     */
+    protected void renderizza(String nomeTemplate, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        //Costruisce il model leggendo gli attributi della request
+        Map<String, Object> model = new HashMap<>();
+        Enumeration<String> nomiAttributi = request.getAttributeNames();
+        while (nomiAttributi.hasMoreElements()) {
+            String nome = nomiAttributi.nextElement();
+            model.put(nome, request.getAttribute(nome));
+        }
+
+        //Carica il template e lo processa scrivendo l'HTML sulla response
+        try {
+            response.setContentType("text/html; charset=UTF-8");
+            freemarker.template.Template template =
+                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(nomeTemplate);
+            template.process(model, response.getWriter());
+        } catch (freemarker.template.TemplateException | IOException e) {
+            throw new IOException("Errore nel rendering del template " + nomeTemplate, e);
+        }
+    }
+
+    /**
      * Metodo di default per i breadcrumbs (override nelle sottoclassi se necessario).
      */
     protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         return new ArrayList<>();
     }
+
+    // =========================================================================================
+    // SICUREZZA, AUTENTICAZIONE E ROUTING
+    // =========================================================================================
 
     /**
      * Verifica se un utente è attualmente loggato in sessione
@@ -112,13 +148,14 @@ public abstract class BaseController {
     }
 
     /**
+     * Metodo per l'autenticazione.
      * Forza l'utente a loggarsi;
      * in caso contrario imposta un messaggio e reindirizza al form di login.
      * Restituisce true se l'utente è loggato, false se è stato eseguito il redirect al login
      */
     public boolean requireLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!isLoggedIn(request)) {
-            HttpSession session = request.getSession(true);
+            HttpSession session = request.getSession(true); //se la sessione non esiste la creiamo per poter mostrare il flash message
             UFlashMessage.addMessage(session, "warning", "È necessario effettuare l'accesso per visualizzare questa pagina.");
 
             response.sendRedirect(request.getContextPath() + "/accedi");
@@ -128,6 +165,7 @@ public abstract class BaseController {
     }
 
     /**
+     * Metodo per l'autorizzazione.
      * Verifica che l'utente sia di una determinata classe (EUtente, EGestore)
      * Restituisce true se l'utente ha il ruolo richiesto, altrimenti false.
      */
@@ -172,7 +210,7 @@ public abstract class BaseController {
 
             // UTENTE NORMALE: Se è loggato come Cliente e cerca di entrare nell'area Gestore o nella pagina di login/registrazione
             if (utenteLoggato instanceof EUtente) {
-                // Non può entrare nell'area gestore, né rifare il login se è già loggato
+                // Non può entrare nell'area gestore
                 if (pathRichiesto.startsWith("/gestore")) {
                     response.sendRedirect(request.getContextPath() + "/");
                     return true;
@@ -199,7 +237,8 @@ public abstract class BaseController {
             return null;
         }
         try {
-            java.net.URI uri = new java.net.URI(raw.trim());
+            java.net.URI uri = new java.net.URI(raw.trim()); // trasforma la stringa in un oggetto URI strutturato, permettendo di analizzarne le parti
+            // Controlliamo che l'host dell'URL di ritorno coincida con il nostro dominio
             if (uri.getHost() != null && !uri.getHost().equalsIgnoreCase(request.getServerName())) {
                 return null; // host esterno
             }
@@ -218,49 +257,20 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Metodo "wrapper" di comodità.
+     * Tenta di usare l'URL estratto in sicurezza; se per qualche motivo non c'è, è invalido o punta all'esterno,
+     * utilizza il fallback (una rotta sicura di default passata dal controller).
+     */
     protected void redirectIndietro(HttpServletRequest request, HttpServletResponse response, String fallback)
             throws IOException {
         String url = estraiUrlRitorno(request);
         response.sendRedirect(url != null ? url : request.getContextPath() + fallback);
     }
 
-    /**
-     * TODO: da controllare
-     */
-    protected void renderizza(String nomeTemplate, HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        //Costruisce il model leggendo gli attributi della request
-        Map<String, Object> model = new HashMap<>();
-        Enumeration<String> nomiAttributi = request.getAttributeNames();
-        while (nomiAttributi.hasMoreElements()) {
-            String nome = nomiAttributi.nextElement();
-            model.put(nome, request.getAttribute(nome));
-        }
-
-        //Carica il template e lo processa scrivendo l'HTML sulla response
-        try {
-            response.setContentType("text/html; charset=UTF-8");
-            freemarker.template.Template template =
-                    it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(nomeTemplate);
-            template.process(model, response.getWriter());
-        } catch (freemarker.template.TemplateException | IOException e) {
-            throw new IOException("Errore nel rendering del template " + nomeTemplate, e);
-        }
-    }
-
     //==========================================================================
-    // METODI UTILI IN COMUNE FRA I CONTROLLER
+    // METODI UTILITY CENTRALI (UPLOAD FILE E STRINGHE)
     //==========================================================================
-
-    // GENERICI
-
-    /**
-     * Formatta un importo come stringa con 2 decimali fissi e punto come separatore.
-     */
-    protected String formattaImporto(double importo) {
-        return String.format(Locale.US, "%.2f", importo);
-    }//TODO: MAI USATOOO???
 
     /**
      * Recupera in sicurezza un Part (file caricato) dalla richiesta HTTP multipart.
@@ -269,6 +279,8 @@ public abstract class BaseController {
     protected Part estraiPart(HttpServletRequest request, String nomeCampo) {
         try {
             Part part = request.getPart(nomeCampo);
+            // Controlli di validità.
+            // Nota: anche se l'utente lascia vuoto il form contenente un <input type="file">, il browser invia comunque una Part al server, ma questa sarà vuota.
             if (part != null && part.getSize() > 0 && part.getSubmittedFileName() != null
                     && !part.getSubmittedFileName().trim().isEmpty()) {
                 return part;
@@ -311,18 +323,31 @@ public abstract class BaseController {
 
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+            uploadDir.mkdirs(); //crea l'intero albero di directory necessario in un solo colpo
         }
 
         // Scrittura del file su disco
         String filePath = uploadPath + File.separator + uniqueFileName;
-        part.write(filePath);
+        part.write(filePath); //scrive fisicamente sul disco, nel percorso calcolato, i byte caricati
 
         // Restituisce il percorso relativo formattato
         return "uploads/" + sottoCartella + "/" + uniqueFileName;
     }
 
-    // CATALOGO/PRODOTTI
+    private boolean isNumeric(String str) {
+        if (str == null || str.trim().isEmpty()) return false;
+        try {
+            // Tentiamo di forzare la conversione della stringa in un Double; ci interessa solo se l'operazione va a buon fine.
+            Double.parseDouble(str.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    //==========================================================================
+    // CATALOGO, RICERCA E FILTRI
+    //==========================================================================
 
     /**
      * Valida e restituisce il numero di pagina richiesto dalla query GET.
@@ -392,18 +417,6 @@ public abstract class BaseController {
         if (query != null && !query.trim().isEmpty()) {
             filtri.put("query", query.trim());
         }
-
-//        List<String> valoriEvidenza = estraiListaDaRequest(request, "inEvidenzaFiltro");
-//        List<String> inEvidenza = new ArrayList<>();
-//        if (valoriEvidenza != null && IN_EVIDENZA_VALIDI != null) {
-//            for (String s : valoriEvidenza) {
-//                if (s != null && IN_EVIDENZA_VALIDI.contains(s)) {
-//                    inEvidenza.add(s);
-//                }
-//            }
-//        }
-
-//        filtri.put("inEvidenzaFiltro", inEvidenza);
 
         filtri.put("ratingMin", isNumeric(ratingMinRaw) ? Double.parseDouble(ratingMinRaw) : 0.0);
 
@@ -511,15 +524,9 @@ public abstract class BaseController {
 
     }
 
-    private boolean isNumeric(String str) {
-        if (str == null || str.trim().isEmpty()) return false;
-        try {
-            Double.parseDouble(str.trim());
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
+    //==========================================================================
+    // METODI UTILITY PRODOTTI (CORELATI E URL)
+    //==========================================================================
 
     /**
      * Restituisce prodotti "correlati" delegando la ricerca al PersistentManager,
@@ -573,7 +580,9 @@ public abstract class BaseController {
         return "Catalogo";
     }
 
-    // UTENTI
+    //==========================================================================
+    // GESTIONE UTENTI
+    //==========================================================================
 
     /**
      * Simile a utenteCorrente(), ma utile in contesti in cui il login è facoltativo
@@ -644,7 +653,9 @@ public abstract class BaseController {
         return utente;
     }
 
-    // CARRELLO
+    //==========================================================================
+    // GESTIONE CARRELLO
+    //==========================================================================
 
     /**
      * Trasforma la mappa del carrello della sessione in una lista di Map contenenti

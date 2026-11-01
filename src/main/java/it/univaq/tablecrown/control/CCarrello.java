@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * Controller dedicato alla gestione del carrello acquisti.
  * I dati del carrello risiedono esclusivamente nella sessione utente come Map<Long, Integer>.
- * Versione sincrona (senza AJAX).
  */
 public class CCarrello extends BaseController {
 

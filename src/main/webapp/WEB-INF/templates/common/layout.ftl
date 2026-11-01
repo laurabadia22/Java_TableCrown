@@ -371,6 +371,27 @@
         });
     </script>
 
+    <script>
+        // MODAL/MENU BURGER NAVBAR MOBILE
+        var burger = document.getElementById('navbar-burger');
+        var menu = document.getElementById('navbar-menu-custom');
+
+        if (burger && menu) {
+            burger.addEventListener('click', function() {
+                // Toggle della classe is-active su entrambi gli elementi
+                burger.classList.toggle('is-active');
+
+                // Nel CSS per il mobile, il menu custom è "display: none"
+                // Possiamo gestirne la visibilità aggiungendo una classe o modificando lo stile in linea
+                if (menu.style.display === 'flex') {
+                    menu.style.display = 'none';
+                } else {
+                    menu.style.display = 'flex';
+                }
+            });
+        }
+    </script>
+
     </body>
     </html>
 </#macro>

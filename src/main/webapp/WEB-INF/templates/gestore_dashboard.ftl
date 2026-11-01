@@ -70,7 +70,7 @@
             <div class="columns is-multiline">
                 <div class="column is-12">
                     <div class="box px-5 py-5 gestore-actions-box">
-                        <p class="subtitle is-6 mb-4">Seleziona la tipologia di prodotto che desideri aggiungere al catalogo:</p>
+                        <p class="mb-4 has-text-light">Seleziona la tipologia di prodotto che desideri aggiungere al catalogo:</p>
 
                         <div class="buttons">
                             <a href="${base_url}/gestore/crea/gioco-da-tavolo" class="button is-medium gestore-action-btn">
