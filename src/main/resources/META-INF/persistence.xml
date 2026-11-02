@@ -7,10 +7,6 @@
     <persistence-unit name="tablecrown-pu" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <!-- Elenca qui tutte le tue classi Entity man mano che le crei -->
-        <class>it.univaq.tablecrown.entity.EProdotto</class>
-        <class>it.univaq.tablecrown.entity.EBustine</class>
-
         <properties>
             <!-- Credenziali XAMPP standard -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

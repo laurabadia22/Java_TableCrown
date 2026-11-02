@@ -528,7 +528,7 @@ public abstract class BaseController {
     }
 
     //==========================================================================
-    // METODI UTILITY PRODOTTI (CORELATI E URL)
+    // METODI UTILITY PRODOTTI (CORRELATI)
     //==========================================================================
 
     /**
@@ -550,11 +550,13 @@ public abstract class BaseController {
         return prodottiCorrelati(em, idsEsclusi, 8);
     }
 
-
-
     //==========================================================================
     // GESTIONE UTENTI
     //==========================================================================
+
+    // Questi metodi vengono usati per la gestione dello stato dell'utente e la
+    // sincronizzazione con il db. Poiché HTTP è un protocollo "stateless", l'applicazione
+    // deve costantemente verificare chi sta facendo la richiesta e se i suoi dati sono ancora validi.
 
     /**
      * Simile a utenteCorrente(), ma utile in contesti in cui il login è facoltativo
@@ -562,7 +564,7 @@ public abstract class BaseController {
      * Non forza mai un redirect: restituisce null se non loggato o senza ruolo 'utente'.
      */
     protected EUtente utenteCorrenteOpzionale(HttpServletRequest request, EntityManager em) {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false); //evitiamo di creare un'area di memoria vuota per ogni singolo utente anonimo
         if (session == null) {
             return null;
         }
@@ -585,6 +587,8 @@ public abstract class BaseController {
             return null;
         }
 
+        // Non restituiamo l'oggetto utenteLoggato che era in sessione, perché potrebbe essere vecchio
+        // Interrogando il PM ad ogni richiesta, prendendo l'id, siamo certi di leggere i dati aggiornati dal db.
         PersistentManager pm = new PersistentManager(em);
         return pm.PMgetObjOnAttribute(EUtente.class, "idPersona", idPersona);
     }
