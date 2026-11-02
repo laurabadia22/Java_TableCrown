@@ -379,20 +379,21 @@ public abstract class BaseController {
      */
     protected int clampPagina(int pagina, int totalePagine) {
         if (totalePagine <= 0) return 1;
-        return Math.max(1, Math.min(pagina, totalePagine)); //TODO: VEDI IL WARNING
+        return Math.max(1, Math.min(pagina, totalePagine));
     }
 
     /**
      * Trasforma il valore di un parametro GET (singolo o multiplo) in una lista di stringhe.
+     * Usato per gestire i form HTML in cui l'utente può spuntare più checkbox con lo stesso nome.
      */
     protected List<String> estraiListaDaRequest(HttpServletRequest request, String parametro) {
-        String[] valori = request.getParameterValues(parametro);
+        String[] valori = request.getParameterValues(parametro); //impacchetta tutte le spunte in un array di stringhe
         if (valori == null || valori.length == 0) {
             return new ArrayList<>();
         }
         return Arrays.stream(valori)
-                .filter(s -> s != null && !s.trim().isEmpty())
-                .collect(Collectors.toList());
+                .filter(s -> s != null && !s.trim().isEmpty()) //analizza ogni stringa passata, scartando i valori nulli o formati solo da spazi
+                .collect(Collectors.toList()); //prende le stringhe sopravvissute al filtro e le compatta in una lista ordinata
     }
 
     /**
@@ -407,7 +408,7 @@ public abstract class BaseController {
         String ordinamentoRaw = request.getParameter("ordinamento");
         String query = request.getParameter("q");
 
-        filtri.put("prezzoMin", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0); //TODO: ????
+        filtri.put("prezzoMin", isNumeric(priceMinRaw) ? Double.parseDouble(priceMinRaw) : 0.0);
         filtri.put("prezzoMax", isNumeric(priceMaxRaw) ? Double.parseDouble(priceMaxRaw) : null);
         filtri.put("prezzoRangeMin", 0.0);
         filtri.put("prezzoRangeMax", null); // Verrà impostato dal PM
@@ -508,12 +509,14 @@ public abstract class BaseController {
         datiPagina.put("query", searchQuery != null ? searchQuery : "");
         datiPagina.put("filtri", filtri);
 
-        // Valori di default per le opzioni dei select/checkbox nei template
+        // Valori di default per le opzioni dei select/checkbox nei template (per far generare le checkbox dinamicamente a FreeMarker con un ciclo)
         datiPagina.put("difficoltaOptions", DifficoltaGioco.values());
         datiPagina.put("categorieDisponibili", Categoria.values());
 
         //Riversiamo i dati nella request per renderli compatibili con il metodo renderizza()
-        for (Map.Entry<String, Object> entry : datiPagina.entrySet()) {
+
+        //Nota: un Entry rappresenta una singola coppia chiave-valore
+        for (Map.Entry<String, Object> entry : datiPagina.entrySet()) { //entrySet() prende tutte le entry e le restituisce sotto forma di un insieme (Set), che posso scorrere con un ciclo for.
             request.setAttribute(entry.getKey(), entry.getValue());
         }
 
@@ -534,14 +537,14 @@ public abstract class BaseController {
      */
     protected List<EProdotto> prodottiCorrelati(EntityManager em, List<Long> idsEsclusi, int limit) {
         if (idsEsclusi == null) {
-            idsEsclusi = Collections.emptyList();
+            idsEsclusi = Collections.emptyList(); //non creiamo una nuova ArrayList che spreca RAM, ma restituiamo una emptyList (una lista "finta", immutabile e vuota)
         }
         PersistentManager pm = new PersistentManager(em);
         return pm.PMfindCorrelati(idsEsclusi, limit);
     }
 
     /**
-     * Overload di comodità con limit di default a 8.
+     * Overload di comodità con limit di default a 8 (in tutto il sito viene sempre restituita una lista di 8 correlati).
      */
     protected List<EProdotto> prodottiCorrelati(EntityManager em, List<Long> idsEsclusi) {
         return prodottiCorrelati(em, idsEsclusi, 8);
