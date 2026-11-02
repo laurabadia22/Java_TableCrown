@@ -1,10 +1,7 @@
 package it.univaq.tablecrown.control;
 
 import it.univaq.tablecrown.dao.PersistentManager;
-import it.univaq.tablecrown.entity.EGiocoDaTavolo;
-import it.univaq.tablecrown.entity.EProdotto;
-import it.univaq.tablecrown.entity.EUtente;
-import it.univaq.tablecrown.entity.EWishlist;
+import it.univaq.tablecrown.entity.*;
 import it.univaq.tablecrown.utility.UFlashMessage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -152,6 +149,39 @@ public class CProdotto extends BaseController{
         }
 
         return false;
+    }
+
+    /**
+     * Determina l'URL del catalogo specifico in base alla classe concreta del prodotto.
+     */
+    private String urlCatalogo(EProdotto prodotto) {
+        if (prodotto instanceof EGiocoDaTavolo) {
+            return "/catalogo/giochi-da-tavolo";
+        }
+        if (prodotto instanceof EBustine) {
+            return "/catalogo/bustine";
+        }
+        if (prodotto instanceof EPortaDadi) {
+            return "/catalogo/porta-dadi";
+        }
+        // Fallback generico di sicurezza
+        return "/";
+    }
+
+    /**
+     * Determina l'etichetta leggibile del catalogo in base alla classe concreta del prodotto.
+     */
+    private String labelCatalogo(EProdotto prodotto) {
+        if (prodotto instanceof EGiocoDaTavolo) {
+            return "Giochi da tavolo";
+        }
+        if (prodotto instanceof EBustine) {
+            return "Bustine";
+        }
+        if (prodotto instanceof EPortaDadi) {
+            return "Porta Dadi";
+        }
+        return "Catalogo";
     }
 
     /**
