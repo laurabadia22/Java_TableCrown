@@ -127,19 +127,6 @@ public class UHTTPMethods {
         }
     }
 
-    public static boolean isAjax(HttpServletRequest request) {
-        String requestedWith = request.getHeader("X-Requested-With");
-        if (requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest")) {
-            return true;
-        }
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.toLowerCase().contains("application/json")) {
-            return true;
-        }
-        String contentType = request.getContentType();
-        return contentType != null && contentType.toLowerCase().contains("application/json");
-    }
-
     public static String getReferer(HttpServletRequest request, String fallback) {
         String requestedWith = request.getHeader("X-Requested-With");
         String referer = request.getHeader("Referer");

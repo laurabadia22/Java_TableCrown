@@ -75,7 +75,7 @@ public class FrontController extends HttpServlet {
         //Esclusione dei file statici (CSS, JS, Immagini)
         String path = request.getRequestURI().substring(request.getContextPath().length());
         if (path.startsWith("/static/") || path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")||path.endsWith(".jpeg")) {
-            getServletContext().getNamedDispatcher("default").forward(request, response);
+            getServletContext().getNamedDispatcher("default").forward(request, response); //passa la richiesta alla servlet di default di Tomcat
             return;
         }
 
@@ -266,14 +266,14 @@ public class FrontController extends HttpServlet {
                             } else {
                                 mostra404(response);
                             }
-                            break; //TODO: mancano dei metodi POST di CCheckout
+                            break;
                         case "wishlist":
                             if ("GET".equals(metodoHTTP)) {
                                 profiloController.mostraWishlist(request, response, em);
                             } else {
                                 mostra404(response);
                             }
-                            break; //TODO: mancano dei metodi??
+                            break;
                         case "indirizzi":
                             if (parti.length > 2) {
                                 String sottoIndirizzi = parti[2].toLowerCase();
