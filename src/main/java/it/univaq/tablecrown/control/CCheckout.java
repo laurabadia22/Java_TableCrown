@@ -264,6 +264,55 @@ public class CCheckout extends BaseController{
         throw new IllegalArgumentException("Metodo di pagamento non valido.");
     }
 
+    //==========================================================================
+    // GESTIONE CARRELLO
+    //==========================================================================
+
+    /**
+     * Trasforma la mappa del carrello della sessione in una lista di Map contenenti
+     * l'entità EProdotto, la quantità, il prezzo unitario scontato e il subtotale.
+     */
+    private List<Map<String, Object>> buildCarrelloItems(Map<Long, Integer> carrelloMap, PersistentManager pm) {
+        List<Map<String, Object>> carrelloItems = new ArrayList<>();
+        if (carrelloMap == null || carrelloMap.isEmpty()) {
+            return carrelloItems;
+        }
+
+        for (Map.Entry<Long, Integer> entry : carrelloMap.entrySet()) {
+            Long idProdotto = entry.getKey();
+            Integer quantita = entry.getValue();
+
+            EProdotto prodotto = pm.PMgetObjOnAttribute(EProdotto.class, "idProdotto", idProdotto);
+            if (prodotto != null) {
+                double prezzoUnitario = prodotto.getPrezzoScontato();
+                double subtotale = prezzoUnitario * quantita;
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("prodotto", prodotto);
+                item.put("quantita", quantita);
+                item.put("prezzoUnitario", prezzoUnitario);
+                item.put("subtotale", subtotale);
+
+                carrelloItems.add(item);
+            }
+        }
+        return carrelloItems;
+    }
+
+    /**
+     * Calcola la somma dei subtotali per gli elementi del carrello.
+     */
+    private double calcolaTotaleCarrello(List<Map<String, Object>> carrelloItems) {
+        double totale = 0.0;
+        for (Map<String, Object> item : carrelloItems) {
+            Object subtotaleObj = item.get("subtotale");
+            if (subtotaleObj instanceof Number) {
+                totale += ((Number) subtotaleObj).doubleValue();
+            }
+        }
+        return totale;
+    }
+
     @Override
     protected List<Map<String, String>> getBreadcrumbs(HttpServletRequest request, String currentPage) {
         List<Map<String, String>> breadcrumbs = new ArrayList<>();
