@@ -317,7 +317,7 @@ public abstract class BaseController {
         // Estrazione del nome originale del file
         String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
-        // Generazione nome univoco per evitare sovrascritture (UUID)
+        // Generazione nome univoco per evitare sovrascritture (UUID = Universally Unique Identifier)
         String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
         // Calcolo del percorso fisico sul server
