@@ -23,13 +23,13 @@ public class BustineDAO extends GenericDAO {
             List<String> condizioniBase = new ArrayList<>();
             Map<String, Object> parametri = new HashMap<>();
 
-            // 1. LA FORMULA MAGICA: Usiamo CURRENT_TIMESTAMP così Hibernate non va più in crash per i parametri mancanti!
+            //controllo se il prodotto bustine ha uo sconto associato valido. current_timestump è una funzione nativa JPQL che restituisce data e ora correnti
             String prezzoReale = "(CASE " +
                     "WHEN b.sconto IS NOT NULL AND b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP) " +
                     "THEN (b.prezzo * (1.0 - b.sconto.sconto / 100.0)) " +
                     "ELSE b.prezzo END)";
 
-            // 2. FILTRO RICERCA
+            //controllo se è stata utilizzata la barra di ricerca
             if (filtri.get("query") != null) {
                 String queryCercata = (String) filtri.get("query");
                 if (!queryCercata.trim().isEmpty()){
@@ -38,7 +38,7 @@ public class BustineDAO extends GenericDAO {
                 }
             }
 
-            // 3. FILTRI ENUM E RATING (Senza i prezzi)
+            //controllo sui filtri utilizzati
             if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
