@@ -39,7 +39,7 @@
                 <div id="navbar-menu-custom" class="navbar-menu-custom-links">
 
                     <!-- LOGO -->
-                    <a class="navbar-logo" href="${base_url}">
+                    <a class="navbar-logo" href="${base_url}/">
                         <img src="${base_url}/public/img/favicon.png" alt="TableCrown" class="navbar-logo-img">
                     </a>
 
