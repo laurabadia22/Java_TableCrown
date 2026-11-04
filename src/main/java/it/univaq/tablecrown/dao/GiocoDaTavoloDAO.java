@@ -94,7 +94,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 parametri.put("etaMinima", filtri.get("etaMinima"));
             }
             if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("g.valutazioneMedia >= :ratingMin");
+                condizioniBase.add("g.valutazione.media >= :ratingMin");
                 parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
@@ -161,7 +161,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                     case "prezzo_asc":  jpqlMain.append("ORDER BY ").append(prezzoReale).append(" ASC"); break;
                     case "prezzo_desc": jpqlMain.append("ORDER BY ").append(prezzoReale).append(" DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY g.numeroVendite DESC"); break;
-                    case "valutazione": jpqlMain.append("ORDER BY g.valutazioneMedia DESC"); break;
+                    case "valutazione": jpqlMain.append("ORDER BY g.valutazione.media DESC"); break;
                     case "novita":      jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                     default:            jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                 }

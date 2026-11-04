@@ -128,7 +128,7 @@
 
                     <label class="auth-checkbox-label auth-checkbox-terms">
                         <input type="checkbox" name="accetta_termini" value="1" required>
-                        <span>Accetto i <a href="${base_url!''}/termini" class="auth-link-inline" target="_blank">Termini di Servizio</a> e la <a href="${base_url!''}/privacy" class="auth-link-inline" target="_blank">Privacy Policy</a></span>
+                        Accetto i Termini di Servizio e la Privacy Policy
                     </label>
 
                     <button class="button auth-submit-btn" type="submit">

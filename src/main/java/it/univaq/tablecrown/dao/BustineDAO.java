@@ -20,7 +20,9 @@ public class BustineDAO extends GenericDAO {
 
     public Map<String, Object> findBustine(Map<String, Object> filtri, int limit, int offset) {
         try {
+            //lista di stringhe che rappresentano gli identificativi
             List<String> condizioniBase = new ArrayList<>();
+            //mappa per i valori associati ai parametri nominali
             Map<String, Object> parametri = new HashMap<>();
 
             //controllo se il prodotto bustine ha uo sconto associato valido. current_timestump è una funzione nativa JPQL che restituisce data e ora correnti
@@ -38,19 +40,22 @@ public class BustineDAO extends GenericDAO {
                 }
             }
 
-            //controllo sui filtri utilizzati
+            //controllo sui filtri selezionati
             if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
 
+                //se il control manda una lista di disponibilità, ciclo  su ogni elemento per estrarlo
                 if (dispObj instanceof List<?>) {
                     for (Object valoreScelto : (List<?>) dispObj) {
+                        //se è un enum di DisponibilitaProdotto lo aggiunge alla lista delle disponibilità selezionate
                         if (valoreScelto instanceof DisponibilitaProdotto) {
                             enumDisp.add((DisponibilitaProdotto) valoreScelto);
-                        } else if (valoreScelto instanceof String) {
+                        } else if (valoreScelto instanceof String) {//se il valore è una stringa lo converte in un enum di disponibiitaprodotto
                             try { enumDisp.add(DisponibilitaProdotto.valueOf(((String) valoreScelto).toUpperCase())); } catch (IllegalArgumentException ignored) {}
                         }
                     }
+                //se invece è un array di stringhe trasforma le varie stringhe nell'enum corrispondente
                 } else if (dispObj instanceof String[]) {
                     for (String valoreScelto : (String[]) dispObj) {
                         try { enumDisp.add(DisponibilitaProdotto.valueOf(valoreScelto.toUpperCase())); } catch (IllegalArgumentException ignored) {}
@@ -63,22 +68,22 @@ public class BustineDAO extends GenericDAO {
                 }
             }
 
-            if (filtri.get("inEvidenzaFiltro") != null) {
-                @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
-                if (evidenza != null) {
-                    if (evidenza.contains("novita")) {
-                        condizioniBase.add("b.dataPubblicazione >= :datalimite");
-                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
-                    }
-                    if (evidenza.contains("sconti")) {
-                        condizioniBase.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
-                    }
-                }
-            }
+//            if (filtri.get("inEvidenzaFiltro") != null) {
+//                @SuppressWarnings("unchecked")
+//                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
+//                if (evidenza != null) {
+//                    if (evidenza.contains("novita")) {
+//                        condizioniBase.add("b.dataPubblicazione >= :datalimite");
+//                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
+//                    }
+//                    if (evidenza.contains("sconti")) {
+//                        condizioniBase.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
+//                    }
+//                }
+//            }
 
             if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("b.valutazioneMedia >= :ratingMin");
+                condizioniBase.add("b.valutazione.media >= :ratingMin");
                 parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 

@@ -82,7 +82,7 @@ public class PortaDadiDAO extends GenericDAO {
             }
 
             if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("p.valutazioneMedia >= :ratingMin");
+                condizioniBase.add("p.valutazione.media >= :ratingMin");
                 parametri.put("ratingMin", filtri.get("ratingMin"));
             }
 
