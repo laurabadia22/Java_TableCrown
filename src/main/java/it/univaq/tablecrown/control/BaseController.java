@@ -109,7 +109,7 @@ public abstract class BaseController {
     protected void renderizza(String nomeTemplate, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        //Costruisce il model leggendo gli attributi della request
+        //Costruisce il model leggendo gli attributi della request (FreeMarker non conosce HttpServletRequest, ha bisogno di una Map<String, Object>)
         Map<String, Object> model = new HashMap<>();
         Enumeration<String> nomiAttributi = request.getAttributeNames();
         while (nomiAttributi.hasMoreElements()) {
@@ -121,7 +121,11 @@ public abstract class BaseController {
         try {
             response.setContentType("text/html; charset=UTF-8");
             freemarker.template.Template template =
+                    //getConfig()... chiama il Singleton Configuration per recuperare il file fisico .ftl
+                    //L'oggetto Configuration è stato "istruito" sulla posizione dei file all'avvio tramite il ServletContext
                     it.univaq.tablecrown.utility.UFreeMarker.getConfig().getTemplate(nomeTemplate);
+            //process() è l'istruzione che prende il file testuale .ftl, cerca tutte le variabili, le sostituisce con
+            //i dati estratti dalla Map e invia il risultato HTML testuale direttamente nella risposta HTTP con response.getWriter(), inviandolo al browser dell'utente.
             template.process(model, response.getWriter());
         } catch (freemarker.template.TemplateException | IOException e) {
             throw new IOException("Errore nel rendering del template " + nomeTemplate, e);
@@ -305,7 +309,7 @@ public abstract class BaseController {
     protected String salvaImmagineSuDisco(HttpServletRequest request, String nomeCampo, String sottoCartella)
             throws IOException {
 
-        Part part = estraiPart(request, nomeCampo);
+        Part part = estraiPart(request, nomeCampo); //l'oggetto Part rappresenta l'immagine in RAM o in file temporanei, non è ancora un file definitivo
         if (part == null) {
             return null;
         }

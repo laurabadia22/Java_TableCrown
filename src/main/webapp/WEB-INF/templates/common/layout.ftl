@@ -40,7 +40,7 @@
 
                     <!-- LOGO -->
                     <a class="navbar-logo" href="${base_url}/">
-                        <img src="${base_url}/public/img/favicon.png" alt="TableCrown" class="navbar-logo-img">
+                        <img src="${base_url}/public/img/logo.png" alt="TableCrown" class="navbar-logo-img">
                     </a>
 
                     <div class="navbar-center-links">
