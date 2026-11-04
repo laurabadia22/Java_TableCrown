@@ -23,7 +23,6 @@ public class OrdineDAO extends GenericDAO {
 
     public float contaVenditeTotali() {
         try {
-            // Sfruttiamo la navigazione diretta degli oggetti di JPA: oi.ordine.stato
             String jpql = "SELECT SUM(oi.quantita * oi.prezzoUnitario * (1 - (oi.scontoApplicato / 100))) " +
                     "FROM EOrdineItem oi WHERE oi.ordine.stato = :stato";
 

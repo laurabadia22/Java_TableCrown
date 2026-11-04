@@ -120,7 +120,7 @@ public class BustineDAO extends GenericDAO {
                 parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            // costruzione jpql finale
+            // costruzione jpql finale per count e select
             StringBuilder jpqlFinale = new StringBuilder("FROM EBustine b ");
             if (!condizioniPrezzo.isEmpty()) {
                 jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
