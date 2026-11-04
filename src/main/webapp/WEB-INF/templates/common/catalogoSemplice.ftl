@@ -33,9 +33,6 @@
         <#if filtri.ordinamento?? && filtri.ordinamento?has_content>
             <#assign qParams = qParams + "&ordinamento=" + filtri.ordinamento?url>
         </#if>
-    <#--<#if filtri.query?? && filtri.query?has_content>
-        <#assign qParams = qParams + "&query=" + filtri.query?url>
-    </#if>-->
 
 
 <#-- Filtri a lista/sequenza -->
@@ -176,7 +173,7 @@
                             </div>
                         </div>
 
-                        <#-- Iniezione dei filtri specifici (es. Giochi da tavolo) -->
+                        <#-- Iniezione dei filtri specifici (Giochi da tavolo) -->
                         <#nested>
 
                         <#-- GRUPPO PULSANTI FILTRA E RESETTA (Inglobato dentro .column per rispettare la griglia) -->

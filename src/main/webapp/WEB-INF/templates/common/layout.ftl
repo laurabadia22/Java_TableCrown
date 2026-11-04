@@ -276,11 +276,6 @@
         </div>
     </footer>
 
-    <!-- JS -->
-    <#--    <script src="${base_url}/public/plugins/jQuery/jquery.min.js"></script>-->
-    <#--    <script src="${base_url}/public/plugins/match-height/jquery.matchHeight-min.js"></script>-->
-    <#--    <script src="${base_url}/public/js/script.js"></script>-->
-
     <!-- JS Extra inserito dalle pagine figlie -->
     ${extra_js}
 
@@ -347,7 +342,7 @@
         <i class="ti ti-arrow-up"></i>
     </button>
 
-    <!-- SCRIPT GLOBALE TORNA IN ALTO -->
+    <!-- SCRIPT GLOBALE TORNA SU -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const backToTopBtn = document.getElementById('back-to-top');
@@ -372,7 +367,7 @@
     </script>
 
     <script>
-        // MODAL/MENU BURGER NAVBAR MOBILE
+        // MENU BURGER NAVBAR MOBILE
         var burger = document.getElementById('navbar-burger');
         var menu = document.getElementById('navbar-menu-custom');
 
@@ -382,7 +377,6 @@
                 burger.classList.toggle('is-active');
 
                 // Nel CSS per il mobile, il menu custom è "display: none"
-                // Possiamo gestirne la visibilità aggiungendo una classe o modificando lo stile in linea
                 if (menu.style.display === 'flex') {
                     menu.style.display = 'none';
                 } else {

@@ -1,18 +1,14 @@
 <#--
-    Macro riga: riga prodotto riusabile tra wishlist e carrello.
+Macro riga: riga prodotto riusabile tra wishlist e carrello.
 
-    Modalità wishlist:
-        mostraAggiungiCarrello=true, quantitaEditabile=false (default)
-        -> bottone "Aggiungi al carrello" + bottone rimuovi a icona singola
+Modalità wishlist:
+mostraAggiungiCarrello=true, quantitaEditabile=false (default)
+-> bottone "Aggiungi al carrello" + bottone rimuovi a icona singola
 
-    Modalità carrello:
-        quantitaEditabile=true, mostraRimuovi=true
-        -> controlli quantità +/- e bottone "Rimuovi" dentro un unico <form>,
-           esattamente come nel vecchio carrello.ftl (il bottone rimuovi
-           sovrascrive l'azione del form con formaction, niente JS).
-           Il prezzo mostrato è quello bloccato sull'item (prezzoUnitario),
-           non p.prezzoScontato, perché nel carrello il prezzo è quello
-           "congelato" al momento dell'aggiunta.
+Modalità carrello:
+quantitaEditabile=true, mostraRimuovi=true
+-> controlli quantità +/- e bottone "Rimuovi" dentro un unico <form>,
+Il prezzo mostrato è prezzoUnitario.
 -->
 <#macro riga p
 mostraRimuovi=false
@@ -30,10 +26,9 @@ subtotale=0>
     <div class="prodotto-riga <#if !p.isAcquistabile()>prodotto-riga-esaurito</#if>">
 
         <a href="${base_url}/prodotto?id=${p.idProdotto}" class="prodotto-riga-media">
-            <#-- 1. Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
+            <#-- Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
             <#assign imgDalDb = p.imgProdotto!"">
 
-            <#-- 2. Logica del vigile urbano -->
             <#if imgDalDb == "">
 
             <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
@@ -51,17 +46,17 @@ subtotale=0>
 
             <#elseif imgDalDb?contains("/")>
 
-            <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+            <#-- CASO B: Prodotto NUOVO (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
                 <#assign pathFinale = "${base_url}/${imgDalDb}">
 
             <#else>
 
-            <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+            <#-- CASO C: Prodotto VECCHIO o placeholder testuale -->
                 <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
 
             </#if>
 
-            <#-- 3. Stampiamo il tag IMG pulitissimo -->
+            <#-- Stampiamo il tag IMG -->
             <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="prodotto-riga-img">
 
             <#if p.disponibilitaProdotto?? && p.disponibilitaProdotto.name() == 'ESAURITO'>
@@ -78,7 +73,6 @@ subtotale=0>
 
             <div class="prodotto-riga-prezzo-row">
                 <#if quantitaEditabile>
-                <#-- carrello: prezzo bloccato sull'item, non ricalcolato da p -->
                     <#if p.sconto.hasSconto()>
                         <span class="prodotto-riga-prezzo">€${prezzoUnitario?string("0.00")}</span>
                         <span class="prodotto-riga-prezzo-old">€${p.prezzo?string("0.00")}</span>
@@ -166,7 +160,6 @@ subtotale=0>
                         </form>
                     </#if>
 
-                    <#-- in modalità carrello il rimuovi è già dentro il form quantità sopra -->
                     <#if mostraRimuovi && !quantitaEditabile>
                         <form action="${azioneRimuovi}" method="POST" class="prodotto-riga-form">
                             <input type="hidden" name="idProdotto" value="${p.idProdotto}">

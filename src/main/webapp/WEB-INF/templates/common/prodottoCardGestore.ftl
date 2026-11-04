@@ -10,30 +10,10 @@
                     <span class="product-badge product-badge-non-disponibile">Nascosto</span>
                 </#if>
             </div>
-<#--            &lt;#&ndash; 1. Impostiamo un placeholder generico di base &ndash;&gt;-->
-<#--            <#assign imgPlaceholder = "placeholder.png">-->
 
-<#--            &lt;#&ndash; 2. Cambiamo il placeholder in base al tipo di prodotto &ndash;&gt;-->
-<#--            <#if p.tipo??>-->
-<#--                <#if p.tipo == "gioco">-->
-<#--                    <#assign imgPlaceholder = "gioco_da_tavolo_img.jpg">-->
-<#--                <#elseif p.tipo == "bustine" || p.tipo == "Bustine">-->
-<#--                    <#assign imgPlaceholder = "bustine_img.jpg">-->
-<#--                <#elseif p.tipo == "portaDadi" || p.tipo == "Portadadi">-->
-<#--                    <#assign imgPlaceholder = "porta_dadi_img.jpg.png">-->
-<#--                </#if>-->
-<#--            </#if>-->
-
-<#--            &lt;#&ndash; 3. Usiamo la singola riga intelligente con il placeholder dinamico &ndash;&gt;-->
-<#--            <img src="${base_url}/${p.imgProdotto!''}"-->
-<#--                 onerror="this.onerror=null; this.src='${base_url}/public/img/${imgPlaceholder}';"-->
-<#--                 alt="${p.nomeProdotto?html}"-->
-<#--                 class="product-image">-->
-
-            <#-- 1. Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
+            <#-- Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
             <#assign imgDalDb = p.imgProdotto!"">
 
-            <#-- 2. Logica del vigile urbano -->
             <#if imgDalDb == "">
 
             <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
@@ -51,17 +31,17 @@
 
             <#elseif imgDalDb?contains("/")>
 
-            <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+            <#-- CASO B: Prodotto NUOVO (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
                 <#assign pathFinale = "${base_url}/${imgDalDb}">
 
             <#else>
 
-            <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+            <#-- CASO C: Prodotto VECCHIO o placeholder testuale -->
                 <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
 
             </#if>
 
-            <#-- 3. Stampiamo il tag IMG pulitissimo -->
+            <#-- Stampiamo il tag IMG -->
             <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="product-image">
         </div>
 

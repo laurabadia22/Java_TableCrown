@@ -91,7 +91,7 @@
                             </div>
                         </div>
 
-                        <#-- QUI VERRANNO INIETTATI I CAMPI SPECIFICI (es. per Giochi da Tavolo) -->
+                        <#-- CAMPI SPECIFICI (Giochi da Tavolo) -->
                         <#nested>
 
                         <h2 class="title is-5 form-section-title mt-6">Promozione (Opzionale)</h2>

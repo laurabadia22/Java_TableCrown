@@ -13,10 +13,9 @@
                             <span class="badge-stato badge-non-disponibile">Non disponibile</span>
                         </#if>
 
-                        <#-- 1. Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
+                        <#-- Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
                         <#assign imgDalDb = p.imgProdotto!"">
 
-                        <#-- 2. Logica del vigile urbano -->
                         <#if imgDalDb == "">
 
                         <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
@@ -34,17 +33,17 @@
 
                         <#elseif imgDalDb?contains("/")>
 
-                        <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+                        <#-- CASO B: Prodotto NUOVO (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
                             <#assign pathFinale = "${base_url}/${imgDalDb}">
 
                         <#else>
 
-                        <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+                        <#-- CASO C: Prodotto VECCHIO o placeholder testuale -->
                             <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
 
                         </#if>
 
-                        <#-- 3. Stampiamo il tag IMG pulitissimo -->
+                        <#-- Stampiamo il tag IMG -->
                         <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="product-image">
                     </figure>
                 </div>
@@ -86,7 +85,7 @@
                     </#if>
                 </div>
 
-                <#-- Form Reale per aggiunta al Carrello -->
+                <#-- Form per aggiunta al Carrello -->
                 <form action="${base_url}/carrello/aggiungi" method="POST" style="margin-top: 10px;">
                     <input type="hidden" name="idProdotto" value="${p.idProdotto?c}">
                     <input type="hidden" name="quantita" value="1">
