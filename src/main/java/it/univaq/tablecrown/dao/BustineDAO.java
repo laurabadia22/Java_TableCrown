@@ -82,19 +82,23 @@ public class BustineDAO extends GenericDAO {
 //                }
 //            }
 
-            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("b.valutazione.media >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("ratingMin"));
-            }
+              //filtro sulla valutazione media, estraggo i prodotti con valutazione maggiore di un certo valore
+//            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
+//                condizioniBase.add("b.valutazione.media >= :ratingMin");
+//                parametri.put("ratingMin", filtri.get("ratingMin"));
+//            }
 
-            // 4. CALCOLO MIN E MAX ASSOLUTI (Applicato al prezzo REALE scontato)
+            //costruisce la stringa JPQL unendo tutte le condizioni tranne quelle sui prezzi
             StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EBustine b ");
             if (!condizioniBase.isEmpty()) {
                 jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
+
+            //calcolo i prezzi massimi e minimi trovati dalla query jpql fatta senza prezzi per poter aggiornare lo slidere dei prezzi dinamicamente sulla ricerca fatta
             jakarta.persistence.TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString(), Object[].class);
             parametri.forEach(queryMinMax::setParameter);
+            //la query restituisce un array di 2 oggetti
             Object[] estremi = queryMinMax.getSingleResult();
 
             double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
@@ -103,7 +107,7 @@ public class BustineDAO extends GenericDAO {
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // 5. AGGIUNTA DEI FILTRI DI PREZZO ALLA QUERY FINALE
+            // clona la query iniziale aggiungendo i vincoli sul prezzo eventualemnte richiesti dall'utente
             List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
 
             if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
@@ -116,19 +120,21 @@ public class BustineDAO extends GenericDAO {
                 parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            // Assemblaggio della stringa finale
+            // costruzione jpql finale
             StringBuilder jpqlFinale = new StringBuilder("FROM EBustine b ");
             if (!condizioniPrezzo.isEmpty()) {
                 jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
             }
 
-            // 6. ESECUZIONE QUERY (COUNT E LISTA)
+            //esecuzione della count per la paginazione
             jakarta.persistence.TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(b) " + jpqlFinale.toString(), Long.class);
             parametri.forEach(queryCount::setParameter);
             Long totale = queryCount.getSingleResult();
 
+            //costruzione query finale con select
             StringBuilder jpqlMain = new StringBuilder("SELECT b ").append(jpqlFinale.toString());
 
+            //uso la query finale creata per inserire l'ordinamento richiesto dall'utente
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
@@ -142,13 +148,16 @@ public class BustineDAO extends GenericDAO {
                 jpqlMain.append("ORDER BY b.dataPubblicazione DESC");
             }
 
+            //eseguo query con ordinamento
             jakarta.persistence.TypedQuery<EBustine> queryMain = em.createQuery(jpqlMain.toString(), EBustine.class);
             parametri.forEach(queryMain::setParameter);
 
+            //risultati per paginazione e "segnalibro" per prodotto successivo nelle varie pagine
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
             List<EBustine> risultati = queryMain.getResultList();
 
+            //creo il dizionario con i vari risultati da passare al control
             Map<String, Object> response = new HashMap<>();
             response.put("risultati", risultati);
             response.put("totale", totale.intValue());
