@@ -24,17 +24,20 @@ public class GiocoDaTavoloDAO extends GenericDAO {
 
     public Map<String, Object> findGiochi(Map<String, Object> filtri, int limit, int offset) {
         try {
+            //condizioniBase contiene tutti i paramteri da riempire
             List<String> condizioniBase = new ArrayList<>();
+            //dizionario con chiave=parametro di condizioniBase e valore sicuro all'swl injection
             Map<String, Object> parametri = new HashMap<>();
 
-            // 1. FORMULA MAGICA CORRETTA: Usiamo g.sconto.sconto esattamente come per le altre entità
+            //controllo se il prodotto bustine ha uno sconto associato valido. current_timestump è una funzione nativa JPQL che restituisce data e ora correnti
             String prezzoReale = "(CASE " +
                     "WHEN g.sconto IS NOT NULL AND g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > CURRENT_TIMESTAMP) " +
                     "THEN (g.prezzo * (1.0 - g.sconto.sconto / 100.0)) " +
                     "ELSE g.prezzo END)";
 
-            // 2. FILTRI ENUM
+            //filtro sulla difficoltà del gioco
             if (filtri.get("difficolta") != null) {
+                //parseEnumList è un metodo interno privato
                 List<DifficoltaGioco> enumDiff = parseEnumList(filtri.get("difficolta"), DifficoltaGioco.class);
                 if (!enumDiff.isEmpty()) {
                     condizioniBase.add("g.difficolta IN (:difficolta)");
@@ -70,7 +73,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 }
             }
 
-            // 3. ALTRI FILTRI E RICERCA
+            //ricerca tramite barra di ricerca
             if (filtri.get("query") != null) {
                 String queryCercata = (String) filtri.get("query");
                 if (!queryCercata.trim().isEmpty()) {
@@ -93,33 +96,34 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 condizioniBase.add("g.etaMinima = :etaMinima");
                 parametri.put("etaMinima", filtri.get("etaMinima"));
             }
-            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("g.valutazioneMedia >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("ratingMin"));
-            }
+//            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
+//                condizioniBase.add("g.valutazione.media >= :ratingMin");
+//                parametri.put("ratingMin", filtri.get("ratingMin"));
+//            }
 
-            if (filtri.get("inEvidenzaFiltro") != null) {
-                @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
-                if (evidenza != null) {
-                    if (evidenza.contains("novita")) {
-                        condizioniBase.add("g.dataPubblicazione >= :datalimite AND g.disponibilitaProdotto = :dispNovita");
-                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
-                        parametri.put("dispNovita", DisponibilitaProdotto.DISPONIBILE);
-                    }
-                    if (evidenza.contains("sconti")) {
-                        // CORRETTO: Uso il campo sconto.sconto e il CURRENT_TIMESTAMP
-                        condizioniBase.add("g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
-                    }
-                }
-            }
+//            if (filtri.get("inEvidenzaFiltro") != null) {
+//                @SuppressWarnings("unchecked")
+//                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
+//                if (evidenza != null) {
+//                    if (evidenza.contains("novita")) {
+//                        condizioniBase.add("g.dataPubblicazione >= :datalimite AND g.disponibilitaProdotto = :dispNovita");
+//                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
+//                        parametri.put("dispNovita", DisponibilitaProdotto.DISPONIBILE);
+//                    }
+//                    if (evidenza.contains("sconti")) {
+//                        // CORRETTO: Uso il campo sconto.sconto e il CURRENT_TIMESTAMP
+//                        condizioniBase.add("g.sconto.sconto > 0 AND (g.sconto.scadenzaOfferta IS NULL OR g.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
+//                    }
+//                }
+//            }
 
-            // 4. CALCOLO MIN E MAX ASSOLUTI SUL PREZZO REALE
+            //costruisce stringa jpql unendo tutte le condizioni dei filtri tranne quelle dei prezzi per lo slider
             StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EGiocoDaTavolo g ");
             if (!condizioniBase.isEmpty()) {
                 jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
+            //calcolo dei prezzi per lo slider
             jakarta.persistence.Query queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString());
             parametri.forEach(queryMinMax::setParameter);
             Object[] estremi = (Object[]) queryMinMax.getSingleResult();
@@ -129,7 +133,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // 5. AGGIUNTA FILTRI PREZZO ALLA QUERY FINALE
+            //clona la query iniziale e ci aggiunge i filtri prezzo
             List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
 
             if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
@@ -148,12 +152,15 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
             }
 
-            // 6. ESECUZIONE QUERY (DISTINCT per evitare duplicati causati dalla JOIN su categoria)
+            // esecuzione query count con distinct applicato per evitare duplicati causati dal join su categoria
             jakarta.persistence.Query queryCount = em.createQuery("SELECT COUNT(DISTINCT g) " + jpqlFinale.toString());
             parametri.forEach(queryCount::setParameter);
             Long totale = (Long) queryCount.getSingleResult();
 
+            //costruzione query finale con select e distinct per la categoria
             StringBuilder jpqlMain = new StringBuilder("SELECT DISTINCT g ").append(jpqlFinale.toString());
+
+            //uso la query creata su cui inserisco l'ordinamento
             String ordinamento = (String) filtri.get("ordinamento");
 
             if (ordinamento != null && !ordinamento.isEmpty()) {
@@ -161,7 +168,7 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                     case "prezzo_asc":  jpqlMain.append("ORDER BY ").append(prezzoReale).append(" ASC"); break;
                     case "prezzo_desc": jpqlMain.append("ORDER BY ").append(prezzoReale).append(" DESC"); break;
                     case "popolarita":  jpqlMain.append("ORDER BY g.numeroVendite DESC"); break;
-                    case "valutazione": jpqlMain.append("ORDER BY g.valutazioneMedia DESC"); break;
+                    case "valutazione": jpqlMain.append("ORDER BY g.valutazione.media DESC"); break;
                     case "novita":      jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                     default:            jpqlMain.append("ORDER BY g.dataPubblicazione DESC"); break;
                 }
@@ -169,12 +176,15 @@ public class GiocoDaTavoloDAO extends GenericDAO {
                 jpqlMain.append("ORDER BY g.dataPubblicazione DESC");
             }
 
+            //esecuzione query con ordinamento
             jakarta.persistence.TypedQuery<EGiocoDaTavolo> queryMain = em.createQuery(jpqlMain.toString(), EGiocoDaTavolo.class);
             parametri.forEach(queryMain::setParameter);
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
             List<EGiocoDaTavolo> risultati = queryMain.getResultList();
 
+
+            //divisione risultati in un dizionario
             Map<String, Object> response = new HashMap<>();
             response.put("risultati", risultati);
             response.put("totale", totale.intValue());
@@ -233,21 +243,20 @@ public class GiocoDaTavoloDAO extends GenericDAO {
         }
     }
 
-    // =========================================================================
-    // HELPER: Convertitore Universale di Enum
-    // =========================================================================
-    //metodo di supporto per questa classe utilizzato nel metofdo find, funziona per un qualsiasi tipo di enum <E>
+    //convertitore di enumerativi per i vari enumerativi presenti sulla classe gioco da tavolo
+    //metodo di supporto per questa classe utilizzato nel metofdo find,
+    // funziona per un qualsiasi tipo di enum <E>, trasforma una stringa in un enum altrimenti aggiunge direttamente l'enum all'array di risultati
     private <E extends Enum<E>> List<E> parseEnumList(Object obj, Class<E> enumClass) {
         List<E> result = new ArrayList<>();
         if (obj == null) return result;
 
-        //l'oggetto è già una singola istanza dell'Enum
+        //l'oggetto è già una singola istanza dell'enum
         if (enumClass.isInstance(obj)) {
             result.add(enumClass.cast(obj));
             return result;
         }
 
-        //l'oggetto è una singola Stringa
+        //l'oggetto è una stringa
         if (obj instanceof String) {
             String str = ((String) obj).trim();
             if (!str.isEmpty()) {

@@ -20,7 +20,9 @@ public class BustineDAO extends GenericDAO {
 
     public Map<String, Object> findBustine(Map<String, Object> filtri, int limit, int offset) {
         try {
+            //lista di stringhe che rappresentano gli identificativi
             List<String> condizioniBase = new ArrayList<>();
+            //mappa per i valori associati ai parametri nominali
             Map<String, Object> parametri = new HashMap<>();
 
             //controllo se il prodotto bustine ha uo sconto associato valido. current_timestump è una funzione nativa JPQL che restituisce data e ora correnti
@@ -38,19 +40,22 @@ public class BustineDAO extends GenericDAO {
                 }
             }
 
-            //controllo sui filtri utilizzati
+            //controllo sui filtri selezionati
             if (filtri.get("disponibilita") != null) {
                 Object dispObj = filtri.get("disponibilita");
                 List<DisponibilitaProdotto> enumDisp = new ArrayList<>();
 
+                //se il control manda una lista di disponibilità, ciclo  su ogni elemento per estrarlo
                 if (dispObj instanceof List<?>) {
                     for (Object valoreScelto : (List<?>) dispObj) {
+                        //se è un enum di DisponibilitaProdotto lo aggiunge alla lista delle disponibilità selezionate
                         if (valoreScelto instanceof DisponibilitaProdotto) {
                             enumDisp.add((DisponibilitaProdotto) valoreScelto);
-                        } else if (valoreScelto instanceof String) {
+                        } else if (valoreScelto instanceof String) {//se il valore è una stringa lo converte in un enum di disponibiitaprodotto
                             try { enumDisp.add(DisponibilitaProdotto.valueOf(((String) valoreScelto).toUpperCase())); } catch (IllegalArgumentException ignored) {}
                         }
                     }
+                //se invece è un array di stringhe trasforma le varie stringhe nell'enum corrispondente
                 } else if (dispObj instanceof String[]) {
                     for (String valoreScelto : (String[]) dispObj) {
                         try { enumDisp.add(DisponibilitaProdotto.valueOf(valoreScelto.toUpperCase())); } catch (IllegalArgumentException ignored) {}
@@ -63,33 +68,37 @@ public class BustineDAO extends GenericDAO {
                 }
             }
 
-            if (filtri.get("inEvidenzaFiltro") != null) {
-                @SuppressWarnings("unchecked")
-                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
-                if (evidenza != null) {
-                    if (evidenza.contains("novita")) {
-                        condizioniBase.add("b.dataPubblicazione >= :datalimite");
-                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
-                    }
-                    if (evidenza.contains("sconti")) {
-                        condizioniBase.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
-                    }
-                }
-            }
+//            if (filtri.get("inEvidenzaFiltro") != null) {
+//                @SuppressWarnings("unchecked")
+//                List<String> evidenza = (List<String>) filtri.get("inEvidenzaFiltro");
+//                if (evidenza != null) {
+//                    if (evidenza.contains("novita")) {
+//                        condizioniBase.add("b.dataPubblicazione >= :datalimite");
+//                        parametri.put("datalimite", java.time.LocalDate.now().minusMonths(1));
+//                    }
+//                    if (evidenza.contains("sconti")) {
+//                        condizioniBase.add("b.sconto.sconto > 0 AND (b.sconto.scadenzaOfferta IS NULL OR b.sconto.scadenzaOfferta > CURRENT_TIMESTAMP)");
+//                    }
+//                }
+//            }
 
-            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
-                condizioniBase.add("b.valutazioneMedia >= :ratingMin");
-                parametri.put("ratingMin", filtri.get("ratingMin"));
-            }
+              //filtro sulla valutazione media, estraggo i prodotti con valutazione maggiore di un certo valore
+//            if (filtri.get("ratingMin") != null && ((Number) filtri.get("ratingMin")).doubleValue() > 0) {
+//                condizioniBase.add("b.valutazione.media >= :ratingMin");
+//                parametri.put("ratingMin", filtri.get("ratingMin"));
+//            }
 
-            // 4. CALCOLO MIN E MAX ASSOLUTI (Applicato al prezzo REALE scontato)
+            //costruisce la stringa JPQL unendo tutte le condizioni tranne quelle sui prezzi
             StringBuilder jpqlSenzaPrezzi = new StringBuilder("FROM EBustine b ");
             if (!condizioniBase.isEmpty()) {
                 jpqlSenzaPrezzi.append("WHERE ").append(String.join(" AND ", condizioniBase)).append(" ");
             }
 
+
+            //calcolo i prezzi massimi e minimi trovati dalla query jpql fatta senza prezzi per poter aggiornare lo slidere dei prezzi dinamicamente sulla ricerca fatta
             jakarta.persistence.TypedQuery<Object[]> queryMinMax = em.createQuery("SELECT MIN(" + prezzoReale + "), MAX(" + prezzoReale + ") " + jpqlSenzaPrezzi.toString(), Object[].class);
             parametri.forEach(queryMinMax::setParameter);
+            //la query restituisce un array di 2 oggetti
             Object[] estremi = queryMinMax.getSingleResult();
 
             double rawMin = (estremi[0] != null) ? ((Number) estremi[0]).doubleValue() : 0.0;
@@ -98,7 +107,7 @@ public class BustineDAO extends GenericDAO {
             double prezzoMinimo = Math.round(rawMin * 100.0) / 100.0;
             double prezzoMassimo = Math.round(rawMax * 100.0) / 100.0;
 
-            // 5. AGGIUNTA DEI FILTRI DI PREZZO ALLA QUERY FINALE
+            // clona la query iniziale aggiungendo i vincoli sul prezzo eventualemnte richiesti dall'utente
             List<String> condizioniPrezzo = new ArrayList<>(condizioniBase);
 
             if (filtri.get("prezzoMin") != null && ((Number) filtri.get("prezzoMin")).doubleValue() > 0) {
@@ -111,19 +120,21 @@ public class BustineDAO extends GenericDAO {
                 parametri.put("prezzoMax", filtri.get("prezzoMax"));
             }
 
-            // Assemblaggio della stringa finale
+            // costruzione jpql finale per count e select
             StringBuilder jpqlFinale = new StringBuilder("FROM EBustine b ");
             if (!condizioniPrezzo.isEmpty()) {
                 jpqlFinale.append("WHERE ").append(String.join(" AND ", condizioniPrezzo)).append(" ");
             }
 
-            // 6. ESECUZIONE QUERY (COUNT E LISTA)
+            //esecuzione della count per la paginazione
             jakarta.persistence.TypedQuery<Long> queryCount = em.createQuery("SELECT COUNT(b) " + jpqlFinale.toString(), Long.class);
             parametri.forEach(queryCount::setParameter);
             Long totale = queryCount.getSingleResult();
 
+            //costruzione query finale con select
             StringBuilder jpqlMain = new StringBuilder("SELECT b ").append(jpqlFinale.toString());
 
+            //uso la query finale creata per inserire l'ordinamento richiesto dall'utente
             String ordinamento = (String) filtri.get("ordinamento");
             if (ordinamento != null && !ordinamento.isEmpty()) {
                 switch (ordinamento) {
@@ -137,13 +148,16 @@ public class BustineDAO extends GenericDAO {
                 jpqlMain.append("ORDER BY b.dataPubblicazione DESC");
             }
 
+            //eseguo query con ordinamento
             jakarta.persistence.TypedQuery<EBustine> queryMain = em.createQuery(jpqlMain.toString(), EBustine.class);
             parametri.forEach(queryMain::setParameter);
 
+            //risultati per paginazione e "segnalibro" per prodotto successivo nelle varie pagine
             queryMain.setFirstResult(offset);
             queryMain.setMaxResults(limit);
             List<EBustine> risultati = queryMain.getResultList();
 
+            //creo il dizionario con i vari risultati da passare al control
             Map<String, Object> response = new HashMap<>();
             response.put("risultati", risultati);
             response.put("totale", totale.intValue());

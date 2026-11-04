@@ -72,10 +72,10 @@ public class PersistentManager {
         return dao.findProdottiInOfferta(filtri, limit, offset);
     }
 
-    public boolean PMutenteHasProdotto(int idUtente, int idProdotto) {
-        ProdottoDAO dao = new ProdottoDAO(em);
-        return dao.utenteHasProdotto(idUtente, idProdotto);
-    }
+//    public boolean PMutenteHasProdotto(int idUtente, int idProdotto) {
+//        ProdottoDAO dao = new ProdottoDAO(em);
+//        return dao.utenteHasProdotto(idUtente, idProdotto);
+//    }
 
     public List<EProdotto> PMfindCorrelati (List<Long> prodottiEsclusi, int limit){
         ProdottoDAO dao = new ProdottoDAO(em);
