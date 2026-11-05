@@ -116,29 +116,29 @@ public class CCheckout extends BaseController{
         EntityTransaction tx = em.getTransaction();
 
         try {
-            // 1. Risoluzione dell'indirizzo
+            // Risoluzione dell'indirizzo
             Long idIndirizzo = UHTTPMethods.postLong(request, "id_indirizzo", null);
             EIndirizzo indirizzo = risolviIndirizzo(idIndirizzo, utente, pm);
 
-            // 2. Risoluzione / Creazione della carta di credito
+            // Risoluzione / Creazione della carta di credito
             String sceltaCarta = UHTTPMethods.postString(request, "scelta_carta", 20);
             Long idCartaSalvata = UHTTPMethods.postLong(request, "id_carta_salvata", null);
             ECartaDiCredito carta = risolviCartaPagamento(request, sceltaCarta, idCartaSalvata, utente, pm);
 
-            // 3. Recupero carrello
+            // Recupero carrello
             @SuppressWarnings("unchecked")
             Map<Long, Integer> carrello = (Map<Long, Integer>) session.getAttribute("carrello");
             if (carrello == null || carrello.isEmpty()) {
                 throw new IllegalArgumentException("Il carrello è vuoto. Impossibile completare l'ordine.");
             }
 
-            // 4. AVVIO TRANSAZIONE JPA
+            // AVVIO TRANSAZIONE JPA
             tx.begin();
 
             // Creazione nuova entità Ordine
             EOrdine ordine = new EOrdine(utente, indirizzo, carta);
 
-            // 5. Verifica e aggiornamento giacenze per ciascun prodotto
+            // Verifica e aggiornamento giacenze per ciascun prodotto
             for (Map.Entry<Long, Integer> entry : carrello.entrySet()) {
                 Long idProdotto = entry.getKey();
                 int quantitaRichiesta = entry.getValue();
@@ -166,7 +166,7 @@ public class CCheckout extends BaseController{
                 ordine.aggiungiProdotto(prodotto, quantitaRichiesta);
             }
 
-            // 6. Addebito simulato con Banca Mock
+            // Addebito simulato con Banca Mock
             float totaleOrdine = ordine.calcolaTotale();
             boolean pagamentoEsito = paymentService.effettuaPagamento(carta.getToken(), totaleOrdine);
 
@@ -174,13 +174,13 @@ public class CCheckout extends BaseController{
                 throw new RuntimeException("La transazione bancaria è stata rifiutata.");
             }
 
-            // 7. Salvataggio definitivo dell'ordine su Database
+            // Salvataggio definitivo dell'ordine su Database
             boolean salvato = pm.PMsaveObj(ordine);
             if (!salvato) {
                 throw new RuntimeException("Impossibile registrare l'ordine a sistema.");
             }
 
-            // 8. COMMIT TRANSAZIONE
+            // COMMIT TRANSAZIONE
             tx.commit();
 
             // Svuotiamo il carrello solo a transazione completata con successo
