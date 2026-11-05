@@ -96,10 +96,9 @@
                                         <#assign p = item.prodotto>
                                         <div class="mieordini-item">
                                             <a href="${base_url}/prodotto?id=${p.idProdotto}" class="mieordini-item-media">
-                                                <#-- 1. Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
+                                                <#-- Leggiamo cosa c'è nel database (se è null, diventa vuoto "") -->
                                                 <#assign imgDalDb = p.imgProdotto!"">
 
-                                                <#-- 2. Logica del vigile urbano -->
                                                 <#if imgDalDb == "">
 
                                                 <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base al tipo -->
@@ -117,17 +116,17 @@
 
                                                 <#elseif imgDalDb?contains("/")>
 
-                                                <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+                                                <#-- CASO B: Prodotto NUOVO (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
                                                     <#assign pathFinale = "${base_url}/${imgDalDb}">
 
                                                 <#else>
 
-                                                <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+                                                <#-- CASO C: Prodotto VECCHIO o placeholder testuale -->
                                                     <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
 
                                                 </#if>
 
-                                                <#-- 3. Stampiamo il tag IMG pulitissimo -->
+                                                <#-- Stampiamo il tag IMG -->
                                                 <img src="${pathFinale}" alt="${p.nomeProdotto?html}" class="product-image">
                                             </a>
 

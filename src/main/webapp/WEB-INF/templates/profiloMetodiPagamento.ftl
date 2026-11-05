@@ -8,7 +8,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // ── Numero carta: raggruppa le cifre a blocchi di 4 mentre si scrive ──
+            // Numero carta: raggruppa le cifre a blocchi di 4 mentre si scrive
             var campoNumero = document.getElementById('pagamenti-form-numero');
             if (campoNumero) {
                 campoNumero.addEventListener('input', function () {
@@ -17,7 +17,7 @@
                 });
             }
 
-            // ── Scadenza: inserisce automaticamente "/" dopo il mese ──
+            // Scadenza: inserisce automaticamente "/" dopo il mese
             var campoScadenza = document.getElementById('pagamenti-form-scadenza');
             if (campoScadenza) {
                 campoScadenza.addEventListener('input', function () {
@@ -30,7 +30,7 @@
                 });
             }
 
-            // ── CVV: solo cifre ──
+            // CVV: solo cifre
             var campoCvv = document.getElementById('pagamenti-form-cvv');
             if (campoCvv) {
                 campoCvv.addEventListener('input', function () {

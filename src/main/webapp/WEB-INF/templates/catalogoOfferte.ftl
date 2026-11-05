@@ -1,7 +1,3 @@
-<#--
-  Importa la macro condivisa che gestisce layout, filtri,
-  impaginazione e carrello per tutti i cataloghi
--->
 <#import "common/catalogoSemplice.ftl" as cs>
 
 <#--

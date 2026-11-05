@@ -35,12 +35,6 @@
                     <p class="auth-subtitle">Unisciti alla community TableCrown</p>
                 </div>
 
-<#--                <#if flash_message??>-->
-<#--                    <div class="alert alert-${flash_type!'danger'}">-->
-<#--                        ${flash_message}-->
-<#--                    </div>-->
-<#--                </#if>-->
-
                 <form class="auth-form" action="${base_url!''}/registrazione" method="post" id="register-form">
 
                     <div class="auth-field">

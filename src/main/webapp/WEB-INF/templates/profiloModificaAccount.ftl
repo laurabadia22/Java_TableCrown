@@ -7,7 +7,7 @@
 <#assign extra_js>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ── Preview avatar al cambio file (facoltativo, puramente estetico) ──
+            //Preview avatar
             var avatarInput = document.getElementById('modifica-account-avatar-input');
             var avatarPreview = document.getElementById('modifica-account-avatar-preview');
 
@@ -53,14 +53,15 @@
                 </div>
             </div>
 
-            <#-- ── FORM PRINCIPALE: avatar + nome + email ── -->
+            <#-- FORM PRINCIPALE: avatar + nome + email -->
             <form action="${base_url}/profilo/modifica" method="POST" enctype="multipart/form-data" class="modifica-account-form">
 
                 <div class="modifica-account-avatar-wrap">
                     <div class="modifica-account-avatar-circle">
                         <div class="modifica-account-avatar">
                             <#if immagineUtente?has_content>
-                                <img src="${base_url}/${immagineUtente}"                                     alt="${nomeUtente!''?html}"
+                                <img src="${base_url}/${immagineUtente}"
+                                     alt="${nomeUtente!''?html}"
                                      class="modifica-account-avatar-img"
                                      id="modifica-account-avatar-preview">
                             <#else>
@@ -110,7 +111,7 @@
 
             </form>
 
-            <#-- ── MODIFICA PASSWORD (<details>, no JS) ── -->
+            <#-- MODIFICA PASSWORD -->
             <details class="modifica-account-details">
                 <summary class="modifica-account-summary">
                     <i class="ti ti-lock"></i> Modifica Password
@@ -140,7 +141,7 @@
                 </form>
             </details>
 
-            <#-- ── ELIMINA ACCOUNT (<details>, no JS) ── -->
+            <#-- ELIMINA ACCOUNT -->
             <details class="modifica-account-details modifica-account-details-danger" id="modifica-account-elimina">
                 <summary class="modifica-account-summary modifica-account-summary-danger">
                     <i class="ti ti-alert-triangle"></i> Elimina Account

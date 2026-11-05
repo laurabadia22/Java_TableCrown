@@ -36,10 +36,9 @@ extra_css=cssProdotto>
                 <div class="column is-5">
                     <div class="box prodotto-gallery-box">
 
-                        <#-- 1. Leggiamo cosa c'è nel database -->
+                        <#-- Leggiamo cosa c'è nel database -->
                         <#assign imgDalDb = prodotto.imgProdotto!"">
 
-                        <#-- 2. Logica del vigile urbano -->
                         <#if imgDalDb == "">
 
                         <#-- CASO A: Il prodotto non ha immagine. Scegliamo il placeholder in base alla classe Java -->
@@ -57,12 +56,12 @@ extra_css=cssProdotto>
 
                         <#elseif imgDalDb?contains("/")>
 
-                        <#-- CASO B: Prodotto NUOVO Java (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
+                        <#-- CASO B: Prodotto NUOVO (contiene lo slash, es: uploads/prodotti/foto.jpg) -->
                             <#assign pathFinale = "${base_url}/${imgDalDb}">
 
                         <#else>
 
-                        <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) o placeholder testuale -->
+                        <#-- CASO C: Prodotto VECCHIO o placeholder testuale -->
                             <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
 
                         </#if>
@@ -209,7 +208,7 @@ extra_css=cssProdotto>
                 </div>
             </div>
 
-            <#-- ── SEZIONE PRODOTTI CORRELATI ── -->
+            <#-- SEZIONE PRODOTTI CORRELATI -->
             <#if correlati?? && (correlati?size > 0)>
                 <hr class="prodotto-divider">
                 <h2 class="title is-4 has-text-light mb-5 titolo-sezione-custom">Forse ti può interessare...</h2>

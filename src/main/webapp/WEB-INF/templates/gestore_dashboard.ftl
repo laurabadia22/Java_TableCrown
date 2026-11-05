@@ -1,15 +1,9 @@
 <#import "common/layout.ftl" as layout>
 
-<#-- Colleghiamo un file CSS esterno per le personalizzazioni del gestore senza iniettare stili -->
 <#assign dashboard_css>
     <link rel="stylesheet" href="${base_url}/public/css/gestoreDashboard.css">
     <link rel="stylesheet" href="${base_url}/public/css/home.css">
 </#assign>
-
-<#-- Se in futuro servirà JS specifico per la dashboard, lo colleghiamo qui -->
-<#--<#assign dashboard_js>-->
-<#--    <script src="${base_url}/public/js/dashboard_gestore.js" defer></script>-->
-<#--</#assign>-->
 
 <@layout.page page_title="Dashboard Gestore - TableCrown" extra_css=dashboard_css current_page="gestore_dashboard">
 
@@ -21,7 +15,7 @@
             <p class="subtitle is-5 has-text-grey">Panoramica delle attività e gestione del negozio.</p>
         </div>
 
-        <!-- STATISTICHE PRINCIPALI (Ordini e Vendite) -->
+        <!-- STATISTICHE PRINCIPALI (ordini e vendite) -->
         <div class="columns is-multiline">
 
             <div class="column is-6-tablet is-6-desktop">
@@ -63,7 +57,7 @@
 
         </div>
 
-        <!-- AZIONI RAPIDE (Aggiunta Prodotti) -->
+        <!-- AZIONI RAPIDE (Aggiunta prodotti) -->
         <div class="mt-1">
             <h2 class="title is-4 mb-4 gestore-actions-title">Azioni Rapide al Catalogo</h2>
 

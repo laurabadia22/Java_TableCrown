@@ -19,7 +19,7 @@
 
             <#if carrello_items?? && carrello_items?has_content>
 
-            <#-- ── LAYOUT 2 COLONNE: ARTICOLI + RIEPILOGO ── -->
+            <#-- LAYOUT 2 COLONNE: ARTICOLI + RIEPILOGO -->
                 <div class="carrello-layout">
 
                     <#-- COLONNA SINISTRA: ARTICOLI -->
@@ -72,9 +72,9 @@
 
                     </aside>
 
-                </div> <#-- FINE .carrello-layout -->
+                </div>
 
-            <#-- ── SEZIONE: POTREBBE INTERESSARTI (A PIENA LARGHEZZA) ── -->
+            <#-- SEZIONE: POTREBBE INTERESSARTI (A PIENA LARGHEZZA) -->
                 <#if correlati?? && correlati?has_content>
                     <section class="carrello-correlati mt-6">
                         <h2 class="title is-4 has-text-light mb-4 titolo-sezione-custom">Potrebbe interessarti</h2>
@@ -89,7 +89,7 @@
 
             <#else>
 
-            <#-- ── CARRELLO VUOTO ── -->
+            <#-- CARRELLO VUOTO -->
                 <div class="carrello-vuoto">
                     <i class="ti ti-shopping-cart-off"></i>
                     <p>Il tuo carrello è vuoto.</p>

@@ -50,7 +50,7 @@ breadcrumbs=breadcrumbs>
         </div>
     </div>
 
-<#-- Categorie a Pulsantoni -->
+<#-- Categorie -->
     <div class="column is-12 mt-3">
         <div class="field">
             <label class="label has-text-light is-size-7 mb-2">Categorie (Seleziona una o più)</label>

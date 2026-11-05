@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <!-- ZONA: OFFERTE IN SCADENZA -->
+        <!-- ZONA OFFERTE IN SCADENZA -->
         <section class="home-section">
             <h2 class="title section-title is-4 text-uppercase">🔥 Offerte in Scadenza</h2>
             <div class="card-row-vector">

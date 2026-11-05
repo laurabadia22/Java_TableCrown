@@ -35,7 +35,7 @@
                 </#if>
             </div>
 
-            <#-- ── LISTA PRODOTTI IN WISHLIST ── -->
+            <#-- LISTA PRODOTTI IN WISHLIST -->
             <#if prodotti?has_content>
                 <div class="wishlist-grid" id="wishlist-grid">
                     <#list prodotti as p>
@@ -59,7 +59,7 @@
                 </div>
             </#if>
 
-            <#-- ── SEZIONE: POTREBBE INTERESSARTI ── -->
+            <#-- SEZIONE POTREBBE INTERESSARTI -->
             <#if correlati?? && correlati?has_content>
                 <section class="wishlist-correlati mt-6">
                     <h2 class="title is-4 has-text-light mb-4 titolo-sezione-custom">Potrebbe interessarti</h2>

@@ -98,7 +98,7 @@
                 </div>
             </#if>
 
-            <#-- ── FORM AGGIUNGI INDIRIZZO: <details> nativo, zero JS ── -->
+            <#-- FORM AGGIUNGI INDIRIZZO -->
             <details class="indirizzi-add-details">
                 <summary class="indirizzi-add-summary">
                     <i class="ti ti-plus"></i> Aggiungi nuovo indirizzo

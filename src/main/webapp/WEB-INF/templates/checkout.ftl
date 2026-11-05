@@ -15,7 +15,7 @@
             <form action="${base_url}/checkout/acquista" method="POST" id="form-checkout">
                 <div class="checkout-grid">
 
-                    <!-- COLONNA SINISTRA: Indirizzi e Pagamento -->
+                    <!-- COLONNA SINISTRA: indirizzi e pagamento -->
                     <div class="checkout-main">
 
                         <!-- SEZIONE INDIRIZZI -->
@@ -80,7 +80,7 @@
                         </div>
                     </div>
 
-                    <!-- COLONNA DESTRA: Riepilogo Ordine -->
+                    <!-- COLONNA DESTRA: riepilogo ordine -->
                     <div class="checkout-summary-box">
                         <h2 class="checkout-summary-title"><i class="ti ti-shopping-cart mr-2"></i> Riepilogo Ordine</h2>
 
@@ -88,7 +88,7 @@
                             <div class="checkout-prodotti-list">
                                 <#list prodotti_carrello as item>
 
-                                <#-- 1. LOGICA IMMAGINE DINAMICA -->
+                                <#-- LOGICA IMMAGINE DINAMICA -->
                                     <#assign imgDalDb = item.prodotto.imgProdotto!"">
 
                                     <#if imgDalDb == "">
@@ -110,13 +110,12 @@
                                         <#assign pathFinale = "${base_url}/${imgDalDb}">
 
                                     <#else>
-                                    <#-- CASO C: Prodotto VECCHIO PHP (es: dixit.jpg) -->
+                                    <#-- CASO C: Prodotto VECCHIO -->
                                         <#assign pathFinale = "${base_url}/public/img/prodotti/${imgDalDb}">
                                     </#if>
-                                <#-- FINE LOGICA IMMAGINE -->
 
                                     <div class="checkout-prodotto-row">
-                                        <#-- 2. STAMPA IMMAGINE CON PATH CALCOLATO -->
+                                        <#-- STAMPA IMMAGINE CON PATH CALCOLATO -->
                                         <img class="checkout-prodotto-img" src="${pathFinale}" alt="${(item.prodotto.nomeProdotto)?html}">
 
                                         <div class="checkout-prodotto-info">

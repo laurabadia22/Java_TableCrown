@@ -191,7 +191,7 @@ sottotitoloForm="Inserisci le regole e le specifiche del nuovo gioco da tavolo."
                     // Crea il bottone per rimuovere la riga
                     const btnRemove = document.createElement('button');
                     btnRemove.type = 'button';
-                    // Usiamo lo stile del bottone elimina che hai già nel CSS!
+
                     btnRemove.className = 'button gestore-btn-elimina';
                     btnRemove.innerHTML = '<i class="ti ti-trash"></i>';
                     btnRemove.addEventListener('click', function() {
