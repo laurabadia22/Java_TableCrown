@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="${base_url}/public/css/prodottoRiga.css">
     <link rel="stylesheet" href="${base_url}/public/css/carrello.css">
     <link rel="stylesheet" href="${base_url}/public/css/home.css">
+    <link rel="stylesheet" href="${base_url}/public/css/prodotto.css">
+
 </#assign>
 
 <@layout.page page_title="Carrello - TableCrown" extra_css=extra_css>
